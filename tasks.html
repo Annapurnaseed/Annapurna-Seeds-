@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Tasks - Annapurna Seeds</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .task-counter-card {
+            background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
+            color: #ffffff;
+            margin: 15px;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 6px 18px rgba(27, 67, 50, 0.2);
+        }
+        .counter-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        .counter-box {
+            background: rgba(255, 255, 255, 0.12);
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .counter-box span { font-size: 11px; opacity: 0.8; display: block; }
+        .counter-box b { font-size: 20px; color: #d8f3dc; }
+
+        .task-action-box {
+            background: #ffffff;
+            margin: 15px;
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid #ddecde;
+            text-align: center;
+        }
+        .task-progress {
+            width: 100%;
+            height: 8px;
+            background: #eef7f0;
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        .task-progress-bar {
+            width: 0%;
+            height: 100%;
+            background: #2d6a4f;
+            transition: width 0.3s;
+        }
+        .holiday-banner {
+            display: none;
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+            padding: 16px;
+            margin: 15px;
+            border-radius: 16px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<div class="mobile-wrapper">
+
+    <!-- Header -->
+    <div class="brand-header">
+        <div class="brand-nav">
+            <div class="brand-title">🌱 Task Room</div>
+            <div class="brand-badge" id="planBadge">Active: Sprout Plan</div>
+        </div>
+        <p style="font-size: 12px; margin-top: 6px; opacity: 0.85;">Daily Crop Quality Review Tasks</p>
+    </div>
+
+    <!-- Sunday Holiday Alert -->
+    <div id="holidayNotice" class="holiday-banner">
+        ⚠️ <b>Today is Sunday (Weekly Holiday)!</b><br>
+        Task room maintenance par hai. Naye tasks kal Monday ko shuru honge.
+    </div>
+
+    <!-- Live Counter -->
+    <div class="task-counter-card" id="counterCard">
+        <div style="font-size: 13px; opacity: 0.9;">Today's Task Status:</div>
+        <div class="counter-grid">
+            <div class="counter-box">
+                <span>Completed Tasks</span>
+                <b id="completedText">0 / 5</b>
+            </div>
+            <div class="counter-box">
+                <span>Earned Today</span>
+                <b id="earnedToday">₹0</b>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Execution Zone -->
+    <div class="task-action-box" id="taskBox">
+        <h3 style="font-size: 16px; color: #1b4332; margin-bottom: 6px;">Agro Quality Verification</h3>
+        <p style="font-size: 12px; color: #557262;">Click submit to verify organic seed batch. Earn ₹10 per task.</p>
+        
+        <div class="task-progress">
+            <div class="task-progress-bar" id="progressBar"></div>
+        </div>
+
+        <button id="taskBtn" class="btn-solid" onclick="executeTask()">Submit Task & Earn ₹10</button>
+    </div>
+
+    <!-- Instructions -->
+    <div class="glass-card">
+        <div class="card-title">Task Rules</div>
+        <ul style="font-size: 12px; color: #557262; padding-left: 18px; line-height: 1.6; margin-top: 8px;">
+            <li>Roz ke tasks raat 12:00 baje se pehle poore karne honge.</li>
+            <li>Bina task submit kiye daily income add nahi hogi (No carry forward).</li>
+            <li>Sunday ko holiday rehta hai. Monday se regular tasks active rahenge.</li>
+        </ul>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="footer-nav">
+        <a href="index.html" class="nav-link">🏠<span>Home</span></a>
+        <a href="tasks.html" class="nav-link active">📋<span>Tasks</span></a>
+        <a href="community.html" class="nav-link">💬<span>Community</span></a>
+        <a href="team.html" class="nav-link">👥<span>Team</span></a>
+        <a href="profile.html" class="nav-link">👤<span>My</span></a>
+    </div>
+
+</div>
+
+<script>
+// Sunday Holiday Checker
+const today = new Date().getDay(); // 0 is Sunday
+const isSunday = (today === 0);
+
+if (isSunday) {
+    document.getElementById('holidayNotice').style.display = 'block';
+    document.getElementById('taskBox').style.display = 'none';
+    document.getElementById('counterCard').style.opacity = '0.6';
+}
+
+// Dummy State (Real setup me Backend API se aayega)
+let totalTasks = 5;
+let rewardPerTask = 10;
+let completed = 0;
+
+function executeTask() {
+    if (completed >= totalTasks) {
+        alert("Aapke aaj ke saare tasks complete ho chuke hain! Kal wapas aayein.");
+        return;
+    }
+
+    const btn = document.getElementById('taskBtn');
+    btn.disabled = true;
+    btn.innerText = "Verifying Batch (5s)...";
+    btn.classList.add('btn-locked');
+
+    // 5-second loading bar
+    let width = 0;
+    const progress = document.getElementById('progressBar');
+    const interval = setInterval(() => {
+        if (width >= 100) {
+            clearInterval(interval);
+            completed++;
+            updateUI();
+            btn.disabled = false;
+            btn.innerText = "Submit Task & Earn ₹10";
+            btn.classList.remove('btn-locked');
+            progress.style.width = '0%';
+            alert(`Task completed! ₹${rewardPerTask} wallet mein add kar diye gaye.`);
+        } else {
+            width += 20;
+            progress.style.width = width + '%';
+        }
+    }, 1000);
+}
+
+function updateUI() {
+    document.getElementById('completedText').innerText = `${completed} / ${totalTasks}`;
+    document.getElementById('earnedToday').innerText = `₹${completed * rewardPerTask}`;
+
+    if (completed >= totalTasks) {
+        const btn = document.getElementById('taskBtn');
+        btn.disabled = true;
+        btn.innerText = "All Tasks Completed for Today ✅";
+        btn.classList.add('btn-locked');
+    }
+}
+</script>
+
+</body>
+</html>
