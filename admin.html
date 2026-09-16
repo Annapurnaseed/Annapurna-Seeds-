@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annapurna Admin Console</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { background: #0f172a; color: #e2e8f0; }
+        .mobile-wrapper { max-width: 600px; background: #1e293b; color: #f8fafc; border: 1px solid #334155; }
+        .admin-header { background: #0f172a; padding: 20px; border-bottom: 1px solid #334155; }
+        .tab-btn { background: #334155; color: #94a3b8; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .tab-btn.active { background: #2d6a4f; color: #fff; }
+        .data-card { background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+        .data-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+        .badge-pending { background: #854d0e; color: #fef08a; padding: 2px 8px; border-radius: 6px; font-size: 11px; }
+        .btn-action { padding: 6px 12px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; font-size: 12px; }
+        .btn-approve { background: #15803d; color: #fff; }
+        .btn-reject { background: #b91c1c; color: #fff; margin-left: 6px; }
+    </style>
+</head>
+<body>
+
+<div class="mobile-wrapper">
+    <div class="admin-header">
+        <h2 style="font-size: 18px; color: #4ade80;">Annapurna Seeds Admin Console 🔒</h2>
+        <p style="font-size: 12px; color: #94a3b8; margin-top: 4px;">Manual UTR Approval & Fixed Slab Payouts</p>
+        <div style="display: flex; gap: 8px; margin-top: 14px;">
+            <button class="tab-btn active" onclick="switchAdminTab('recharge')">Recharge Approvals</button>
+            <button class="tab-btn" onclick="switchAdminTab('withdraw')">Withdrawal Requests</button>
+        </div>
+    </div>
+
+    <!-- Tab 1: Pending Recharges -->
+    <div id="rechargeSection" style="padding: 15px;">
+        <h3 style="font-size: 14px; margin-bottom: 12px; color: #94a3b8;">Pending UTR Submissions</h3>
+        
+        <div class="data-card" id="rec-card-1">
+            <div class="data-row">
+                <span>User: <b>+91 9876543210</b></span>
+                <span class="badge-pending">Pending</span>
+            </div>
+            <div class="data-row">
+                <span>Plan: <b>Sprout Plan (A)</b></span>
+                <span style="color: #4ade80; font-weight: bold;">₹520</span>
+            </div>
+            <div class="data-row">
+                <span>UTR: <b style="letter-spacing: 1px; color: #38bdf8;">412356789012</b></span>
+                <span style="font-size: 11px; color: #64748b;">10 mins ago</span>
+            </div>
+            <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
+                <button class="btn-action btn-approve" onclick="approveRecharge(1, 520)">Approve & Distribute MLM</button>
+                <button class="btn-action btn-reject" onclick="rejectRecharge(1)">Reject</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab 2: Fixed Slab Withdrawals -->
+    <div id="withdrawSection" style="padding: 15px; display: none;">
+        <h3 style="font-size: 14px; margin-bottom: 12px; color: #94a3b8;">Today's Withdrawal Requests</h3>
+        
+        <div class="data-card" id="wd-card-1">
+            <div class="data-row">
+                <span>User: <b>+91 9123456789</b></span>
+                <span class="badge-pending">Monday Queue</span>
+            </div>
+            <div class="data-row">
+                <span>Bank: <b>SBI (A/C: **********4412)</b></span>
+                <span style="color: #38bdf8; font-weight: bold;">₹330 (Slab)</span>
+            </div>
+            <div class="data-row">
+                <span>IFSC: <b>SBIN0001234</b></span>
+                <span>Holder: <b>Mohammad Sahud</b></span>
+            </div>
+            <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
+                <button class="btn-action btn-approve" onclick="markPaid(1)">Mark Paid</button>
+                <button class="btn-action btn-reject" onclick="rejectWd(1)">Reject</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function switchAdminTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    if(tab === 'recharge') {
+        event.target.classList.add('active');
+        document.getElementById('rechargeSection').style.display = 'block';
+        document.getElementById('withdrawSection').style.display = 'none';
+    } else {
+        event.target.classList.add('active');
+        document.getElementById('rechargeSection').style.display = 'none';
+        document.getElementById('withdrawSection').style.display = 'block';
+    }
+}
+
+function approveRecharge(id, amount) {
+    if(confirm(`Approve ₹${amount} recharge? Isse user ka plan activate hoga aur upline me 15%, 5%, 2% commission chala jayega.`)) {
+        document.getElementById(`rec-card-${id}`).style.display = 'none';
+        alert("Recharge approved and MLM tree updated!");
+    }
+}
+
+function rejectRecharge(id) {
+    if(confirm("Reject this recharge submission?")) {
+        document.getElementById(`rec-card-${id}`).style.display = 'none';
+    }
+}
+
+function markPaid(id) {
+    if(confirm("Confirm payout transfer?")) {
+        document.getElementById(`wd-card-${id}`).style.display = 'none';
+        alert("Marked as paid.");
+    }
+}
+
+function rejectWd(id) {
+    if(confirm("Reject this withdrawal? Amount wallet me revert ho jayega.")) {
+        document.getElementById(`wd-card-${id}`).style.display = 'none';
+    }
+}
+</script>
+
+</body>
+</html>
