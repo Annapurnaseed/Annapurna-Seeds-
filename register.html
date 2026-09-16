@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Annapurna Seeds</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .register-container {
+            padding: 24px 18px;
+        }
+        .input-group {
+            margin-bottom: 14px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #1b4332;
+            margin-bottom: 6px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid #c7e8cf;
+            background: #ffffff;
+            font-size: 14px;
+            outline: none;
+        }
+        .input-group input:focus {
+            border-color: #2d6a4f;
+        }
+        .brand-hero {
+            text-align: center;
+            padding: 28px 10px 10px;
+        }
+        .brand-hero h1 {
+            font-size: 24px;
+            color: #1b4332;
+            margin-bottom: 4px;
+        }
+        .brand-hero p {
+            font-size: 13px;
+            color: #557262;
+        }
+        .auth-switch {
+            text-align: center;
+            font-size: 13px;
+            margin-top: 20px;
+            color: #557262;
+        }
+        .auth-switch a {
+            color: #2d6a4f;
+            font-weight: 700;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="mobile-wrapper">
+
+    <div class="brand-hero">
+        <h1>🌱 Annapurna Seeds</h1>
+        <p>Create Farmer & Investor Account</p>
+    </div>
+
+    <div class="register-container">
+        <form id="registerForm" onsubmit="handleRegister(event)">
+            
+            <div class="input-group">
+                <label>Mobile Number</label>
+                <input type="tel" id="regMobile" placeholder="Enter 10-digit mobile number" maxlength="10" required pattern="[0-9]{10}">
+            </div>
+
+            <div class="input-group">
+                <label>Login Password</label>
+                <input type="password" id="regPassword" placeholder="Minimum 6 characters" required minlength="6">
+            </div>
+
+            <div class="input-group">
+                <label>Confirm Password</label>
+                <input type="password" id="regConfirmPassword" placeholder="Re-enter password" required minlength="6">
+            </div>
+
+            <div class="input-group">
+                <label>Invitation / Referral Code</label>
+                <input type="text" id="regInviteCode" placeholder="Enter referral code">
+            </div>
+
+            <button type="submit" class="btn-solid" style="margin-top: 15px;">Complete Registration</button>
+        </form>
+
+        <div class="auth-switch">
+            Already have an account? <a href="login.html">Login here</a>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// Referral link se code auto-detect karna (?ref=ANP9901)
+const params = new URLSearchParams(window.location.search);
+const refCode = params.get('ref');
+if (refCode) {
+    document.getElementById('regInviteCode').value = refCode;
+}
+
+function handleRegister(e) {
+    e.preventDefault();
+    const mobile = document.getElementById('regMobile').value;
+    const pass = document.getElementById('regPassword').value;
+    const confirmPass = document.getElementById('regConfirmPassword').value;
+    const invite = document.getElementById('regInviteCode').value;
+
+    if (pass !== confirmPass) {
+        alert("Passwords match nahi kar rahe hain! Kripya dobara check karein.");
+        return;
+    }
+
+    alert(`Registration successful for +91 ${mobile}! Please login to continue.`);
+    window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>
