@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Register - Annapurna Seeds</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .auth-container {
+            padding: 24px 18px;
+        }
+        .auth-tabs {
+            display: flex;
+            background: #eef7f0;
+            border-radius: 16px;
+            padding: 4px;
+            margin-bottom: 24px;
+        }
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #557262;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: 0.2s;
+        }
+        .auth-tab.active {
+            background: #ffffff;
+            color: #1b4332;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+        }
+        .input-group {
+            margin-bottom: 14px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #1b4332;
+            margin-bottom: 6px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid #c7e8cf;
+            background: #ffffff;
+            font-size: 14px;
+            outline: none;
+        }
+        .input-group input:focus {
+            border-color: #2d6a4f;
+        }
+        .brand-hero {
+            text-align: center;
+            padding: 30px 10px 10px;
+        }
+        .brand-hero h1 {
+            font-size: 24px;
+            color: #1b4332;
+            margin-bottom: 4px;
+        }
+        .brand-hero p {
+            font-size: 13px;
+            color: #557262;
+        }
+    </style>
+</head>
+<body>
+
+<div class="mobile-wrapper">
+
+    <div class="brand-hero">
+        <h1>🌱 Annapurna Seeds</h1>
+        <p>Official Farmer & Agro Partner Portal</p>
+    </div>
+
+    <div class="auth-container">
+        <!-- Auth Tabs -->
+        <div class="auth-tabs">
+            <div class="auth-tab active" id="tabLogin" onclick="switchMode('login')">Login</div>
+            <div class="auth-tab" id="tabRegister" onclick="switchMode('register')">Register</div>
+        </div>
+
+        <!-- Form -->
+        <form id="authForm" onsubmit="handleAuth(event)">
+            <div class="input-group">
+                <label>Mobile Number</label>
+                <input type="tel" id="mobileNumber" placeholder="Enter 10-digit mobile" maxlength="10" required pattern="[0-9]{10}">
+            </div>
+
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Enter your password" required minlength="6">
+            </div>
+
+            <div class="input-group" id="refGroup" style="display: none;">
+                <label>Invitation Code (Optional)</label>
+                <input type="text" id="inviteCode" placeholder="Enter Referral Code">
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn-solid" style="margin-top: 20px;">Secure Login</button>
+        </form>
+
+        <p style="text-align: center; font-size: 12px; color: #777; margin-top: 20px;">
+            By continuing, you agree to Annapurna Seeds Certified Terms & Agro Policies.
+        </p>
+    </div>
+
+</div>
+
+<script>
+let currentMode = 'login';
+
+// URL se referral code auto-fill (?ref=ANP9901)
+const params = new URLSearchParams(window.location.search);
+const refParam = params.get('ref');
+if(refParam) {
+    switchMode('register');
+    document.getElementById('inviteCode').value = refParam;
+}
+
+function switchMode(mode) {
+    currentMode = mode;
+    const tabLogin = document.getElementById('tabLogin');
+    const tabRegister = document.getElementById('tabRegister');
+    const refGroup = document.getElementById('refGroup');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if(mode === 'login') {
+        tabLogin.classList.add('active');
+        tabRegister.classList.remove('active');
+        refGroup.style.display = 'none';
+        submitBtn.innerText = 'Secure Login';
+    } else {
+        tabRegister.classList.add('active');
+        tabLogin.classList.remove('active');
+        refGroup.style.display = 'block';
+        submitBtn.innerText = 'Create Account';
+    }
+}
+
+function handleAuth(e) {
+    e.preventDefault();
+    const mobile = document.getElementById('mobileNumber').value;
+    alert(`${currentMode === 'login' ? 'Login' : 'Registration'} successful for +91 ${mobile}!`);
+    window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
