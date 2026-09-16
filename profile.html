@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Annapurna Seeds</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .profile-summary {
+            background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
+            color: #fff;
+            padding: 24px 18px;
+            border-radius: 24px;
+            margin: 15px;
+            box-shadow: 0 8px 20px rgba(27, 67, 50, 0.2);
+        }
+        .user-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+        .avatar-circle {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #d8f3dc;
+            color: #1b4332;
+            font-size: 22px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #fff;
+        }
+        .user-details h3 { font-size: 16px; color: #fff; }
+        .user-details p { font-size: 12px; color: #a3e635; margin-top: 2px; }
+
+        .balance-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 14px;
+        }
+        .metric-cell span { font-size: 11px; opacity: 0.8; display: block; }
+        .metric-cell b { font-size: 18px; color: #d8f3dc; }
+
+        .slab-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 12px 0 16px;
+        }
+        .slab-chip {
+            padding: 12px;
+            text-align: center;
+            border: 1.5px solid #ddecde;
+            background: #f8fcf9;
+            border-radius: 12px;
+            font-weight: 700;
+            color: #2d6a4f;
+            cursor: pointer;
+        }
+        .slab-chip.active {
+            background: #2d6a4f;
+            color: #fff;
+            border-color: #2d6a4f;
+        }
+        .locked-input {
+            background: #e9ecef !important;
+            color: #6c757d !important;
+            cursor: not-allowed;
+            border: 1px solid #ced4da !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="mobile-wrapper">
+
+    <!-- Profile Header Card -->
+    <div class="profile-summary">
+        <div class="user-row">
+            <div class="avatar-circle">AS</div>
+            <div class="user-details">
+                <h3 id="displayPhone">+91 98XXXXXXXX</h3>
+                <p>Plan: <b id="userPlan">Sprout Plan (₹520)</b></p>
+            </div>
+        </div>
+        <div class="balance-metrics">
+            <div class="metric-cell">
+                <span>Available Balance</span>
+                <b id="walletBalance">₹650</b>
+            </div>
+            <div class="metric-cell">
+                <span>Total Commission</span>
+                <b>₹180</b>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 1: Bank Account Details Binding (Lock System) -->
+    <div class="glass-card">
+        <div class="card-header">
+            <div class="card-title">Bank Account Details</div>
+            <span id="bankLockStatus" style="font-size: 11px; font-weight: bold; color: #e65100;">Unlocked 🔓</span>
+        </div>
+        <p style="font-size: 12px; color: #666; margin-bottom: 12px;">Kripya dhyan se bharein. Ek baar save hone ke baad details lock ho jayengi.</p>
+
+        <form id="bankForm" onsubmit="saveBankDetails(event)">
+            <div class="input-box">
+                <input type="text" id="holderName" placeholder="Account Holder Name" required>
+            </div>
+            <div class="input-box">
+                <input type="text" id="accountNo" placeholder="Bank Account Number" required pattern="[0-9]{9,18}">
+            </div>
+            <div class="input-box">
+                <input type="text" id="ifscCode" placeholder="IFSC Code (e.g. SBIN0001234)" required maxlength="11">
+            </div>
+            <button type="submit" id="saveBankBtn" class="btn-solid">Bind & Lock Bank Account</button>
+        </form>
+    </div>
+
+    <!-- Section 2: Fixed Slab Withdrawal System -->
+    <div class="glass-card">
+        <div class="card-header">
+            <div class="card-title">Apply Withdrawal</div>
+            <span style="font-size: 11px; color: #2d6a4f; font-weight: 600;">Max 1 Daily</span>
+        </div>
+
+        <p style="font-size: 12px; color: #557262; margin-top: 4px;">Choose fixed withdrawal slab:</p>
+        
+        <div class="slab-container">
+            <div class="slab-chip active" onclick="selectSlab(330, this)">₹330</div>
+            <div class="slab-chip" onclick="selectSlab(550, this)">₹550</div>
+            <div class="slab-chip" onclick="selectSlab(950, this)">₹950</div>
+            <div class="slab-chip" onclick="selectSlab(1320, this)">₹1,320</div>
+        </div>
+
+        <form onsubmit="handleWithdrawal(event)">
+            <div class="input-box">
+                <input type="password" id="withdrawPass" placeholder="Enter Withdrawal Password" required>
+            </div>
+            <button type="submit" id="withdrawBtn" class="btn-solid">Withdrawal Request Submit</button>
+        </form>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="footer-nav">
+        <a href="index.html" class="nav-link">🏠<span>Home</span></a>
+        <a href="tasks.html" class="nav-link">📋<span>Tasks</span></a>
+        <a href="community.html" class="nav-link">💬<span>Community</span></a>
+        <a href="team.html" class="nav-link">👥<span>Team</span></a>
+        <a href="profile.html" class="nav-link active">👤<span>My</span></a>
+    </div>
+
+</div>
+
+<script>
+let selectedWithdrawSlab = 330;
+let isBankLocked = false;
+let userPlanType = "520"; // 520 = Monday Only, 1500/2500 = Tuesday Only
+let alreadyWithdrawnToday = false;
+
+function selectSlab(amount, element) {
+    selectedWithdrawSlab = amount;
+    document.querySelectorAll('.slab-chip').forEach(c => c.classList.remove('active'));
+    element.classList.add('active');
+}
+
+function saveBankDetails(e) {
+    e.preventDefault();
+    if(confirm("Kya aap inhi details ko lock karna chahte hain? Ek baar lock hone ke baad sirf admin panel se hi badlav ho sakega.")) {
+        isBankLocked = true;
+        
+        document.getElementById('holderName').readOnly = true;
+        document.getElementById('accountNo').readOnly = true;
+        document.getElementById('ifscCode').readOnly = true;
+
+        document.getElementById('holderName').classList.add('locked-input');
+        document.getElementById('accountNo').classList.add('locked-input');
+        document.getElementById('ifscCode').classList.add('locked-input');
+
+        document.getElementById('bankLockStatus').innerText = "Locked 🔒";
+        document.getElementById('bankLockStatus').style.color = "#2d6a4f";
+        document.getElementById('saveBankBtn').style.display = "none";
+        
+        alert("Bank account successfully locked to this ID!");
+    }
+}
+
+function handleWithdrawal(e) {
+    e.preventDefault();
+
+    // 1. Bank Binding Check
+    if (!isBankLocked) {
+        alert("Pehle apna Bank Account enter karke Bind & Lock karein!");
+        return;
+    }
+
+    // 2. Frequency Check (1 per day)
+    if (alreadyWithdrawnToday) {
+        alert("Aap aaj ka 1 withdrawal request submit kar chuke hain. Agla request kal lagayein.");
+        return;
+    }
+
+    // 3. Day of week rule
+    const currentDay = new Date().getDay(); // 1 = Monday, 2 = Tuesday
+    if (userPlanType === "520" && currentDay !== 1) {
+        alert("₹520 Plan wale accounts ka withdrawal sirf Monday ko allowed hai!");
+        return;
+    }
+    if ((userPlanType === "1500" || userPlanType === "2500") && currentDay !== 2) {
+        alert("Aapke plan ka withdrawal sirf Tuesday ko allowed hai!");
+        return;
+    }
+
+    // 4. Balance Check
+    const currentBalance = 650;
+    if (currentBalance < selectedWithdrawSlab) {
+        alert("Insufficient balance for this slab!");
+        return;
+    }
+
+    alreadyWithdrawnToday = true;
+    alert(`Withdrawal request of ₹${selectedWithdrawSlab} submitted successfully! Slabs are processed during office hours.`);
+}
+</script>
+
+</body>
+</html>
