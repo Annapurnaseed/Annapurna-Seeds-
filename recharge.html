@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recharge - Annapurna Seeds</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .qr-card {
+            background: #ffffff;
+            margin: 15px;
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid #ddecde;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .qr-box {
+            width: 190px;
+            height: 190px;
+            margin: 12px auto;
+            border: 2px dashed #2d6a4f;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fcf9;
+            padding: 8px;
+        }
+        .qr-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .copy-chip {
+            background: #eef7f0;
+            border: 1px solid #c7e8cf;
+            padding: 8px 14px;
+            border-radius: 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1b4332;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+        .amount-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .amt-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddecde;
+            background: #ffffff;
+            border-radius: 12px;
+            font-weight: 700;
+            color: #2d6a4f;
+            cursor: pointer;
+        }
+        .amt-btn.selected {
+            background: #2d6a4f;
+            color: #ffffff;
+            border-color: #2d6a4f;
+        }
+    </style>
+</head>
+<body>
+
+<div class="mobile-wrapper">
+
+    <div class="brand-header">
+        <div class="brand-nav">
+            <a href="index.html" style="color: #fff; text-decoration: none; font-size: 18px;">← Back</a>
+            <div class="brand-title">Recharge Wallet</div>
+            <div class="brand-badge">Step 1 of 2</div>
+        </div>
+    </div>
+
+    <!-- Amount Selection -->
+    <div class="glass-card">
+        <div class="card-title" style="margin-bottom: 10px;">Select Plan Amount</div>
+        <div class="amount-selector">
+            <button class="amt-btn selected" onclick="setAmount(520, this)">₹520</button>
+            <button class="amt-btn" onclick="setAmount(1500, this)">₹1,500</button>
+            <button class="amt-btn" onclick="setAmount(2500, this)">₹2,500</button>
+        </div>
+        <div class="input-box" style="margin-bottom: 0;">
+            <span>₹</span>
+            <input type="number" id="rechargeAmt" value="520" readonly>
+        </div>
+    </div>
+
+    <!-- Manual UPI Details & QR -->
+    <div class="qr-card">
+        <p style="font-size: 13px; color: #557262;">Scan QR or copy UPI ID to pay using PhonePe / GPay / Paytm</p>
+        
+        <div class="qr-box">
+            <!-- Replace with your actual UPI QR Image link -->
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=YOUR_UPI_ID@okaxis&pn=AnnapurnaSeeds" alt="UPI QR">
+        </div>
+
+        <div class="copy-chip" onclick="copyUPI()">
+            <span id="upiText">annapurnaseeds@upi</span>
+            <span style="color: #2d6a4f;">📋 Copy</span>
+        </div>
+    </div>
+
+    <!-- UTR Submission Box -->
+    <div class="glass-card">
+        <div class="card-title">Submit Verification (UTR)</div>
+        <p style="font-size: 12px; color: #777; margin-bottom: 12px;">Payment ke baad bank se mila 12-digit UTR / Ref number yahan darj karein:</p>
+        
+        <form id="utrForm" onsubmit="submitUTR(event)">
+            <div class="input-box">
+                <input type="text" id="utrInput" placeholder="Enter 12-Digit UTR Number" maxlength="12" required pattern="[0-9]{12}">
+            </div>
+            <button type="submit" class="btn-solid">Submit Payment for Approval</button>
+        </form>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="footer-nav">
+        <a href="index.html" class="nav-link">🏠<span>Home</span></a>
+        <a href="tasks.html" class="nav-link">📋<span>Tasks</span></a>
+        <a href="community.html" class="nav-link">💬<span>Community</span></a>
+        <a href="team.html" class="nav-link">👥<span>Team</span></a>
+        <a href="profile.html" class="nav-link active">👤<span>My</span></a>
+    </div>
+
+</div>
+
+<script>
+// URL se parameter check karna (?plan=1500)
+const urlParams = new URLSearchParams(window.location.search);
+const planParam = urlParams.get('plan');
+if(planParam) {
+    document.getElementById('rechargeAmt').value = planParam;
+}
+
+function setAmount(amt, btn) {
+    document.getElementById('rechargeAmt').value = amt;
+    document.querySelectorAll('.amt-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+}
+
+function copyUPI() {
+    const upi = document.getElementById('upiText').innerText;
+    navigator.clipboard.writeText(upi);
+    alert("UPI ID copied: " + upi);
+}
+
+function submitUTR(e) {
+    e.preventDefault();
+    const utr = document.getElementById('utrInput').value;
+    const amount = document.getElementById('rechargeAmt').value;
+    
+    if(utr.length !== 12) {
+        alert("Kripya sahi 12-digit ka UTR number dalein!");
+        return;
+    }
+    
+    alert(`Payment request of ₹${amount} with UTR: ${utr} submitted successfully! Admin will verify and activate within 15 minutes.`);
+    window.location.href = "profile.html";
+}
+</script>
+
+</body>
+</html>
