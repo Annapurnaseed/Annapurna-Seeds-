@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Team - Annapurna Seeds</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .share-card {
+            background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
+            color: #ffffff;
+            margin: 15px;
+            padding: 20px;
+            border-radius: 24px;
+            box-shadow: 0 8px 20px rgba(27, 67, 50, 0.2);
+        }
+        .code-box {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px dashed rgba(255, 255, 255, 0.35);
+            padding: 12px;
+            border-radius: 14px;
+            margin: 14px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .code-box span { font-size: 13px; opacity: 0.9; }
+        .code-box b { font-size: 18px; letter-spacing: 1px; color: #a3e635; }
+
+        .btn-copy {
+            background: #ffffff;
+            color: #1b4332;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .team-summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px;
+        }
+        .stat-card {
+            background: #ffffff;
+            border: 1px solid #ddecde;
+            padding: 14px;
+            border-radius: 16px;
+            text-align: center;
+        }
+        .stat-card span { font-size: 11px; color: #557262; display: block; }
+        .stat-card b { font-size: 18px; color: #1b4332; margin-top: 2px; display: block; }
+
+        .tier-row {
+            background: #ffffff;
+            border: 1px solid #ddecde;
+            border-radius: 16px;
+            margin: 10px 15px;
+            padding: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .tier-info h4 { font-size: 14px; color: #1b4332; }
+        .tier-info p { font-size: 11px; color: #557262; margin-top: 2px; }
+        .tier-badge {
+            background: #e8f5e9;
+            color: #2d6a4f;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="mobile-wrapper">
+
+    <!-- Brand Header -->
+    <div class="brand-header">
+        <div class="brand-nav">
+            <div class="brand-title">🌱 Referral Center</div>
+            <div class="brand-badge">Up to 22% Return</div>
+        </div>
+        <p style="font-size: 12px; margin-top: 6px; opacity: 0.85;">Build your farming community & earn multi-tier rewards</p>
+    </div>
+
+    <!-- Referral Invite Box -->
+    <div class="share-card">
+        <h3 style="font-size: 16px;">Invite Friends & Earn</h3>
+        <p style="font-size: 12px; opacity: 0.85; margin-top: 4px;">Get instant commission every time your downline recharges.</p>
+
+        <div class="code-box">
+            <div>
+                <span>Referral Code:</span>
+                <b id="refCode">ANP9901</b>
+            </div>
+            <button class="btn-copy" onclick="copyText('ANP9901')">Copy Code</button>
+        </div>
+
+        <button class="btn-solid" style="background: #25d366; color: #fff; box-shadow: none;" onclick="shareOnWhatsApp()">
+            📲 Share Link on WhatsApp
+        </button>
+    </div>
+
+    <!-- Total Team Stats -->
+    <div class="team-summary-grid">
+        <div class="stat-card">
+            <span>Total Team Members</span>
+            <b id="totalMembers">14 Users</b>
+        </div>
+        <div class="stat-card">
+            <span>Total Referral Earning</span>
+            <b id="totalCommission">₹2,840</b>
+        </div>
+    </div>
+
+    <!-- 3-Level Commission Breakdown -->
+    <div style="margin: 20px 15px 8px; font-weight: 700; font-size: 15px; color: #1b4332;">
+        Commission Levels
+    </div>
+
+    <!-- Level 1 (15%) -->
+    <div class="tier-row">
+        <div class="tier-info">
+            <h4>Level 1 (Direct Team)</h4>
+            <p>Direct Invite Recharge Commission</p>
+            <span style="font-size: 12px; color: #2d6a4f; font-weight: 600;">8 Members | ₹1,980 Earned</span>
+        </div>
+        <div class="tier-badge">15%</div>
+    </div>
+
+    <!-- Level 2 (5%) -->
+    <div class="tier-row">
+        <div class="tier-info">
+            <h4>Level 2 (Secondary Team)</h4>
+            <p>Downline-Invited Members</p>
+            <span style="font-size: 12px; color: #2d6a4f; font-weight: 600;">4 Members | ₹560 Earned</span>
+        </div>
+        <div class="tier-badge">5%</div>
+    </div>
+
+    <!-- Level 3 (2%) -->
+    <div class="tier-row">
+        <div class="tier-info">
+            <h4>Level 3 (Extended Team)</h4>
+            <p>3rd Generation Network</p>
+            <span style="font-size: 12px; color: #2d6a4f; font-weight: 600;">2 Members | ₹300 Earned</span>
+        </div>
+        <div class="tier-badge">2%</div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="footer-nav">
+        <a href="index.html" class="nav-link">🏠<span>Home</span></a>
+        <a href="tasks.html" class="nav-link">📋<span>Tasks</span></a>
+        <a href="community.html" class="nav-link">💬<span>Community</span></a>
+        <a href="team.html" class="nav-link active">👥<span>Team</span></a>
+        <a href="profile.html" class="nav-link">👤<span>My</span></a>
+    </div>
+
+</div>
+
+<script>
+function copyText(val) {
+    navigator.clipboard.writeText(val);
+    alert("Referral Code copied: " + val);
+}
+
+function shareOnWhatsApp() {
+    const code = document.getElementById('refCode').innerText;
+    const shareUrl = window.location.origin + "/register.html?ref=" + code;
+    const msg = `Join Annapurna Seeds! Complete daily agro tasks and earn fixed income. Register using my invite code: ${code}\nLink: ${shareUrl}`;
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
+}
+</script>
+
+</body>
+</html>
