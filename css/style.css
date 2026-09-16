@@ -1,13 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
-    background: #e6f4ea;
-    color: #1c3b2b;
+    background: #0f1f17;
     display: flex;
     justify-content: center;
 }
@@ -16,206 +18,248 @@ body {
     width: 100%;
     max-width: 430px;
     min-height: 100vh;
-    background: #f7fbf8;
+    background: #f4f8f5;
     position: relative;
-    padding-bottom: 80px;
-    box-shadow: 0 0 25px rgba(0,0,0,0.08);
+    padding-bottom: 90px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.3);
 }
 
-/* Header & Official Brand Box */
+/* Premium Curved Top Header */
 .brand-header {
-    background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
+    background: linear-gradient(145deg, #0b291b 0%, #174d33 60%, #1f6b47 100%);
     color: #ffffff;
-    padding: 24px 18px 20px;
-    border-bottom-left-radius: 28px;
-    border-bottom-right-radius: 28px;
-    box-shadow: 0 8px 20px rgba(27, 67, 50, 0.2);
+    padding: 24px 18px 22px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    box-shadow: 0 12px 28px rgba(11, 41, 27, 0.35);
+    position: relative;
+    overflow: hidden;
+}
+
+.brand-header::after {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 140px;
+    height: 140px;
+    background: radial-gradient(circle, rgba(74, 222, 128, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
 }
 
 .brand-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
+    z-index: 2;
 }
 
 .brand-title {
     font-size: 20px;
     font-weight: 800;
-    letter-spacing: 0.5px;
+    letter-spacing: -0.3px;
     display: flex;
     align-items: center;
-    gap: 6px;
-    color: #d8f3dc;
+    gap: 8px;
+    color: #ffffff;
 }
 
 .brand-badge {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%);
+    color: #1a1a1a;
     padding: 4px 10px;
     border-radius: 20px;
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
 }
 
-/* Telegram Action Bar */
+/* Glowing Telegram Bar */
 .telegram-bar {
-    background: linear-gradient(90deg, #0088cc 0%, #00aaff 100%);
+    background: linear-gradient(90deg, #0077b5 0%, #00a0dc 100%);
     color: #ffffff;
     margin: 14px 16px;
-    padding: 12px 16px;
-    border-radius: 16px;
+    padding: 13px 18px;
+    border-radius: 18px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     text-decoration: none;
-    box-shadow: 0 4px 12px rgba(0, 136, 204, 0.25);
+    font-weight: 700;
+    font-size: 13px;
+    box-shadow: 0 6px 18px rgba(0, 119, 181, 0.3);
 }
 
 .telegram-bar span {
-    font-weight: 600;
-    font-size: 13px;
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-/* Notice Marquee */
-.notice-marquee {
-    background: #eef7f0;
-    color: #2d6a4f;
-    border: 1px solid #c7e8cf;
-    margin: 10px 16px;
-    padding: 8px 12px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 600;
+/* Trust Quick Grid */
+.trust-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 14px 16px;
 }
 
-/* Cards & Grid Containers */
+.trust-box {
+    background: #ffffff;
+    border: 1px solid #e1eee4;
+    border-radius: 16px;
+    padding: 12px 6px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #174d33;
+    box-shadow: 0 4px 12px rgba(23, 77, 51, 0.04);
+}
+
+.trust-box span {
+    display: block;
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+/* Alert Marquee */
+.notice-marquee {
+    background: #fff9e6;
+    color: #8c6b00;
+    border: 1px solid #fae69e;
+    margin: 10px 16px;
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Plan Cards with Soft 3D Elevation */
 .glass-card {
     background: #ffffff;
-    margin: 14px 16px;
-    padding: 18px;
-    border-radius: 22px;
-    border: 1px solid #ddecde;
-    box-shadow: 0 6px 18px rgba(45, 106, 79, 0.05);
+    margin: 16px;
+    padding: 20px 18px;
+    border-radius: 24px;
+    border: 1px solid #e3efe6;
+    box-shadow: 0 10px 25px rgba(23, 77, 51, 0.06);
+    position: relative;
+    overflow: hidden;
 }
 
 .card-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-    border-bottom: 1px dashed #ddecde;
+    align-items: flex-start;
+    margin-bottom: 14px;
     padding-bottom: 10px;
+    border-bottom: 1px solid #f0f6f2;
 }
 
 .card-title {
-    font-size: 16px;
+    font-size: 17px;
+    font-weight: 800;
+    color: #0b291b;
+}
+
+.holiday-tag {
+    background: #fff4e5;
+    color: #b76e00;
+    font-size: 11px;
     font-weight: 700;
-    color: #1b4332;
+    padding: 3px 8px;
+    border-radius: 6px;
+    margin-top: 4px;
+    display: inline-block;
 }
 
 .plan-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 14px;
+    gap: 10px;
+    margin-bottom: 16px;
 }
 
 .plan-item {
-    background: #f4faf5;
+    background: #f7fbf8;
+    border: 1px solid #e7f2ea;
     padding: 10px 12px;
-    border-radius: 12px;
-    font-size: 12px;
-    color: #557262;
+    border-radius: 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #587967;
 }
 
 .plan-item b {
     display: block;
-    font-size: 15px;
-    color: #2d6a4f;
+    font-size: 16px;
+    color: #174d33;
+    font-weight: 800;
     margin-top: 2px;
 }
 
-/* Form Inputs */
-.input-box {
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    background: #f8fcf9;
-    border: 1.5px solid #ddecde;
-    border-radius: 14px;
-    padding: 2px 14px;
-}
-
-.input-box span {
-    font-weight: bold;
-    color: #2d6a4f;
-    font-size: 16px;
-    margin-right: 6px;
-}
-
-.input-box input {
-    width: 100%;
-    padding: 12px 0;
-    border: none;
-    background: transparent;
-    font-size: 14px;
-    outline: none;
-    color: #1c3b2b;
-}
-
-/* Buttons */
+/* Action Button */
 .btn-solid {
     width: 100%;
-    background: linear-gradient(90deg, #2d6a4f 0%, #40916c 100%);
+    background: linear-gradient(135deg, #174d33 0%, #257d54 100%);
     color: #ffffff;
     border: none;
-    padding: 13px;
-    border-radius: 25px;
+    padding: 14px;
+    border-radius: 20px;
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 800;
+    letter-spacing: 0.3px;
     cursor: pointer;
-    box-shadow: 0 4px 14px rgba(45, 106, 79, 0.25);
+    box-shadow: 0 6px 18px rgba(23, 77, 51, 0.28);
     text-align: center;
     display: block;
     text-decoration: none;
+    transition: transform 0.1s;
+}
+
+.btn-solid:active {
+    transform: scale(0.98);
 }
 
 .btn-locked {
-    background: #b0bec5 !important;
-    color: #eceff1 !important;
-    cursor: not-allowed;
+    background: #cfd8dc !important;
+    color: #78909c !important;
     box-shadow: none !important;
+    cursor: not-allowed;
 }
 
-/* Bottom Navigation Bar */
+/* Modern Pill Bottom Bar */
 .footer-nav {
     position: fixed;
     bottom: 0;
     width: 100%;
     max-width: 430px;
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
     display: flex;
     justify-content: space-around;
-    padding: 10px 0 12px;
-    border-top: 1px solid #ddecde;
+    padding: 10px 0 14px;
+    border-top: 1px solid #e1eee4;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.03);
     z-index: 1000;
 }
 
 .nav-link {
     text-decoration: none;
-    color: #748c74;
+    color: #7b9987;
     font-size: 11px;
+    font-weight: 600;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 3px;
+    gap: 4px;
 }
 
 .nav-link.active {
-    color: #2d6a4f;
-    font-weight: 700;
+    color: #174d33;
+    font-weight: 800;
 }
