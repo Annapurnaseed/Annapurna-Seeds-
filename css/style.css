@@ -16,25 +16,23 @@ body {
     min-height: 100vh;
 }
 
-/* Master Mobile App Wrapper */
 .mobile-wrapper {
     width: 100%;
     max-width: 430px;
     min-height: 100vh;
-    background: #eef7f2;
+    background: #f0f7f2;
     position: relative;
     padding-bottom: 95px;
     box-shadow: 0 0 50px rgba(0,0,0,0.55);
     overflow-x: hidden;
 }
 
-/* Light Botanical Canvas Header */
+/* Header Canvas */
 .top-nature-canvas {
-    background: linear-gradient(180deg, #dcf3e4 0%, #eef7f2 100%);
+    background: linear-gradient(180deg, #dcf3e4 0%, #f0f7f2 100%);
     padding-bottom: 8px;
 }
 
-/* Top App Bar */
 .top-nav {
     display: flex;
     justify-content: space-between;
@@ -79,14 +77,14 @@ body {
     margin-top: -4px;
 }
 
-/* Agro 3D Hero Poster */
+/* Real High-Res Banner Frame */
 .hero-banner-container {
-    margin: 6px 16px 16px;
-    border-radius: 24px;
+    margin: 6px 14px 14px;
+    border-radius: 22px;
     overflow: hidden;
     position: relative;
-    box-shadow: 0 12px 28px rgba(18, 55, 36, 0.16);
-    border: 3px solid #ffffff;
+    box-shadow: 0 10px 24px rgba(18, 55, 36, 0.16);
+    border: 2px solid #ffffff;
     height: 195px;
     background: #0f3822;
 }
@@ -95,44 +93,10 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center 25%;
 }
 
-.hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(8,33,19,0.88) 100%);
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.hero-badge-top {
-    align-self: flex-start;
-    background: #ffffff;
-    color: #0f3822;
-    font-size: 11px;
-    font-weight: 800;
-    padding: 4px 12px;
-    border-radius: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-}
-
-.hero-text-bottom h2 {
-    color: #ffffff;
-    font-size: 22px;
-    font-weight: 900;
-    line-height: 1.15;
-}
-
-.hero-text-bottom p {
-    color: #bbf7d0;
-    font-size: 12px;
-    font-weight: 700;
-    margin-top: 3px;
-}
-
-/* 5 Capsule App Buttons */
+/* 5 Capsule Buttons */
 .action-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -158,11 +122,6 @@ body {
     justify-content: center;
     box-shadow: 0 8px 18px rgba(18, 55, 36, 0.08), inset 0 -3px 0 rgba(0,0,0,0.05);
     border: 1.5px solid #ffffff;
-    transition: transform 0.15s ease;
-}
-
-.action-capsule:active {
-    transform: scale(0.92);
 }
 
 .action-inner-icon {
@@ -184,21 +143,20 @@ body {
     margin-top: 6px;
 }
 
-/* Button Color Themes */
 .bg-recharge { background: linear-gradient(135deg, #10b981 0%, #047857 100%); }
 .bg-withdraw { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
 .bg-mission  { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); }
 .bg-service  { background: linear-gradient(135deg, #06b6d4 0%, #0e7490 100%); }
 .bg-channel  { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); }
 
-/* High-Gloss Product Cards */
+/* Product Showcase Cards */
 .product-card {
     background: #ffffff;
     margin: 0 14px 20px;
-    border-radius: 28px;
-    padding: 18px 16px;
+    border-radius: 26px;
+    padding: 16px;
     border: 2px solid #ffffff;
-    box-shadow: 0 14px 30px rgba(18, 55, 36, 0.07);
+    box-shadow: 0 12px 28px rgba(18, 55, 36, 0.07);
     position: relative;
 }
 
@@ -209,7 +167,7 @@ body {
 }
 
 .plan-title-head h3 {
-    font-size: 20px;
+    font-size: 19px;
     font-weight: 900;
     color: #0f3822;
 }
@@ -231,69 +189,64 @@ body {
     border: 1px solid #ccebd7;
 }
 
-/* Visual Plan Layout */
+/* Product Media Row */
 .product-visual-box {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: linear-gradient(135deg, #f0f8f3 0%, #e2f2e7 100%);
-    border-radius: 22px;
-    padding: 16px;
-    margin: 14px 0;
-    border: 1px solid #d4ebd9;
+    background: linear-gradient(135deg, #f5faf6 0%, #e6f3eb 100%);
+    border-radius: 20px;
+    padding: 12px 14px;
+    margin: 12px 0;
+    border: 1px solid #d8ebd9;
+    gap: 12px;
 }
 
 .seed-specs {
     font-size: 12px;
-    line-height: 2;
+    line-height: 1.9;
     color: #1e4630;
     font-weight: 700;
+    flex: 1;
 }
 
-/* 3D Seed Pouch Graphic */
-.seed-pouch-3d {
-    width: 105px;
-    height: 135px;
-    background: linear-gradient(145deg, #1b4d35 0%, #2f855a 50%, #15422d 100%);
-    border-radius: 12px 12px 16px 16px;
-    border: 2px solid #a3e635;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2), inset 0 2px 6px rgba(255,255,255,0.4);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 6px;
-    color: #ffffff;
-    text-align: center;
-    position: relative;
+/* Authentic Seed Pouch Frame */
+.official-seed-frame {
+    width: 115px;
+    height: 145px;
+    border-radius: 16px;
     overflow: hidden;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+    border: 2px solid #ffffff;
+    flex-shrink: 0;
+    background: #fff;
 }
 
-.pouch-seal {
+.official-seed-frame img {
     width: 100%;
-    height: 6px;
-    background: repeating-linear-gradient(90deg, #15422d, #15422d 2px, #a3e635 2px, #a3e635 4px);
-    border-radius: 2px;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 60%;
 }
 
 /* 4 Metric Tiles */
 .metric-row {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-bottom: 16px;
+    gap: 7px;
+    margin-bottom: 14px;
 }
 
 .metric-pill {
-    background: #f7faf8;
+    background: #f8fbf9;
     border: 1.5px solid #e2ede5;
-    border-radius: 16px;
-    padding: 10px 4px;
+    border-radius: 14px;
+    padding: 9px 3px;
     text-align: center;
 }
 
 .metric-pill span {
-    font-size: 11px;
+    font-size: 10px;
     color: #628270;
     font-weight: 700;
     display: block;
@@ -307,55 +260,45 @@ body {
     margin-top: 3px;
 }
 
-/* 3D Buy Now Button */
+/* 3D Buy Button */
 .btn-buy-now {
     width: 100%;
     background: linear-gradient(135deg, #1d6a43 0%, #2f9460 100%);
     color: #ffffff;
     border: none;
-    padding: 15px;
-    border-radius: 20px;
-    font-size: 16px;
+    padding: 14px;
+    border-radius: 18px;
+    font-size: 15px;
     font-weight: 900;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     cursor: pointer;
-    box-shadow: 0 8px 22px rgba(29, 106, 67, 0.32);
+    box-shadow: 0 8px 20px rgba(29, 106, 67, 0.32);
     text-decoration: none;
 }
 
-.btn-buy-now:active {
-    transform: scale(0.98);
-}
-
-/* Floating 3D Gift Box */
+/* Floating Reward Box Icon */
 .floating-gift {
     position: absolute;
     right: 14px;
-    bottom: 80px;
-    width: 48px;
-    height: 48px;
+    bottom: 74px;
+    width: 44px;
+    height: 44px;
     background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 22px;
     color: #fff;
-    box-shadow: 0 8px 18px rgba(185, 28, 28, 0.4);
+    box-shadow: 0 6px 16px rgba(185, 28, 28, 0.35);
     cursor: pointer;
-    border: 2.5px solid #ffffff;
-    animation: bounce 2.2s infinite ease-in-out;
+    border: 2px solid #ffffff;
 }
 
-@keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-7px); }
-}
-
-/* Bottom App Navigation */
+/* Bottom App Navigation Bar */
 .bottom-nav {
     position: fixed;
     bottom: 0;
