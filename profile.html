@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile - Annapurna Seeds</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- Supabase JS Client CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .profile-summary {
             background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
@@ -74,6 +76,10 @@
             cursor: not-allowed;
             border: 1px solid #ced4da !important;
         }
+        button:disabled {
+            background: #a3b18a;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -85,18 +91,18 @@
         <div class="user-row">
             <div class="avatar-circle">AS</div>
             <div class="user-details">
-                <h3 id="displayPhone">+91 98XXXXXXXX</h3>
-                <p>Plan: <b id="userPlan">Sprout Plan (₹520)</b></p>
+                <h3 id="displayPhone">+91 0000000000</h3>
+                <p>Plan: <b id="userPlan">No Active Plan</b></p>
             </div>
         </div>
         <div class="balance-metrics">
             <div class="metric-cell">
                 <span>Available Balance</span>
-                <b id="walletBalance">₹650</b>
+                <b id="walletBalance">₹0.00</b>
             </div>
             <div class="metric-cell">
                 <span>Total Commission</span>
-                <b>₹180</b>
+                <b id="totalCommission">₹0.00</b>
             </div>
         </div>
     </div>
@@ -141,7 +147,7 @@
 
         <form onsubmit="handleWithdrawal(event)">
             <div class="input-box">
-                <input type="password" id="withdrawPass" placeholder="Enter Withdrawal Password" required>
+                <input type="password" id="withdrawPass" placeholder="Enter Account Password" required>
             </div>
             <button type="submit" id="withdrawBtn" class="btn-solid">Withdrawal Request Submit</button>
         </form>
@@ -159,10 +165,22 @@
 </div>
 
 <script>
+// Supabase Client Setup
+const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
+const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+// Auth Guard Check
+const savedUserStr = localStorage.getItem('annapurna_user');
+if (!savedUserStr) {
+    window.location.href = 'login.html';
+}
+let currentUser = JSON.parse(savedUserStr || '{}');
+
 let selectedWithdrawSlab = 330;
 let isBankLocked = false;
-let userPlanType = "520"; // 520 = Monday Only, 1500/2500 = Tuesday Only
-let alreadyWithdrawnToday = false;
+let userLiveBalance = 0;
+let userLivePlan = "520";
 
 function selectSlab(amount, element) {
     selectedWithdrawSlab = amount;
@@ -170,64 +188,193 @@ function selectSlab(amount, element) {
     element.classList.add('active');
 }
 
-function saveBankDetails(e) {
-    e.preventDefault();
-    if(confirm("Kya aap inhi details ko lock karna chahte hain? Ek baar lock hone ke baad sirf admin panel se hi badlav ho sakega.")) {
-        isBankLocked = true;
-        
-        document.getElementById('holderName').readOnly = true;
-        document.getElementById('accountNo').readOnly = true;
-        document.getElementById('ifscCode').readOnly = true;
+// UI Lock State
+function applyBankLock(holder, acc, ifsc) {
+    isBankLocked = true;
+    const hInput = document.getElementById('holderName');
+    const aInput = document.getElementById('accountNo');
+    const iInput = document.getElementById('ifscCode');
 
-        document.getElementById('holderName').classList.add('locked-input');
-        document.getElementById('accountNo').classList.add('locked-input');
-        document.getElementById('ifscCode').classList.add('locked-input');
+    hInput.value = holder || '';
+    aInput.value = acc || '';
+    iInput.value = ifsc || '';
 
-        document.getElementById('bankLockStatus').innerText = "Locked 🔒";
-        document.getElementById('bankLockStatus').style.color = "#2d6a4f";
-        document.getElementById('saveBankBtn').style.display = "none";
-        
-        alert("Bank account successfully locked to this ID!");
+    hInput.readOnly = true;
+    aInput.readOnly = true;
+    iInput.readOnly = true;
+
+    hInput.classList.add('locked-input');
+    aInput.classList.add('locked-input');
+    iInput.classList.add('locked-input');
+
+    document.getElementById('bankLockStatus').innerText = "Locked 🔒";
+    document.getElementById('bankLockStatus').style.color = "#2d6a4f";
+    document.getElementById('saveBankBtn').style.display = "none";
+}
+
+// Load Fresh User Details from Supabase
+async function loadUserData() {
+    try {
+        const { data, error } = await client
+            .from('users')
+            .select('*')
+            .eq('mobile', currentUser.mobile)
+            .single();
+
+        if (error || !data) return;
+
+        currentUser = data;
+        localStorage.setItem('annapurna_user', JSON.stringify(data));
+
+        document.getElementById('displayPhone').innerText = "+91 " + data.mobile;
+        userLiveBalance = Number(data.balance || 0);
+        document.getElementById('walletBalance').innerText = "₹" + userLiveBalance.toFixed(2);
+        document.getElementById('totalCommission').innerText = "₹" + Number(data.commission || 0).toFixed(2);
+
+        userLivePlan = data.active_plan ? String(data.active_plan) : "520";
+        document.getElementById('userPlan').innerText = data.active_plan ? `Plan ₹${data.active_plan}` : "Sprout Plan (₹520)";
+
+        // Check if bank is already locked
+        if (data.bank_account && data.bank_holder) {
+            applyBankLock(data.bank_holder, data.bank_account, data.bank_ifsc);
+        }
+    } catch (err) {
+        console.error("Profile load error:", err);
     }
 }
 
-function handleWithdrawal(e) {
+loadUserData();
+
+// Bind Bank Details to Supabase
+async function saveBankDetails(e) {
     e.preventDefault();
+    const holder = document.getElementById('holderName').value.trim();
+    const acc = document.getElementById('accountNo').value.trim();
+    const ifsc = document.getElementById('ifscCode').value.trim().toUpperCase();
+
+    if (!confirm("Kya aap inhi details ko lock karna chahte hain? Ek baar lock hone ke baad badlav nahi hoga.")) {
+        return;
+    }
+
+    const btn = document.getElementById('saveBankBtn');
+    btn.disabled = true;
+    btn.innerText = "Locking...";
+
+    try {
+        const { error } = await client
+            .from('users')
+            .update({
+                bank_holder: holder,
+                bank_account: acc,
+                bank_ifsc: ifsc
+            })
+            .eq('mobile', currentUser.mobile);
+
+        if (error) throw error;
+
+        applyBankLock(holder, acc, ifsc);
+        alert("Bank account successfully locked to this ID!");
+    } catch (err) {
+        alert("Bank details lock nahi ho saki: " + err.message);
+        btn.disabled = false;
+        btn.innerText = "Bind & Lock Bank Account";
+    }
+}
+
+// Handle Withdrawal Request
+async function handleWithdrawal(e) {
+    e.preventDefault();
+    const pass = document.getElementById('withdrawPass').value;
+    const btn = document.getElementById('withdrawBtn');
 
     // 1. Bank Binding Check
     if (!isBankLocked) {
-        alert("Pehle apna Bank Account enter karke Bind & Lock karein!");
+        alert("Pehle apna Bank Account bind & lock karein!");
         return;
     }
 
-    // 2. Frequency Check (1 per day)
-    if (alreadyWithdrawnToday) {
-        alert("Aap aaj ka 1 withdrawal request submit kar chuke hain. Agla request kal lagayein.");
+    // 2. Password Check
+    if (pass !== currentUser.password) {
+        alert("Galat password darj kiya hai!");
         return;
     }
 
-    // 3. Day of week rule
+    // 3. Day Rule Check
     const currentDay = new Date().getDay(); // 1 = Monday, 2 = Tuesday
-    if (userPlanType === "520" && currentDay !== 1) {
-        alert("₹520 Plan wale accounts ka withdrawal sirf Monday ko allowed hai!");
+    if (userLivePlan === "520" && currentDay !== 1) {
+        alert("₹520 Plan ke liye withdrawal sirf Monday ko allowed hai!");
         return;
     }
-    if ((userPlanType === "1500" || userPlanType === "2500") && currentDay !== 2) {
-        alert("Aapke plan ka withdrawal sirf Tuesday ko allowed hai!");
+    if ((userLivePlan === "1500" || userLivePlan === "2500") && currentDay !== 2) {
+        alert("Aapke plan ke liye withdrawal sirf Tuesday ko allowed hai!");
         return;
     }
 
     // 4. Balance Check
-    const currentBalance = 650;
-    if (currentBalance < selectedWithdrawSlab) {
-        alert("Insufficient balance for this slab!");
+    if (userLiveBalance < selectedWithdrawSlab) {
+        alert("Insufficient balance! Aapka balance ₹" + userLiveBalance + " hai.");
         return;
     }
 
-    alreadyWithdrawnToday = true;
-    alert(`Withdrawal request of ₹${selectedWithdrawSlab} submitted successfully! Slabs are processed during office hours.`);
+    btn.disabled = true;
+    btn.innerText = "Processing...";
+
+    try {
+        // Daily frequency check: Check if already submitted withdrawal today
+        const todayStart = new Date();
+        todayStart.setHours(0, 0, 0, 0);
+
+        const { data: recentWd, error: wdCheckErr } = await client
+            .from('withdrawals')
+            .select('id')
+            .eq('mobile', currentUser.mobile)
+            .gte('created_at', todayStart.toISOString());
+
+        if (recentWd && recentWd.length > 0) {
+            alert("Aap aaj ka 1 withdrawal request pehle hi submit kar chuke hain!");
+            btn.disabled = false;
+            btn.innerText = "Withdrawal Request Submit";
+            return;
+        }
+
+        // Insert into withdrawals table
+        const { error: insertErr } = await client
+            .from('withdrawals')
+            .insert([
+                {
+                    user_id: currentUser.id || null,
+                    mobile: currentUser.mobile,
+                    amount: selectedWithdrawSlab,
+                    bank_holder: currentUser.bank_holder || document.getElementById('holderName').value,
+                    bank_account: currentUser.bank_account || document.getElementById('accountNo').value,
+                    bank_ifsc: currentUser.bank_ifsc || document.getElementById('ifscCode').value,
+                    status: 'pending'
+                }
+            ]);
+
+        if (insertErr) throw insertErr;
+
+        // Deduct balance in users table
+        const updatedBalance = userLiveBalance - selectedWithdrawSlab;
+        await client
+            .from('users')
+            .update({ balance: updatedBalance })
+            .eq('mobile', currentUser.mobile);
+
+        userLiveBalance = updatedBalance;
+        document.getElementById('walletBalance').innerText = "₹" + updatedBalance.toFixed(2);
+        document.getElementById('withdrawPass').value = '';
+
+        alert(`Withdrawal request of ₹${selectedWithdrawSlab} submitted successfully! Slabs are processed during office hours.`);
+    } catch (err) {
+        alert("Withdrawal fail ho gaya: " + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "Withdrawal Request Submit";
+    }
 }
 </script>
 
 </body>
-</html>
+            </html>
+            
