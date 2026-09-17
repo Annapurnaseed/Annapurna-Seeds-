@@ -4,234 +4,218 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recharge - Annapurna Seeds</title>
-    <link rel="stylesheet" href="css/style.css">
-    <!-- Supabase JS Client CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        .qr-card {
-            background: #ffffff;
-            margin: 15px;
-            padding: 20px;
-            border-radius: 20px;
-            text-align: center;
-            border: 1px solid #ddecde;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        .qr-box {
-            width: 190px;
-            height: 190px;
-            margin: 12px auto;
-            border: 2px dashed #2d6a4f;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f8fcf9;
-            padding: 8px;
-        }
-        .qr-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-        .copy-chip {
-            background: #eef7f0;
-            border: 1px solid #c7e8cf;
-            padding: 8px 14px;
-            border-radius: 25px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #1b4332;
-            cursor: pointer;
-            margin-top: 6px;
-        }
-        .amount-selector {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .amt-btn {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ddecde;
-            background: #ffffff;
-            border-radius: 12px;
-            font-weight: 700;
-            color: #2d6a4f;
-            cursor: pointer;
-        }
-        .amt-btn.selected {
-            background: #2d6a4f;
-            color: #ffffff;
-            border-color: #2d6a4f;
-        }
-        button:disabled {
-            background: #a3b18a;
-            cursor: not-allowed;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background: #eef6f0 url('bg-agro.png') center top/contain no-repeat fixed; min-height: 100vh; display: flex; justify-content: center; }
+        .mobile-wrapper { width: 100%; max-width: 420px; background: rgba(244, 250, 245, 0.94); backdrop-filter: blur(12px); min-height: 100vh; padding-bottom: 95px; }
+
+        /* Top Header */
+        .top-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; }
+        .back-circle { width: 36px; height: 36px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: #1e5e3a; text-decoration: none; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+        .wallet-pill { background: linear-gradient(135deg, #2ecc71, #1e824c); color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 800; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(30,130,76,0.25); }
+
+        /* Brand Head */
+        .brand-logo-row { text-align: center; margin-bottom: 12px; }
+        .brand-logo-row h2 { font-size: 20px; font-weight: 900; color: #0d3820; }
+        .brand-logo-row span { font-size: 11px; color: #2e7d32; font-style: italic; }
+
+        /* Card 1: Amount Selection (Kaveri Screenshot Exact) */
+        .clay-card { background: #ffffff; margin: 0 14px 14px; border-radius: 26px; padding: 18px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1.5px solid #e1eee4; }
+        .card-title-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+        .title-icon { width: 36px; height: 36px; border-radius: 12px; background: linear-gradient(135deg, #2ecc71, #1e824c); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+        .title-meta h3 { font-size: 15px; font-weight: 900; color: #123e24; }
+        .title-meta p { font-size: 11px; color: #648a72; }
+
+        /* Sunken Input Box */
+        .sunken-input { background: #f0f7f2; border-radius: 20px; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; box-shadow: inset 0 2px 4px rgba(0,0,0,0.06); border: 1px solid #dcece0; margin-bottom: 16px; }
+        .sunken-input span { font-size: 16px; font-weight: 900; color: #123e24; }
+        .sunken-input input { border: none; background: transparent; font-size: 16px; font-weight: 900; color: #123e24; outline: none; width: 80%; }
+
+        /* Amount Slabs (6 Buttons) */
+        .amount-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .amt-chip { background: #f4fbf6; border: 1.5px solid #ddecde; border-radius: 16px; padding: 11px 4px; text-align: center; font-size: 13px; font-weight: 800; color: #2d6a4f; cursor: pointer; transition: all 0.15s; }
+        .amt-chip.active { background: linear-gradient(180deg, #2ecc71 0%, #1e824c 100%); color: #fff; border-color: #1e824c; box-shadow: 0 4px 12px rgba(30,130,76,0.3); }
+
+        /* Card 2: Payment Method (PAY-A, B, C, D) */
+        .gateway-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+        .gw-chip { background: #f4fbf6; border: 1.5px solid #ddecde; border-radius: 16px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+        .gw-left { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; color: #123e24; }
+        .gw-icon { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #fff; }
+        .gw-radio { width: 14px; height: 14px; border-radius: 50%; border: 2px solid #a3e635; }
+        .gw-chip.active .gw-radio { background: #27ae60; border-color: #27ae60; }
+
+        /* Big Green Shiny Pay Button */
+        .btn-proceed { width: 100%; background: linear-gradient(180deg, #2ecc71 0%, #1e824c 100%); border: none; border-radius: 28px; padding: 14px; color: #fff; font-size: 15px; font-weight: 900; cursor: pointer; box-shadow: 0 8px 20px rgba(30,130,76,0.35); text-align: center; display: block; text-decoration: none; }
+
+        /* UTR Form Sunken Box */
+        .utr-wrap { margin-top: 14px; padding-top: 14px; border-top: 1px dashed #e1eee4; }
+        .utr-input { width: 100%; background: #f0f7f2; border: 1px solid #dcece0; border-radius: 16px; padding: 12px 14px; font-size: 13px; font-weight: 700; color: #123e24; outline: none; margin-bottom: 10px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.06); }
     </style>
 </head>
 <body>
 
 <div class="mobile-wrapper">
 
-    <div class="brand-header">
-        <div class="brand-nav">
-            <a href="index.html" style="color: #fff; text-decoration: none; font-size: 18px;">← Back</a>
-            <div class="brand-title">Recharge Wallet</div>
-            <div class="brand-badge">Step 1 of 2</div>
+    <!-- Top Header -->
+    <div class="top-header">
+        <a href="index.html" class="back-circle">❮</a>
+        <div class="wallet-pill">
+            <span>👛 Wallet:</span>
+            <b id="userWalletTop">₹0.00</b>
         </div>
     </div>
 
-    <!-- Amount Selection -->
-    <div class="glass-card">
-        <div class="card-title" style="margin-bottom: 10px;">Select Plan Amount</div>
-        <div class="amount-selector">
-            <button class="amt-btn selected" onclick="setAmount(520, this)">₹520</button>
-            <button class="amt-btn" onclick="setAmount(1500, this)">₹1,500</button>
-            <button class="amt-btn" onclick="setAmount(2500, this)">₹2,500</button>
-        </div>
-        <div class="input-box" style="margin-bottom: 0;">
-            <span>₹</span>
-            <input type="number" id="rechargeAmt" value="520" readonly>
-        </div>
+    <div class="brand-logo-row">
+        <h2>🌾 Annapurna Seeds</h2>
+        <span>Fast & Secure Payment Terminal</span>
     </div>
 
-    <!-- Manual UPI Details & QR -->
-    <div class="qr-card">
-        <p style="font-size: 13px; color: #557262;">Scan QR or copy UPI ID to pay using PhonePe / GPay / Paytm</p>
-        
-        <div class="qr-box">
-            <!-- Replace with your actual UPI QR Image link -->
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=YOUR_UPI_ID@okaxis&pn=AnnapurnaSeeds" alt="UPI QR">
-        </div>
-
-        <div class="copy-chip" onclick="copyUPI()">
-            <span id="upiText">annapurnaseeds@upi</span>
-            <span style="color: #2d6a4f;">📋 Copy</span>
-        </div>
-    </div>
-
-    <!-- UTR Submission Box -->
-    <div class="glass-card">
-        <div class="card-title">Submit Verification (UTR)</div>
-        <p style="font-size: 12px; color: #777; margin-bottom: 12px;">Payment ke baad bank se mila 12-digit UTR / Ref number yahan darj karein:</p>
-        
-        <form id="utrForm" onsubmit="submitUTR(event)">
-            <div class="input-box">
-                <input type="text" id="utrInput" placeholder="Enter 12-Digit UTR Number" maxlength="12" required pattern="[0-9]{12}">
+    <!-- Card 1: Amount Selection -->
+    <div class="clay-card">
+        <div class="card-title-row">
+            <div class="title-icon">💳</div>
+            <div class="title-meta">
+                <h3>Recharge Amount</h3>
+                <p>Enter the amount you want to add</p>
             </div>
-            <button type="submit" id="submitBtn" class="btn-solid">Submit Payment for Approval</button>
-        </form>
+        </div>
+
+        <div class="sunken-input">
+            <span>₹</span>
+            <input type="number" id="amtDisplay" value="520" readonly>
+            <span style="font-size: 13px; color: #94b8a1; cursor: pointer;">✕</span>
+        </div>
+
+        <div class="amount-grid">
+            <div class="amt-chip active" onclick="setAmt(520, this)">₹520</div>
+            <div class="amt-chip" onclick="setAmt(2120, this)">₹2,120</div>
+            <div class="amt-chip" onclick="setAmt(4920, this)">₹4,920</div>
+            <div class="amt-chip" onclick="setAmt(9820, this)">₹9,820</div>
+            <div class="amt-chip" onclick="setAmt(19820, this)">₹19,820</div>
+            <div class="amt-chip" onclick="setAmt(29200, this)">₹29,200</div>
+        </div>
     </div>
 
-    <!-- Bottom Navigation -->
-    <div class="footer-nav">
-        <a href="index.html" class="nav-link">🏠<span>Home</span></a>
-        <a href="tasks.html" class="nav-link">📋<span>Tasks</span></a>
-        <a href="community.html" class="nav-link">💬<span>Community</span></a>
-        <a href="team.html" class="nav-link">👥<span>Team</span></a>
-        <a href="profile.html" class="nav-link active">👤<span>My</span></a>
+    <!-- Card 2: Payment Gateway Selection -->
+    <div class="clay-card">
+        <div class="card-title-row">
+            <div class="title-icon">🏧</div>
+            <div class="title-meta">
+                <h3>Select Payment Method</h3>
+                <p>Choose your preferred payment channel</p>
+            </div>
+        </div>
+
+        <div class="gateway-grid">
+            <div class="gw-chip active" onclick="selectGateway('A', this)">
+                <div class="gw-left">
+                    <div class="gw-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">💳</div>
+                    <span>PAY-A</span>
+                </div>
+                <div class="gw-radio"></div>
+            </div>
+            <div class="gw-chip" onclick="selectGateway('B', this)">
+                <div class="gw-left">
+                    <div class="gw-icon" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);">💳</div>
+                    <span>PAY-B</span>
+                </div>
+                <div class="gw-radio"></div>
+            </div>
+            <div class="gw-chip" onclick="selectGateway('C', this)">
+                <div class="gw-left">
+                    <div class="gw-icon" style="background: linear-gradient(135deg, #10b981, #047857);">💳</div>
+                    <span>PAY-C</span>
+                </div>
+                <div class="gw-radio"></div>
+            </div>
+            <div class="gw-chip" onclick="selectGateway('D', this)">
+                <div class="gw-left">
+                    <div class="gw-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">💳</div>
+                    <span>PAY-D</span>
+                </div>
+                <div class="gw-radio"></div>
+            </div>
+        </div>
+
+        <!-- UTR Submission Box -->
+        <div class="utr-wrap">
+            <p style="font-size: 11px; color: #557262; margin-bottom: 8px;">UPI se pay karne ke baad mila 12-digit UTR number yahan daalein:</p>
+            <input type="text" id="utrInput" class="utr-input" placeholder="Enter 12-digit UTR / Ref No." maxlength="12">
+            <button class="btn-proceed" id="payBtn" onclick="submitRecharge()">Proceed to Pay ₹520</button>
+        </div>
     </div>
 
 </div>
 
 <script>
-// Supabase Client Setup
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-// Auth Guard Check
-const savedUserStr = localStorage.getItem('annapurna_user');
-if (!savedUserStr) {
-    alert("Kripya pehle login karein!");
-    window.location.href = 'login.html';
-}
-const currentUser = JSON.parse(savedUserStr || '{}');
+const savedUser = JSON.parse(localStorage.getItem('annapurna_user') || '{}');
+if (!savedUser.mobile) { window.location.href = 'login.html'; }
 
-// URL se parameter check karna (?plan=1500)
-const urlParams = new URLSearchParams(window.location.search);
-const planParam = urlParams.get('plan');
+let currentSelectedAmt = 520;
+
+// URL parameter check (?plan=1500)
+const params = new URLSearchParams(window.location.search);
+const planParam = params.get('plan');
 if (planParam) {
-    document.getElementById('rechargeAmt').value = planParam;
-    document.querySelectorAll('.amt-btn').forEach(b => {
-        if (b.innerText.replace(/[^0-9]/g, '') === planParam) {
-            b.classList.add('selected');
-        } else {
-            b.classList.remove('selected');
-        }
-    });
+    currentSelectedAmt = Number(planParam);
+    document.getElementById('amtDisplay').value = currentSelectedAmt;
+    document.getElementById('payBtn').innerText = `Proceed to Pay ₹${currentSelectedAmt}`;
 }
 
-function setAmount(amt, btn) {
-    document.getElementById('rechargeAmt').value = amt;
-    document.querySelectorAll('.amt-btn').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
+async function loadBalance() {
+    const { data } = await client.from('users').select('balance').eq('mobile', savedUser.mobile).single();
+    if (data) {
+        document.getElementById('userWalletTop').innerText = "₹" + Number(data.balance || 0).toFixed(2);
+    }
+}
+loadBalance();
+
+function setAmt(val, el) {
+    currentSelectedAmt = val;
+    document.getElementById('amtDisplay').value = val;
+    document.querySelectorAll('.amt-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('payBtn').innerText = `Proceed to Pay ₹${val}`;
 }
 
-function copyUPI() {
-    const upi = document.getElementById('upiText').innerText;
-    navigator.clipboard.writeText(upi);
-    alert("UPI ID copied: " + upi);
+function selectGateway(gw, el) {
+    document.querySelectorAll('.gw-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
 }
 
-async function submitUTR(e) {
-    e.preventDefault();
-    const btn = document.getElementById('submitBtn');
+async function submitRecharge() {
     const utr = document.getElementById('utrInput').value.trim();
-    const amount = Number(document.getElementById('rechargeAmt').value);
-
     if (utr.length !== 12) {
-        alert("Kripya sahi 12-digit ka UTR number dalein!");
+        alert("Kripya 12-digit ka sahi UTR number darj karein!");
         return;
     }
 
+    const btn = document.getElementById('payBtn');
     btn.disabled = true;
     btn.innerText = "Submitting...";
 
     try {
-        // 1. Check duplicate UTR
-        const { data: existingUtr, error: checkError } = await client
-            .from('recharges')
-            .select('utr')
-            .eq('utr', utr)
-            .maybeSingle();
+        const { error } = await client.from('recharges').insert([{
+            mobile: savedUser.mobile,
+            amount: currentSelectedAmt,
+            utr: utr,
+            status: 'pending'
+        }]);
 
-        if (existingUtr) {
-            alert("Yeh UTR number pehle hi submit kiya ja chuka hai!");
-            btn.disabled = false;
-            btn.innerText = "Submit Payment for Approval";
-            return;
-        }
+        if (error) throw error;
 
-        // 2. Insert into Supabase 'recharges' table
-        const { error: insertError } = await client
-            .from('recharges')
-            .insert([
-                {
-                    user_id: currentUser.id || null,
-                    mobile: currentUser.mobile,
-                    amount: amount,
-                    utr: utr,
-                    status: 'pending'
-                }
-            ]);
-
-        if (insertError) throw insertError;
-
-        alert(`Payment request of ₹${amount} with UTR: ${utr} successfully submit ho gayi hai! Admin verify karke 15 minute me approve kar dega.`);
+        alert(`Recharge request of ₹${currentSelectedAmt} with UTR: ${utr} successfully submit ho gayi! Admin approve karega.`);
         window.location.href = "profile.html";
-
-    } catch (err) {
-        console.error("UTR Submit error:", err);
-        alert("Submit nahi ho paya: " + (err.message || 'Database connection error'));
+    } catch (e) {
+        alert("Error: " + e.message);
     } finally {
         btn.disabled = false;
-        btn.innerText = "Submit Payment for Approval";
+        btn.innerText = `Proceed to Pay ₹${currentSelectedAmt}`;
     }
 }
 </script>
