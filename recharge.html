@@ -6,146 +6,472 @@
     <title>Recharge - Annapurna Seeds</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background: #eef6f0 url('bg-agro.png') center top/contain no-repeat fixed; min-height: 100vh; display: flex; justify-content: center; }
-        .mobile-wrapper { width: 100%; max-width: 420px; background: rgba(244, 250, 245, 0.94); backdrop-filter: blur(12px); min-height: 100vh; padding-bottom: 95px; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-        /* Top Header */
-        .top-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; }
-        .back-circle { width: 36px; height: 36px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: #1e5e3a; text-decoration: none; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
-        .wallet-pill { background: linear-gradient(135deg, #2ecc71, #1e824c); color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 800; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(30,130,76,0.25); }
+        body {
+            background-color: #dcefe3;
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(163, 230, 53, 0.25) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(34, 197, 94, 0.2) 0%, transparent 40%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
 
-        /* Brand Head */
-        .brand-logo-row { text-align: center; margin-bottom: 12px; }
-        .brand-logo-row h2 { font-size: 20px; font-weight: 900; color: #0d3820; }
-        .brand-logo-row span { font-size: 11px; color: #2e7d32; font-style: italic; }
+        .mobile-wrapper {
+            width: 100%;
+            max-width: 420px;
+            background: #eef8f2;
+            min-height: 100vh;
+            padding: 12px 14px 100px;
+            position: relative;
+            box-shadow: 0 0 35px rgba(0, 0, 0, 0.08);
+        }
 
-        /* Card 1: Amount Selection (Kaveri Screenshot Exact) */
-        .clay-card { background: #ffffff; margin: 0 14px 14px; border-radius: 26px; padding: 18px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1.5px solid #e1eee4; }
-        .card-title-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-        .title-icon { width: 36px; height: 36px; border-radius: 12px; background: linear-gradient(135deg, #2ecc71, #1e824c); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-        .title-meta h3 { font-size: 15px; font-weight: 900; color: #123e24; }
-        .title-meta p { font-size: 11px; color: #648a72; }
+        /* Top Header Bar */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .btn-circle-back {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1b4332;
+            font-size: 18px;
+            font-weight: 900;
+            text-decoration: none;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06), inset 0 2px 2px #ffffff;
+            border: 1px solid #e2f0e6;
+        }
+
+        .wallet-pill {
+            background: linear-gradient(180deg, #22c55e 0%, #15803d 100%);
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 6px 16px rgba(21, 128, 61, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+        }
+        .wallet-pill .icon { font-size: 16px; }
+        .wallet-pill .meta { display: flex; flex-direction: column; text-align: left; line-height: 1.1; }
+        .wallet-pill .meta span { font-size: 10px; opacity: 0.9; }
+        .wallet-pill .meta b { font-size: 14px; font-weight: 800; letter-spacing: 0.3px; }
+
+        /* Brand Center */
+        .brand-section {
+            text-align: center;
+            margin: 6px 0 16px;
+        }
+        .brand-section h1 {
+            font-size: 26px;
+            font-weight: 900;
+            color: #0d3820;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .brand-section p {
+            font-size: 11px;
+            color: #2d6a4f;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+        .banner-slogan {
+            font-size: 16px;
+            font-weight: 800;
+            color: #123e24;
+            font-style: italic;
+            margin-top: 8px;
+        }
+
+        /* Clay 3D Cards */
+        .clay-card {
+            background: #ffffff;
+            border-radius: 30px;
+            padding: 22px 18px;
+            margin-bottom: 16px;
+            box-shadow: 0 12px 30px rgba(18, 62, 36, 0.06), 0 2px 6px rgba(0, 0, 0, 0.02);
+            border: 1.5px solid #ffffff;
+        }
+
+        .card-header-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .clay-round-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #ffffff;
+            box-shadow: 0 6px 14px rgba(34, 197, 94, 0.35);
+        }
+
+        .header-text h3 {
+            font-size: 17px;
+            font-weight: 900;
+            color: #113820;
+        }
+        .header-text p {
+            font-size: 11px;
+            color: #648a72;
+            font-weight: 600;
+            margin-top: 2px;
+        }
 
         /* Sunken Input Box */
-        .sunken-input { background: #f0f7f2; border-radius: 20px; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; box-shadow: inset 0 2px 4px rgba(0,0,0,0.06); border: 1px solid #dcece0; margin-bottom: 16px; }
-        .sunken-input span { font-size: 16px; font-weight: 900; color: #123e24; }
-        .sunken-input input { border: none; background: transparent; font-size: 16px; font-weight: 900; color: #123e24; outline: none; width: 80%; }
+        .sunken-input-box {
+            background: #f1f8f3;
+            border-radius: 20px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.08);
+            border: 1px solid #ddecde;
+            margin-bottom: 16px;
+        }
+        .currency-symbol {
+            font-size: 18px;
+            font-weight: 900;
+            color: #166534;
+            margin-right: 8px;
+        }
+        .sunken-input-box input {
+            border: none;
+            background: transparent;
+            font-size: 18px;
+            font-weight: 900;
+            color: #113820;
+            outline: none;
+            width: 100%;
+        }
+        .clear-btn {
+            color: #94a3b8;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
 
-        /* Amount Slabs (6 Buttons) */
-        .amount-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .amt-chip { background: #f4fbf6; border: 1.5px solid #ddecde; border-radius: 16px; padding: 11px 4px; text-align: center; font-size: 13px; font-weight: 800; color: #2d6a4f; cursor: pointer; transition: all 0.15s; }
-        .amt-chip.active { background: linear-gradient(180deg, #2ecc71 0%, #1e824c 100%); color: #fff; border-color: #1e824c; box-shadow: 0 4px 12px rgba(30,130,76,0.3); }
+        /* Slabs Grid */
+        .slabs-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        .slab-pill {
+            background: #f1f8f3;
+            border: 1.5px solid #dcece0;
+            border-radius: 16px;
+            padding: 12px 4px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 800;
+            color: #1b4332;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.03);
+            transition: all 0.15s;
+        }
+        .slab-pill.active {
+            background: linear-gradient(180deg, #22c55e 0%, #15803d 100%);
+            color: #ffffff;
+            border-color: #15803d;
+            box-shadow: 0 6px 14px rgba(21, 128, 61, 0.35);
+        }
 
-        /* Card 2: Payment Method (PAY-A, B, C, D) */
-        .gateway-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
-        .gw-chip { background: #f4fbf6; border: 1.5px solid #ddecde; border-radius: 16px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
-        .gw-left { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; color: #123e24; }
-        .gw-icon { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #fff; }
-        .gw-radio { width: 14px; height: 14px; border-radius: 50%; border: 2px solid #a3e635; }
-        .gw-chip.active .gw-radio { background: #27ae60; border-color: #27ae60; }
+        /* Payment Channel Buttons (PAY-A, B, C, D) */
+        .gateway-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        .gateway-pill {
+            background: #f1f8f3;
+            border: 1.5px solid #dcece0;
+            border-radius: 20px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.03);
+        }
+        .gw-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 900;
+            color: #113820;
+        }
+        .gw-badge {
+            width: 32px;
+            height: 32px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #ffffff;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.12);
+        }
+        .badge-blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .badge-purple { background: linear-gradient(135deg, #a855f7, #7e22ce); }
+        .badge-green { background: linear-gradient(135deg, #22c55e, #15803d); }
+        .badge-orange { background: linear-gradient(135deg, #f97316, #c2410c); }
 
-        /* Big Green Shiny Pay Button */
-        .btn-proceed { width: 100%; background: linear-gradient(180deg, #2ecc71 0%, #1e824c 100%); border: none; border-radius: 28px; padding: 14px; color: #fff; font-size: 15px; font-weight: 900; cursor: pointer; box-shadow: 0 8px 20px rgba(30,130,76,0.35); text-align: center; display: block; text-decoration: none; }
+        .gw-radio-indicator {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid #86efac;
+            background: #ffffff;
+        }
+        .gateway-pill.active .gw-radio-indicator {
+            background: #16a34a;
+            border-color: #16a34a;
+            box-shadow: 0 0 0 2px #dcfce7;
+        }
 
-        /* UTR Form Sunken Box */
-        .utr-wrap { margin-top: 14px; padding-top: 14px; border-top: 1px dashed #e1eee4; }
-        .utr-input { width: 100%; background: #f0f7f2; border: 1px solid #dcece0; border-radius: 16px; padding: 12px 14px; font-size: 13px; font-weight: 700; color: #123e24; outline: none; margin-bottom: 10px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.06); }
+        /* 3D Big Glossy Proceed Button */
+        .btn-proceed {
+            width: 100%;
+            background: linear-gradient(180deg, #22c55e 0%, #15803d 100%);
+            border: none;
+            border-radius: 26px;
+            padding: 16px;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            box-shadow: 0 10px 24px rgba(21, 128, 61, 0.4), inset 0 2px 2px rgba(255, 255, 255, 0.4);
+            transition: transform 0.1s;
+        }
+        .btn-proceed:active {
+            transform: scale(0.98);
+        }
+
+        /* UTR Modal Popup */
+        .utr-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .modal-box {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 22px;
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        .qr-placeholder {
+            width: 160px;
+            height: 160px;
+            background: #f1f8f3;
+            border-radius: 16px;
+            margin: 12px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            border: 2px dashed #86efac;
+        }
+
+        /* Floating 4-Circle Bottom Icons */
+        .floating-bottom-bar {
+            position: fixed;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 10px;
+            z-index: 100;
+        }
+        .circle-nav-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(180deg, #22c55e 0%, #15803d 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 20px;
+            text-decoration: none;
+            box-shadow: 0 8px 18px rgba(21, 128, 61, 0.4), inset 0 2px 2px rgba(255, 255, 255, 0.4);
+            transition: transform 0.15s;
+        }
+        .circle-nav-btn:active {
+            transform: scale(0.92);
+        }
     </style>
 </head>
 <body>
 
 <div class="mobile-wrapper">
 
-    <!-- Top Header -->
-    <div class="top-header">
-        <a href="index.html" class="back-circle">❮</a>
+    <!-- Header Navigation -->
+    <div class="top-nav">
+        <a href="index.html" class="btn-circle-back">‹</a>
         <div class="wallet-pill">
-            <span>👛 Wallet:</span>
-            <b id="userWalletTop">₹0.00</b>
+            <span class="icon">👛</span>
+            <div class="meta">
+                <span>Wallet</span>
+                <b id="userWalletVal">₹0.00</b>
+            </div>
         </div>
     </div>
 
-    <div class="brand-logo-row">
-        <h2>🌾 Annapurna Seeds</h2>
-        <span>Fast & Secure Payment Terminal</span>
+    <!-- Annapurna Brand Head -->
+    <div class="brand-section">
+        <h1>🌾 Annapurna</h1>
+        <p>Seeds For A Better Tomorrow</p>
+        <div class="banner-slogan">Recharge Today • Grow Tomorrow 🌱</div>
     </div>
 
     <!-- Card 1: Amount Selection -->
     <div class="clay-card">
-        <div class="card-title-row">
-            <div class="title-icon">💳</div>
-            <div class="title-meta">
+        <div class="card-header-row">
+            <div class="clay-round-icon">💳</div>
+            <div class="header-text">
                 <h3>Recharge Amount</h3>
-                <p>Enter the amount you want to add</p>
+                <p>Enter the amount you want to add to your wallet</p>
             </div>
         </div>
 
-        <div class="sunken-input">
-            <span>₹</span>
-            <input type="number" id="amtDisplay" value="520" readonly>
-            <span style="font-size: 13px; color: #94b8a1; cursor: pointer;">✕</span>
+        <!-- Sunken Input Box -->
+        <div class="sunken-input-box">
+            <span class="currency-symbol">₹</span>
+            <input type="number" id="amtInput" value="520">
+            <span class="clear-btn" onclick="clearInput()">✕</span>
         </div>
 
-        <div class="amount-grid">
-            <div class="amt-chip active" onclick="setAmt(520, this)">₹520</div>
-            <div class="amt-chip" onclick="setAmt(2120, this)">₹2,120</div>
-            <div class="amt-chip" onclick="setAmt(4920, this)">₹4,920</div>
-            <div class="amt-chip" onclick="setAmt(9820, this)">₹9,820</div>
-            <div class="amt-chip" onclick="setAmt(19820, this)">₹19,820</div>
-            <div class="amt-chip" onclick="setAmt(29200, this)">₹29,200</div>
+        <!-- Slabs Grid -->
+        <div class="slabs-grid">
+            <div class="slab-pill active" onclick="pickSlab(520, this)">₹520</div>
+            <div class="slab-pill" onclick="pickSlab(2120, this)">₹2,120</div>
+            <div class="slab-pill" onclick="pickSlab(4920, this)">₹4,920</div>
+            <div class="slab-pill" onclick="pickSlab(9820, this)">₹9,820</div>
+            <div class="slab-pill" onclick="pickSlab(19820, this)" style="grid-column: span 2;">₹19,820</div>
+            <div class="slab-pill" onclick="pickSlab(29200, this)" style="grid-column: span 2;">₹29,200</div>
         </div>
     </div>
 
-    <!-- Card 2: Payment Gateway Selection -->
+    <!-- Card 2: Select Payment Method -->
     <div class="clay-card">
-        <div class="card-title-row">
-            <div class="title-icon">🏧</div>
-            <div class="title-meta">
+        <div class="card-header-row">
+            <div class="clay-round-icon">🏧</div>
+            <div class="header-text">
                 <h3>Select Payment Method</h3>
-                <p>Choose your preferred payment channel</p>
+                <p>Choose your preferred payment option</p>
             </div>
         </div>
 
         <div class="gateway-grid">
-            <div class="gw-chip active" onclick="selectGateway('A', this)">
+            <div class="gateway-pill active" onclick="pickGateway('PAY-A', this)">
                 <div class="gw-left">
-                    <div class="gw-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">💳</div>
+                    <div class="gw-badge badge-blue">💳</div>
                     <span>PAY-A</span>
                 </div>
-                <div class="gw-radio"></div>
+                <div class="gw-radio-indicator"></div>
             </div>
-            <div class="gw-chip" onclick="selectGateway('B', this)">
+
+            <div class="gateway-pill" onclick="pickGateway('PAY-B', this)">
                 <div class="gw-left">
-                    <div class="gw-icon" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);">💳</div>
+                    <div class="gw-badge badge-purple">💳</div>
                     <span>PAY-B</span>
                 </div>
-                <div class="gw-radio"></div>
+                <div class="gw-radio-indicator"></div>
             </div>
-            <div class="gw-chip" onclick="selectGateway('C', this)">
+
+            <div class="gateway-pill" onclick="pickGateway('PAY-C', this)">
                 <div class="gw-left">
-                    <div class="gw-icon" style="background: linear-gradient(135deg, #10b981, #047857);">💳</div>
-                    <span>PAY-C</span>
+                    <div class="gw-badge badge-green">💳</div>
+                    <span>PAY C</span>
                 </div>
-                <div class="gw-radio"></div>
+                <div class="gw-radio-indicator"></div>
             </div>
-            <div class="gw-chip" onclick="selectGateway('D', this)">
+
+            <div class="gateway-pill" onclick="pickGateway('PAY-D', this)">
                 <div class="gw-left">
-                    <div class="gw-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">💳</div>
-                    <span>PAY-D</span>
+                    <div class="gw-badge badge-orange">💳</div>
+                    <span>PAY D</span>
                 </div>
-                <div class="gw-radio"></div>
+                <div class="gw-radio-indicator"></div>
             </div>
         </div>
 
-        <!-- UTR Submission Box -->
-        <div class="utr-wrap">
-            <p style="font-size: 11px; color: #557262; margin-bottom: 8px;">UPI se pay karne ke baad mila 12-digit UTR number yahan daalein:</p>
-            <input type="text" id="utrInput" class="utr-input" placeholder="Enter 12-digit UTR / Ref No." maxlength="12">
-            <button class="btn-proceed" id="payBtn" onclick="submitRecharge()">Proceed to Pay ₹520</button>
-        </div>
+        <button class="btn-proceed" id="proceedBtn" onclick="openPaymentGateway()">
+            Proceed to Pay ₹520
+        </button>
     </div>
 
+    <!-- 4 Round Circular Bottom Nav Floating Icons -->
+    <div class="floating-bottom-bar">
+        <a href="index.html" class="circle-nav-btn" title="Home">⚡</a>
+        <a href="profile.html" class="circle-nav-btn" title="Lock Bank">🔒</a>
+        <a href="https://t.me/your_official_channel" target="_blank" class="circle-nav-btn" title="Support">🎧</a>
+        <a href="team.html" class="circle-nav-btn" title="Rewards">🎁</a>
+    </div>
+
+</div>
+
+<!-- UTR Submission Modal -->
+<div class="utr-modal" id="payModal">
+    <div class="modal-box">
+        <h3 style="font-size: 18px; font-weight: 900; color: #113820;">Scan & Pay UPI</h3>
+        <p style="font-size: 12px; color: #648a72; margin-top: 4px;">Kripya is QR par exact amount transfer karein:</p>
+        
+        <div class="qr-placeholder">📲</div>
+        <b id="modalAmtText" style="font-size: 20px; color: #166534; display: block; margin-bottom: 12px;">₹520</b>
+
+        <input type="text" id="modalUtr" placeholder="Enter 12-Digit UTR / Ref Number" maxlength="12"
+               style="width: 100%; background: #f1f8f3; border: 1.5px solid #86efac; border-radius: 16px; padding: 12px; font-size: 14px; font-weight: 800; color: #113820; outline: none; margin-bottom: 14px; text-align: center;">
+
+        <button class="btn-proceed" onclick="submitUTR()">Confirm & Submit UTR</button>
+        <p onclick="closePaymentGateway()" style="font-size: 12px; color: #ef4444; font-weight: 700; margin-top: 12px; cursor: pointer;">Cancel</p>
+    </div>
 </div>
 
 <script>
@@ -156,66 +482,73 @@ const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 const savedUser = JSON.parse(localStorage.getItem('annapurna_user') || '{}');
 if (!savedUser.mobile) { window.location.href = 'login.html'; }
 
-let currentSelectedAmt = 520;
+let currentAmount = 520;
 
-// URL parameter check (?plan=1500)
-const params = new URLSearchParams(window.location.search);
-const planParam = params.get('plan');
-if (planParam) {
-    currentSelectedAmt = Number(planParam);
-    document.getElementById('amtDisplay').value = currentSelectedAmt;
-    document.getElementById('payBtn').innerText = `Proceed to Pay ₹${currentSelectedAmt}`;
-}
-
-async function loadBalance() {
+async function syncWallet() {
     const { data } = await client.from('users').select('balance').eq('mobile', savedUser.mobile).single();
     if (data) {
-        document.getElementById('userWalletTop').innerText = "₹" + Number(data.balance || 0).toFixed(2);
+        document.getElementById('userWalletVal').innerText = "₹" + Number(data.balance || 0).toFixed(2);
     }
 }
-loadBalance();
+syncWallet();
 
-function setAmt(val, el) {
-    currentSelectedAmt = val;
-    document.getElementById('amtDisplay').value = val;
-    document.querySelectorAll('.amt-chip').forEach(c => c.classList.remove('active'));
+function pickSlab(val, el) {
+    currentAmount = val;
+    document.getElementById('amtInput').value = val;
+    document.querySelectorAll('.slab-pill').forEach(p => p.classList.remove('active'));
     el.classList.add('active');
-    document.getElementById('payBtn').innerText = `Proceed to Pay ₹${val}`;
+    document.getElementById('proceedBtn').innerText = `Proceed to Pay ₹${val.toLocaleString('en-IN')}`;
 }
 
-function selectGateway(gw, el) {
-    document.querySelectorAll('.gw-chip').forEach(c => c.classList.remove('active'));
+function clearInput() {
+    document.getElementById('amtInput').value = '';
+    document.querySelectorAll('.slab-pill').forEach(p => p.classList.remove('active'));
+}
+
+document.getElementById('amtInput').addEventListener('input', (e) => {
+    currentAmount = Number(e.target.value) || 0;
+    document.getElementById('proceedBtn').innerText = `Proceed to Pay ₹${currentAmount.toLocaleString('en-IN')}`;
+});
+
+function pickGateway(gw, el) {
+    document.querySelectorAll('.gateway-pill').forEach(p => p.classList.remove('active'));
     el.classList.add('active');
 }
 
-async function submitRecharge() {
-    const utr = document.getElementById('utrInput').value.trim();
-    if (utr.length !== 12) {
-        alert("Kripya 12-digit ka sahi UTR number darj karein!");
+function openPaymentGateway() {
+    if (!currentAmount || currentAmount < 520) {
+        alert("Minimum recharge amount ₹520 hai!");
         return;
     }
+    document.getElementById('modalAmtText').innerText = `₹${currentAmount.toLocaleString('en-IN')}`;
+    document.getElementById('payModal').style.display = 'flex';
+}
 
-    const btn = document.getElementById('payBtn');
-    btn.disabled = true;
-    btn.innerText = "Submitting...";
+function closePaymentGateway() {
+    document.getElementById('payModal').style.display = 'none';
+}
+
+async function submitUTR() {
+    const utr = document.getElementById('modalUtr').value.trim();
+    if (utr.length !== 12) {
+        alert("Kripya 12-digit ka sahi UTR number bharein!");
+        return;
+    }
 
     try {
         const { error } = await client.from('recharges').insert([{
             mobile: savedUser.mobile,
-            amount: currentSelectedAmt,
+            amount: currentAmount,
             utr: utr,
             status: 'pending'
         }]);
 
         if (error) throw error;
 
-        alert(`Recharge request of ₹${currentSelectedAmt} with UTR: ${utr} successfully submit ho gayi! Admin approve karega.`);
+        alert(`UTR ${utr} submit ho gaya! Admin verify karke plan activate karega.`);
         window.location.href = "profile.html";
-    } catch (e) {
-        alert("Error: " + e.message);
-    } finally {
-        btn.disabled = false;
-        btn.innerText = `Proceed to Pay ₹${currentSelectedAmt}`;
+    } catch(err) {
+        alert("Failed: " + err.message);
     }
 }
 </script>
