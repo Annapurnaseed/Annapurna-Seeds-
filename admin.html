@@ -16,9 +16,31 @@
         .badge-secure { background: #22c55e; color: #052e16; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 12px; }
         
         /* Navigation Tabs */
-        .admin-tabs { display: flex; background: #e2e8f0; overflow-x: auto; border-bottom: 2px solid #cbd5e1; }
-        .tab-btn { flex: 1; min-width: 120px; padding: 14px 12px; border: none; background: transparent; font-weight: 800; font-size: 13px; color: #475569; cursor: pointer; text-align: center; }
-        .tab-btn.active { background: #fff; color: #15803d; border-bottom: 3px solid #16a34a; }
+        /* Tab Buttons ko clickable aur visible banayein */
+.admin-tabs {
+    display: flex;
+    background: #0f2d1a;
+    overflow-x: auto;
+    white-space: nowrap;
+    border-bottom: 2px solid #1e5e3a;
+    -webkit-overflow-scrolling: touch;
+}
+.tab-btn {
+    flex: 0 0 auto;
+    padding: 14px 18px;
+    border: none;
+    background: transparent;
+    font-weight: 800;
+    font-size: 13px;
+    color: #a7f3d0;
+    cursor: pointer;
+}
+.tab-btn.active {
+    background: #ffffff;
+    color: #064e3b;
+    border-radius: 12px 12px 0 0;
+}
+        
 
         .tab-pane { display: none; padding: 20px; }
         .tab-pane.active { display: block; }
