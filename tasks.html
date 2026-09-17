@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Tasks - Annapurna Seeds</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- Supabase JS Client CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .task-counter-card {
             background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
@@ -63,6 +65,10 @@
             font-size: 14px;
             font-weight: 600;
         }
+        button:disabled {
+            background: #a3b18a;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -73,7 +79,7 @@
     <div class="brand-header">
         <div class="brand-nav">
             <div class="brand-title">🌱 Task Room</div>
-            <div class="brand-badge" id="planBadge">Active: Sprout Plan</div>
+            <div class="brand-badge" id="planBadge">Loading Plan...</div>
         </div>
         <p style="font-size: 12px; margin-top: 6px; opacity: 0.85;">Daily Crop Quality Review Tasks</p>
     </div>
@@ -90,7 +96,7 @@
         <div class="counter-grid">
             <div class="counter-box">
                 <span>Completed Tasks</span>
-                <b id="completedText">0 / 5</b>
+                <b id="completedText">0 / 0</b>
             </div>
             <div class="counter-box">
                 <span>Earned Today</span>
@@ -102,13 +108,13 @@
     <!-- Task Execution Zone -->
     <div class="task-action-box" id="taskBox">
         <h3 style="font-size: 16px; color: #1b4332; margin-bottom: 6px;">Agro Quality Verification</h3>
-        <p style="font-size: 12px; color: #557262;">Click submit to verify organic seed batch. Earn ₹10 per task.</p>
+        <p style="font-size: 12px; color: #557262;" id="taskDesc">Click submit to verify organic seed batch.</p>
         
         <div class="task-progress">
             <div class="task-progress-bar" id="progressBar"></div>
         </div>
 
-        <button id="taskBtn" class="btn-solid" onclick="executeTask()">Submit Task & Earn ₹10</button>
+        <button id="taskBtn" class="btn-solid" onclick="executeTask()">Submit Task</button>
     </div>
 
     <!-- Instructions -->
@@ -133,7 +139,19 @@
 </div>
 
 <script>
-// Sunday Holiday Checker
+// Supabase Client Setup
+const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
+const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+// Auth Guard Check
+const savedUserStr = localStorage.getItem('annapurna_user');
+if (!savedUserStr) {
+    window.location.href = 'login.html';
+}
+let currentUser = JSON.parse(savedUserStr || '{}');
+
+// Sunday Holiday Check
 const today = new Date().getDay(); // 0 is Sunday
 const isSunday = (today === 0);
 
@@ -143,35 +161,140 @@ if (isSunday) {
     document.getElementById('counterCard').style.opacity = '0.6';
 }
 
-// Dummy State (Real setup me Backend API se aayega)
+// Plan Configuration
 let totalTasks = 5;
 let rewardPerTask = 10;
-let completed = 0;
+let completedTasks = 0;
+let liveBalance = 0;
 
-function executeTask() {
-    if (completed >= totalTasks) {
-        alert("Aapke aaj ke saare tasks complete ho chuke hain! Kal wapas aayein.");
+function setupPlanDetails(plan) {
+    if (plan === 1500) {
+        totalTasks = 10;
+        rewardPerTask = 15;
+        document.getElementById('planBadge').innerText = "Active: Plan ₹1,500";
+    } else if (plan === 2500) {
+        totalTasks = 15;
+        rewardPerTask = 20;
+        document.getElementById('planBadge').innerText = "Active: Plan ₹2,500";
+    } else {
+        totalTasks = 5;
+        rewardPerTask = 10;
+        document.getElementById('planBadge').innerText = "Active: Plan ₹520";
+    }
+    document.getElementById('taskDesc').innerText = `Click submit to verify batch. Earn ₹${rewardPerTask} per task.`;
+    document.getElementById('taskBtn').innerText = `Submit Task & Earn ₹${rewardPerTask}`;
+}
+
+async function initTaskRoom() {
+    try {
+        // Fetch fresh user data
+        const { data: user, error: uErr } = await client
+            .from('users')
+            .select('*')
+            .eq('mobile', currentUser.mobile)
+            .single();
+
+        if (user && !uErr) {
+            currentUser = user;
+            localStorage.setItem('annapurna_user', JSON.stringify(user));
+            liveBalance = Number(user.balance || 0);
+            const plan = Number(user.active_plan || 520);
+            setupPlanDetails(plan);
+        }
+
+        // Fetch today's completed tasks
+        const todayDate = new Date().toISOString().slice(0, 10);
+        const { data: taskLog, error: tErr } = await client
+            .from('daily_tasks')
+            .select('*')
+            .eq('mobile', currentUser.mobile)
+            .eq('task_date', todayDate)
+            .maybeSingle();
+
+        if (taskLog) {
+            completedTasks = taskLog.completed_count || 0;
+        }
+
+        updateUI();
+
+    } catch (err) {
+        console.error("Task room init error:", err);
+    }
+}
+
+function updateUI() {
+    document.getElementById('completedText').innerText = `${completedTasks} / ${totalTasks}`;
+    document.getElementById('earnedToday').innerText = `₹${completedTasks * rewardPerTask}`;
+
+    const btn = document.getElementById('taskBtn');
+    if (completedTasks >= totalTasks) {
+        btn.disabled = true;
+        btn.innerText = "All Tasks Completed for Today ✅";
+    } else if (!isSunday) {
+        btn.disabled = false;
+        btn.innerText = `Submit Task & Earn ₹${rewardPerTask}`;
+    }
+}
+
+async function executeTask() {
+    if (completedTasks >= totalTasks) {
+        alert("Aapke aaj ke saare tasks complete ho chuke hain!");
         return;
     }
 
     const btn = document.getElementById('taskBtn');
     btn.disabled = true;
     btn.innerText = "Verifying Batch (5s)...";
-    btn.classList.add('btn-locked');
 
-    // 5-second loading bar
+    // 5-second loading progress simulation
     let width = 0;
     const progress = document.getElementById('progressBar');
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
         if (width >= 100) {
             clearInterval(interval);
-            completed++;
-            updateUI();
-            btn.disabled = false;
-            btn.innerText = "Submit Task & Earn ₹10";
-            btn.classList.remove('btn-locked');
             progress.style.width = '0%';
-            alert(`Task completed! ₹${rewardPerTask} wallet mein add kar diye gaye.`);
+
+            try {
+                const todayDate = new Date().toISOString().slice(0, 10);
+                const nextCount = completedTasks + 1;
+
+                // 1. Log or update task count in daily_tasks
+                const { error: logErr } = await client
+                    .from('daily_tasks')
+                    .upsert(
+                        {
+                            mobile: currentUser.mobile,
+                            task_date: todayDate,
+                            completed_count: nextCount
+                        },
+                        { onConflict: 'mobile,task_date' }
+                    );
+
+                if (logErr) throw logErr;
+
+                // 2. Credit reward to user balance
+                const newBalance = liveBalance + rewardPerTask;
+                const { error: balErr } = await client
+                    .from('users')
+                    .update({ balance: newBalance })
+                    .eq('mobile', currentUser.mobile);
+
+                if (balErr) throw balErr;
+
+                liveBalance = newBalance;
+                completedTasks = nextCount;
+                currentUser.balance = newBalance;
+                localStorage.setItem('annapurna_user', JSON.stringify(currentUser));
+
+                alert(`Task verified! ₹${rewardPerTask} aapke wallet mein jama ho gaye.`);
+                updateUI();
+
+            } catch (err) {
+                console.error("Task submission error:", err);
+                alert("Task submit hone me dikkat aayi: " + err.message);
+                btn.disabled = false;
+                btn.innerText = `Submit Task & Earn ₹${rewardPerTask}`;
+            }
         } else {
             width += 20;
             progress.style.width = width + '%';
@@ -179,17 +302,7 @@ function executeTask() {
     }, 1000);
 }
 
-function updateUI() {
-    document.getElementById('completedText').innerText = `${completed} / ${totalTasks}`;
-    document.getElementById('earnedToday').innerText = `₹${completed * rewardPerTask}`;
-
-    if (completed >= totalTasks) {
-        const btn = document.getElementById('taskBtn');
-        btn.disabled = true;
-        btn.innerText = "All Tasks Completed for Today ✅";
-        btn.classList.add('btn-locked');
-    }
-}
+initTaskRoom();
 </script>
 
 </body>
