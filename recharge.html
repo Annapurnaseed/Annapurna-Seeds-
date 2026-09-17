@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recharge - Annapurna Seeds</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- Supabase JS Client CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .qr-card {
             background: #ffffff;
@@ -66,6 +68,10 @@
             color: #ffffff;
             border-color: #2d6a4f;
         }
+        button:disabled {
+            background: #a3b18a;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -118,7 +124,7 @@
             <div class="input-box">
                 <input type="text" id="utrInput" placeholder="Enter 12-Digit UTR Number" maxlength="12" required pattern="[0-9]{12}">
             </div>
-            <button type="submit" class="btn-solid">Submit Payment for Approval</button>
+            <button type="submit" id="submitBtn" class="btn-solid">Submit Payment for Approval</button>
         </form>
     </div>
 
@@ -134,11 +140,31 @@
 </div>
 
 <script>
+// Supabase Client Setup
+const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
+const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+// Auth Guard Check
+const savedUserStr = localStorage.getItem('annapurna_user');
+if (!savedUserStr) {
+    alert("Kripya pehle login karein!");
+    window.location.href = 'login.html';
+}
+const currentUser = JSON.parse(savedUserStr || '{}');
+
 // URL se parameter check karna (?plan=1500)
 const urlParams = new URLSearchParams(window.location.search);
 const planParam = urlParams.get('plan');
-if(planParam) {
+if (planParam) {
     document.getElementById('rechargeAmt').value = planParam;
+    document.querySelectorAll('.amt-btn').forEach(b => {
+        if (b.innerText.replace(/[^0-9]/g, '') === planParam) {
+            b.classList.add('selected');
+        } else {
+            b.classList.remove('selected');
+        }
+    });
 }
 
 function setAmount(amt, btn) {
@@ -153,18 +179,60 @@ function copyUPI() {
     alert("UPI ID copied: " + upi);
 }
 
-function submitUTR(e) {
+async function submitUTR(e) {
     e.preventDefault();
-    const utr = document.getElementById('utrInput').value;
-    const amount = document.getElementById('rechargeAmt').value;
-    
-    if(utr.length !== 12) {
+    const btn = document.getElementById('submitBtn');
+    const utr = document.getElementById('utrInput').value.trim();
+    const amount = Number(document.getElementById('rechargeAmt').value);
+
+    if (utr.length !== 12) {
         alert("Kripya sahi 12-digit ka UTR number dalein!");
         return;
     }
-    
-    alert(`Payment request of ₹${amount} with UTR: ${utr} submitted successfully! Admin will verify and activate within 15 minutes.`);
-    window.location.href = "profile.html";
+
+    btn.disabled = true;
+    btn.innerText = "Submitting...";
+
+    try {
+        // 1. Check duplicate UTR
+        const { data: existingUtr, error: checkError } = await client
+            .from('recharges')
+            .select('utr')
+            .eq('utr', utr)
+            .maybeSingle();
+
+        if (existingUtr) {
+            alert("Yeh UTR number pehle hi submit kiya ja chuka hai!");
+            btn.disabled = false;
+            btn.innerText = "Submit Payment for Approval";
+            return;
+        }
+
+        // 2. Insert into Supabase 'recharges' table
+        const { error: insertError } = await client
+            .from('recharges')
+            .insert([
+                {
+                    user_id: currentUser.id || null,
+                    mobile: currentUser.mobile,
+                    amount: amount,
+                    utr: utr,
+                    status: 'pending'
+                }
+            ]);
+
+        if (insertError) throw insertError;
+
+        alert(`Payment request of ₹${amount} with UTR: ${utr} successfully submit ho gayi hai! Admin verify karke 15 minute me approve kar dega.`);
+        window.location.href = "profile.html";
+
+    } catch (err) {
+        console.error("UTR Submit error:", err);
+        alert("Submit nahi ho paya: " + (err.message || 'Database connection error'));
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "Submit Payment for Approval";
+    }
 }
 </script>
 
