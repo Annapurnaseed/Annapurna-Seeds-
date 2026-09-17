@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Team - Annapurna Seeds</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- Supabase JS Client CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .share-card {
             background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
@@ -97,9 +99,9 @@
         <div class="code-box">
             <div>
                 <span>Referral Code:</span>
-                <b id="refCode">ANP9901</b>
+                <b id="refCode">...</b>
             </div>
-            <button class="btn-copy" onclick="copyText('ANP9901')">Copy Code</button>
+            <button class="btn-copy" onclick="copyReferral()">Copy Code</button>
         </div>
 
         <button class="btn-solid" style="background: #25d366; color: #fff; box-shadow: none;" onclick="shareOnWhatsApp()">
@@ -111,11 +113,11 @@
     <div class="team-summary-grid">
         <div class="stat-card">
             <span>Total Team Members</span>
-            <b id="totalMembers">14 Users</b>
+            <b id="totalMembers">0 Users</b>
         </div>
         <div class="stat-card">
             <span>Total Referral Earning</span>
-            <b id="totalCommission">₹2,840</b>
+            <b id="totalCommission">₹0.00</b>
         </div>
     </div>
 
@@ -129,7 +131,7 @@
         <div class="tier-info">
             <h4>Level 1 (Direct Team)</h4>
             <p>Direct Invite Recharge Commission</p>
-            <span style="font-size: 12px; color: #2d6a4f; font-weight: 600;">8 Members | ₹1,980 Earned</span>
+            <span id="lvl1Stat" style="font-size: 12px; color: #2d6a4f; font-weight: 600;">0 Members</span>
         </div>
         <div class="tier-badge">15%</div>
     </div>
@@ -139,7 +141,7 @@
         <div class="tier-info">
             <h4>Level 2 (Secondary Team)</h4>
             <p>Downline-Invited Members</p>
-            <span style="font-size: 12px; color: #2d6a4f; font-weight: 600;">4 Members | ₹560 Earned</span>
+            <span id="lvl2Stat" style="font-size: 12px; color: #2d6a4f; font-weight: 600;">0 Members</span>
         </div>
         <div class="tier-badge">5%</div>
     </div>
@@ -149,7 +151,7 @@
         <div class="tier-info">
             <h4>Level 3 (Extended Team)</h4>
             <p>3rd Generation Network</p>
-            <span style="font-size: 12px; color: #2d6a4f; font-weight: 600;">2 Members | ₹300 Earned</span>
+            <span id="lvl3Stat" style="font-size: 12px; color: #2d6a4f; font-weight: 600;">0 Members</span>
         </div>
         <div class="tier-badge">2%</div>
     </div>
@@ -166,17 +168,97 @@
 </div>
 
 <script>
-function copyText(val) {
-    navigator.clipboard.writeText(val);
-    alert("Referral Code copied: " + val);
+// Supabase Client Setup
+const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
+const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+// Auth Guard Check
+const savedUserStr = localStorage.getItem('annapurna_user');
+if (!savedUserStr) {
+    window.location.href = 'login.html';
+}
+let currentUser = JSON.parse(savedUserStr || '{}');
+
+let userInviteCode = currentUser.invite_code || "ANP9901";
+
+async function loadTeamData() {
+    try {
+        // 1. Fetch fresh user info to get code and commission
+        const { data: user, error: uErr } = await client
+            .from('users')
+            .select('*')
+            .eq('mobile', currentUser.mobile)
+            .single();
+
+        if (user && !uErr) {
+            currentUser = user;
+            localStorage.setItem('annapurna_user', JSON.stringify(user));
+            userInviteCode = user.invite_code || "ANP9901";
+            document.getElementById('refCode').innerText = userInviteCode;
+            document.getElementById('totalCommission').innerText = "₹" + Number(user.commission || 0).toFixed(2);
+        }
+
+        // 2. Fetch Level 1 downline members
+        const { data: lvl1Users, error: l1Err } = await client
+            .from('users')
+            .select('mobile, invite_code')
+            .eq('referred_by', userInviteCode);
+
+        const lvl1Count = lvl1Users ? lvl1Users.length : 0;
+        document.getElementById('lvl1Stat').innerText = `${lvl1Count} Members`;
+
+        let lvl2Count = 0;
+        let lvl3Count = 0;
+
+        // Level 2 members count
+        if (lvl1Users && lvl1Users.length > 0) {
+            const lvl1Codes = lvl1Users.map(u => u.invite_code).filter(Boolean);
+            if (lvl1Codes.length > 0) {
+                const { data: lvl2Users } = await client
+                    .from('users')
+                    .select('mobile, invite_code')
+                    .in('referred_by', lvl1Codes);
+
+                lvl2Count = lvl2Users ? lvl2Users.length : 0;
+
+                // Level 3 members count
+                if (lvl2Users && lvl2Users.length > 0) {
+                    const lvl2Codes = lvl2Users.map(u => u.invite_code).filter(Boolean);
+                    if (lvl2Codes.length > 0) {
+                        const { data: lvl3Users } = await client
+                            .from('users')
+                            .select('mobile')
+                            .in('referred_by', lvl2Codes);
+
+                        lvl3Count = lvl3Users ? lvl3Users.length : 0;
+                    }
+                }
+            }
+        }
+
+        document.getElementById('lvl2Stat').innerText = `${lvl2Count} Members`;
+        document.getElementById('lvl3Stat').innerText = `${lvl3Count} Members`;
+        document.getElementById('totalMembers').innerText = `${lvl1Count + lvl2Count + lvl3Count} Users`;
+
+    } catch (err) {
+        console.error("Team load error:", err);
+    }
+}
+
+function copyReferral() {
+    navigator.clipboard.writeText(userInviteCode);
+    alert("Referral Code copied: " + userInviteCode);
 }
 
 function shareOnWhatsApp() {
-    const code = document.getElementById('refCode').innerText;
-    const shareUrl = window.location.origin + "/register.html?ref=" + code;
-    const msg = `Join Annapurna Seeds! Complete daily agro tasks and earn fixed income. Register using my invite code: ${code}\nLink: ${shareUrl}`;
+    const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+    const shareUrl = `${baseUrl}/login.html?ref=${userInviteCode}`;
+    const msg = `🌱 Join Annapurna Seeds!\nRegister using my invite code: ${userInviteCode}\nLink: ${shareUrl}`;
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
 }
+
+loadTeamData();
 </script>
 
 </body>
