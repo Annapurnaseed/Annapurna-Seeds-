@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community Feed - Annapurna Seeds</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- Supabase JS Client CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .feed-container {
             padding: 15px;
@@ -78,6 +80,10 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            user-select: none;
+        }
+        .btn-like:disabled {
+            cursor: default;
         }
     </style>
 </head>
@@ -98,7 +104,7 @@
     <div class="feed-container">
 
         <!-- Post 1: Management Notice -->
-        <div class="post-card">
+        <div class="post-card" id="post-1">
             <div class="post-header">
                 <div class="post-avatar-img">🌾</div>
                 <div class="post-user-info">
@@ -107,16 +113,16 @@
                 </div>
             </div>
             <p class="post-text">
-                Kisan bhaiyo aur sathiyo, aaj ke saare Monday withdrawal payouts successfully process ho chuke hain. Aap apne bank statements check kar sakte hain! Sunday maintainence regular rahegi.
+                Kisan bhaiyo aur sathiyo, aaj ke saare Monday withdrawal payouts successfully process ho chuke hain. Aap apne bank statements check kar sakte hain! Sunday maintenance regular rahegi.
             </p>
             <div class="post-actions">
-                <button class="btn-like" onclick="likePost(this)">👍 <span>142 Likes</span></button>
+                <button class="btn-like" onclick="likePost(this, 'post-1')">👍 <span>142 Likes</span></button>
                 <span>💬 18 Comments</span>
             </div>
         </div>
 
         <!-- Post 2: Yield / Harvest Success -->
-        <div class="post-card">
+        <div class="post-card" id="post-2">
             <div class="post-header">
                 <div class="post-avatar-img">🧑‍🌾</div>
                 <div class="post-user-info">
@@ -131,13 +137,13 @@
                 🌾 Batch #4092 Hybrid Inspection Passed
             </div>
             <div class="post-actions">
-                <button class="btn-like" onclick="likePost(this)">👍 <span>89 Likes</span></button>
+                <button class="btn-like" onclick="likePost(this, 'post-2')">👍 <span>89 Likes</span></button>
                 <span>💬 6 Comments</span>
             </div>
         </div>
 
         <!-- Post 3: Bonus Alert -->
-        <div class="post-card">
+        <div class="post-card" id="post-3">
             <div class="post-header">
                 <div class="post-avatar-img">🎁</div>
                 <div class="post-user-info">
@@ -149,7 +155,7 @@
                 Naye 3-Level Affiliate program me ab Level 1 par 15% direct reward activate ho chuka hai. Apni team build karein aur daily milestone bonuses unlock karein.
             </p>
             <div class="post-actions">
-                <button class="btn-like" onclick="likePost(this)">👍 <span>210 Likes</span></button>
+                <button class="btn-like" onclick="likePost(this, 'post-3')">👍 <span>210 Likes</span></button>
                 <span>💬 34 Comments</span>
             </div>
         </div>
@@ -168,13 +174,47 @@
 </div>
 
 <script>
-function likePost(btn) {
+// Supabase Client Setup
+const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
+const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+// Auth Guard Check
+const savedUserStr = localStorage.getItem('annapurna_user');
+if (!savedUserStr) {
+    window.location.href = 'login.html';
+}
+
+function likePost(btn, postId) {
+    const likedPosts = JSON.parse(localStorage.getItem('liked_community_posts') || '[]');
+    if (likedPosts.includes(postId)) {
+        return;
+    }
+
     const span = btn.querySelector('span');
     let count = parseInt(span.innerText);
     span.innerText = `${count + 1} Likes`;
     btn.style.color = "#1b4332";
     btn.disabled = true;
+
+    likedPosts.push(postId);
+    localStorage.setItem('liked_community_posts', JSON.stringify(likedPosts));
 }
+
+// Restore user's previous likes
+window.addEventListener('DOMContentLoaded', () => {
+    const likedPosts = JSON.parse(localStorage.getItem('liked_community_posts') || '[]');
+    likedPosts.forEach(postId => {
+        const postCard = document.getElementById(postId);
+        if (postCard) {
+            const btn = postCard.querySelector('.btn-like');
+            if (btn) {
+                btn.style.color = "#1b4332";
+                btn.disabled = true;
+            }
+        }
+    });
+});
 </script>
 
 </body>
