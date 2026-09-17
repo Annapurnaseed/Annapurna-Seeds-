@@ -4,102 +4,282 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Annapurna Seeds</title>
-    <link rel="stylesheet" href="css/style.css">
     <!-- Supabase JS Client CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        .register-container {
-            padding: 24px 18px;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
-        .input-group {
-            margin-bottom: 14px;
+
+        body {
+            /* Aapka bheja hua photo background me */
+            background: linear-gradient(rgba(0, 30, 15, 0.45), rgba(0, 30, 15, 0.65)), url('bg-agro.png') center/cover no-repeat fixed;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 14px;
         }
-        .input-group label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            color: #1b4332;
-            margin-bottom: 6px;
-        }
-        .input-group input {
+
+        .screen-wrapper {
             width: 100%;
-            padding: 12px 14px;
-            border-radius: 12px;
-            border: 1px solid #c7e8cf;
+            max-width: 410px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Brand Head */
+        .brand-box {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .brand-logo-text {
+            font-size: 32px;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+        .brand-tagline {
+            font-size: 13px;
+            color: #d8f3dc;
+            font-weight: 600;
+            margin-top: 2px;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+        }
+
+        /* 3D Glass Card */
+        .auth-card {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(16px);
+            width: 100%;
+            border-radius: 32px;
+            padding: 26px 20px 22px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+            border: 1.5px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .card-header {
+            margin-bottom: 18px;
+        }
+        .card-header h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #123e24;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .card-header p {
+            font-size: 12px;
+            color: #4a775d;
+            margin-top: 4px;
+        }
+
+        /* 3D Inner-Shadow Capsule Inputs */
+        .pill-field {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: #f1f6f2;
+            border-radius: 26px;
+            padding: 6px 16px 6px 6px;
+            margin-bottom: 12px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e1eee4;
+            transition: all 0.2s;
+        }
+        .pill-field:focus-within {
             background: #ffffff;
-            font-size: 14px;
-            outline: none;
+            border-color: #27ae60;
+            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.18), inset 0 1px 2px rgba(0,0,0,0.04);
         }
-        .input-group input:focus {
-            border-color: #2d6a4f;
+
+        /* Colorful 3D Round Icons */
+        .field-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #ffffff;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
         }
-        .brand-hero {
-            text-align: center;
-            padding: 28px 10px 10px;
+        .icon-phone { background: linear-gradient(135deg, #27ae60, #1e824c); }
+        .icon-pass { background: linear-gradient(135deg, #f43f5e, #be123c); }
+        .icon-confirm { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+        .icon-gift { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+
+        .field-body {
+            display: flex;
+            flex-direction: column;
+            margin-left: 10px;
+            flex: 1;
         }
-        .brand-hero h1 {
-            font-size: 24px;
-            color: #1b4332;
-            margin-bottom: 4px;
-        }
-        .brand-hero p {
-            font-size: 13px;
-            color: #557262;
-        }
-        .auth-switch {
-            text-align: center;
-            font-size: 13px;
-            margin-top: 20px;
-            color: #557262;
-        }
-        .auth-switch a {
-            color: #2d6a4f;
+        .field-body label {
+            font-size: 10px;
             font-weight: 700;
-            text-decoration: none;
+            color: #174d2e;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        button:disabled {
-            background: #a3b18a;
-            cursor: not-allowed;
+        .input-row {
+            display: flex;
+            align-items: center;
+        }
+        .prefix {
+            font-size: 13px;
+            font-weight: 700;
+            color: #143e24;
+            margin-right: 6px;
+        }
+        .field-body input {
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            font-weight: 600;
+            color: #143e24;
+            outline: none;
+            width: 100%;
+        }
+        .field-body input::placeholder {
+            color: #94b8a1;
+            font-weight: 400;
+        }
+
+        .terms-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            margin: 12px 6px 18px;
+            color: #2d6a4f;
+            font-weight: 600;
+        }
+
+        /* 3D Shiny Green Pill Button */
+        .btn-green-pill {
+            width: 100%;
+            background: linear-gradient(180deg, #2ecc71 0%, #208e4e 100%);
+            border: none;
+            border-radius: 30px;
+            padding: 8px 10px 8px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(33, 147, 81, 0.35), inset 0 2px 1px rgba(255,255,255,0.4);
+            transition: transform 0.1s;
+        }
+        .btn-green-pill:active {
+            transform: scale(0.98);
+        }
+        .btn-arrow-circle {
+            width: 38px;
+            height: 38px;
+            background: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1e824c;
+            font-size: 16px;
+            font-weight: 900;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .switch-footer {
+            text-align: center;
+            font-size: 13px;
+            margin-top: 18px;
+            color: #557c64;
+        }
+        .switch-footer a {
+            color: #1b683b;
+            font-weight: 800;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
 
-<div class="mobile-wrapper">
+<div class="screen-wrapper">
 
-    <div class="brand-hero">
-        <h1>🌱 Annapurna Seeds</h1>
-        <p>Create Farmer & Investor Account</p>
+    <div class="brand-box">
+        <div class="brand-logo-text">🌾 Annapurna Seeds</div>
+        <div class="brand-tagline">Quality Seeds • Better Harvest</div>
     </div>
 
-    <div class="register-container">
+    <div class="auth-card">
+        <div class="card-header">
+            <h2>Create Your Account 🍃</h2>
+            <p>Join Annapurna Seeds and grow a greener tomorrow</p>
+        </div>
+
         <form id="registerForm" onsubmit="handleRegister(event)">
-            
-            <div class="input-group">
-                <label>Mobile Number</label>
-                <input type="tel" id="regMobile" placeholder="Enter 10-digit mobile number" maxlength="10" required pattern="[0-9]{10}">
+            <!-- Mobile -->
+            <div class="pill-field">
+                <div class="field-icon icon-phone">📞</div>
+                <div class="field-body">
+                    <label>Mobile Number</label>
+                    <div class="input-row">
+                        <span class="prefix">+91</span>
+                        <input type="tel" id="regMobile" placeholder="Enter your mobile number" maxlength="10" required pattern="[0-9]{10}">
+                    </div>
+                </div>
             </div>
 
-            <div class="input-group">
-                <label>Login Password</label>
-                <input type="password" id="regPassword" placeholder="Minimum 6 characters" required minlength="6">
+            <!-- Password -->
+            <div class="pill-field">
+                <div class="field-icon icon-pass">🔒</div>
+                <div class="field-body">
+                    <label>Create Password</label>
+                    <input type="password" id="regPassword" placeholder="Set a strong password" required minlength="6">
+                </div>
             </div>
 
-            <div class="input-group">
-                <label>Confirm Password</label>
-                <input type="password" id="regConfirmPassword" placeholder="Re-enter password" required minlength="6">
+            <!-- Confirm Password -->
+            <div class="pill-field">
+                <div class="field-icon icon-confirm">🔐</div>
+                <div class="field-body">
+                    <label>Confirm Password</label>
+                    <input type="password" id="regConfirmPassword" placeholder="Confirm your password" required minlength="6">
+                </div>
             </div>
 
-            <div class="input-group">
-                <label>Invitation / Referral Code</label>
-                <input type="text" id="regInviteCode" placeholder="Enter referral code">
+            <!-- Referral Code -->
+            <div class="pill-field">
+                <div class="field-icon icon-gift">🎁</div>
+                <div class="field-body">
+                    <label>Invitation Code (Optional)</label>
+                    <input type="text" id="regInviteCode" placeholder="Enter referral code">
+                </div>
             </div>
 
-            <button type="submit" id="submitBtn" class="btn-solid" style="margin-top: 15px;">Complete Registration</button>
+            <div class="terms-row">
+                <input type="checkbox" id="terms" checked required>
+                <label for="terms">I agree to the Terms & Conditions</label>
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn-green-pill">
+                <span>🌱</span>
+                <span>Register Now</span>
+                <div class="btn-arrow-circle">➔</div>
+            </button>
         </form>
 
-        <div class="auth-switch">
-            Already have an account? <a href="login.html">Login here</a>
+        <div class="switch-footer">
+            Already have an account? <a href="login.html">Login Now &gt;</a>
         </div>
     </div>
 
@@ -111,14 +291,13 @@ const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-// Referral link auto-detect (?ref=ANP9901)
+// Auto-fill referral code from link (?ref=ANP9901)
 const params = new URLSearchParams(window.location.search);
-const refCode = params.get('ref');
-if (refCode) {
-    document.getElementById('regInviteCode').value = refCode;
+const refParam = params.get('ref');
+if(refParam) {
+    document.getElementById('regInviteCode').value = refParam;
 }
 
-// Unique referral code generate karna naye user ke liye
 function generateInviteCode() {
     return 'ANP' + Math.floor(1000 + Math.random() * 9000);
 }
@@ -132,55 +311,47 @@ async function handleRegister(e) {
     const invite = document.getElementById('regInviteCode').value.trim();
 
     if (pass !== confirmPass) {
-        alert("Passwords match nahi kar rahe hain! Kripya dobara check karein.");
+        alert("Passwords match nahi kar rahe hain!");
         return;
     }
 
     btn.disabled = true;
-    btn.innerText = "Registering...";
+    btn.querySelector('span:nth-child(2)').innerText = "Creating...";
 
     try {
-        // 1. Check if user already exists
-        const { data: existingUser, error: checkError } = await client
+        const { data: existingUser } = await client
             .from('users')
             .select('mobile')
             .eq('mobile', mobile)
             .maybeSingle();
 
         if (existingUser) {
-            alert("Yeh mobile number pehle se registered hai! Kripya login karein.");
-            btn.disabled = false;
-            btn.innerText = "Complete Registration";
+            alert('Yeh mobile number pehle se registered hai! Login karein.');
+            window.location.href = "login.html";
             return;
         }
 
-        // 2. Insert new user into Supabase
-        const myReferralCode = generateInviteCode();
+        const myCode = generateInviteCode();
         const { error: insertError } = await client
             .from('users')
-            .insert([
-                {
-                    mobile: mobile,
-                    password: pass,
-                    invite_code: myReferralCode,
-                    referred_by: invite || null,
-                    balance: 0.00
-                }
-            ]);
+            .insert([{
+                mobile: mobile,
+                password: pass,
+                invite_code: myCode,
+                referred_by: invite || null,
+                balance: 0.00
+            }]);
 
-        if (insertError) {
-            throw insertError;
-        }
+        if (insertError) throw insertError;
 
-        alert(`Registration successful! Aapka referral code hai: ${myReferralCode}`);
+        alert(`Account ban gaya! Referral Code: ${myCode}`);
         window.location.href = "login.html";
 
     } catch (err) {
-        console.error(err);
-        alert("Registration me error aayi: " + (err.message || 'Database error'));
+        alert('Registration failed: ' + err.message);
     } finally {
         btn.disabled = false;
-        btn.innerText = "Complete Registration";
+        btn.querySelector('span:nth-child(2)').innerText = "Register Now";
     }
 }
 </script>
