@@ -344,3 +344,33 @@ body {
     background: #1d6a43;
     color: #ffffff;
 }
+
+/* Metric row ko thoda tight aur clean spacing */
+.metric-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin-bottom: 14px;
+    padding-right: 20px;
+}
+
+.metric-pill b {
+    font-size: 13px;
+    color: #0f3822;
+    font-weight: 900;
+    display: block;
+    margin-top: 3px;
+    white-space: nowrap;
+}
+
+/* Official Seed Frame ko aur crisp display */
+.official-seed-frame {
+    width: 125px;
+    height: 155px;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 10px 22px rgba(0,0,0,0.16);
+    border: 2px solid #ffffff;
+    flex-shrink: 0;
+    background: #fff;
+        }
