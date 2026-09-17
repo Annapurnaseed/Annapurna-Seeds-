@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Annapurna Seeds</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- Supabase JS Client CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .register-container {
             padding: 24px 18px;
@@ -55,6 +57,10 @@
             font-weight: 700;
             text-decoration: none;
         }
+        button:disabled {
+            background: #a3b18a;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -89,7 +95,7 @@
                 <input type="text" id="regInviteCode" placeholder="Enter referral code">
             </div>
 
-            <button type="submit" class="btn-solid" style="margin-top: 15px;">Complete Registration</button>
+            <button type="submit" id="submitBtn" class="btn-solid" style="margin-top: 15px;">Complete Registration</button>
         </form>
 
         <div class="auth-switch">
@@ -100,27 +106,82 @@
 </div>
 
 <script>
-// Referral link se code auto-detect karna (?ref=ANP9901)
+// Supabase Client Setup
+const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
+const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+// Referral link auto-detect (?ref=ANP9901)
 const params = new URLSearchParams(window.location.search);
 const refCode = params.get('ref');
 if (refCode) {
     document.getElementById('regInviteCode').value = refCode;
 }
 
-function handleRegister(e) {
+// Unique referral code generate karna naye user ke liye
+function generateInviteCode() {
+    return 'ANP' + Math.floor(1000 + Math.random() * 9000);
+}
+
+async function handleRegister(e) {
     e.preventDefault();
-    const mobile = document.getElementById('regMobile').value;
+    const btn = document.getElementById('submitBtn');
+    const mobile = document.getElementById('regMobile').value.trim();
     const pass = document.getElementById('regPassword').value;
     const confirmPass = document.getElementById('regConfirmPassword').value;
-    const invite = document.getElementById('regInviteCode').value;
+    const invite = document.getElementById('regInviteCode').value.trim();
 
     if (pass !== confirmPass) {
         alert("Passwords match nahi kar rahe hain! Kripya dobara check karein.");
         return;
     }
 
-    alert(`Registration successful for +91 ${mobile}! Please login to continue.`);
-    window.location.href = "login.html";
+    btn.disabled = true;
+    btn.innerText = "Registering...";
+
+    try {
+        // 1. Check if user already exists
+        const { data: existingUser, error: checkError } = await client
+            .from('users')
+            .select('mobile')
+            .eq('mobile', mobile)
+            .maybeSingle();
+
+        if (existingUser) {
+            alert("Yeh mobile number pehle se registered hai! Kripya login karein.");
+            btn.disabled = false;
+            btn.innerText = "Complete Registration";
+            return;
+        }
+
+        // 2. Insert new user into Supabase
+        const myReferralCode = generateInviteCode();
+        const { error: insertError } = await client
+            .from('users')
+            .insert([
+                {
+                    mobile: mobile,
+                    password: pass,
+                    invite_code: myReferralCode,
+                    referred_by: invite || null,
+                    balance: 0.00
+                }
+            ]);
+
+        if (insertError) {
+            throw insertError;
+        }
+
+        alert(`Registration successful! Aapka referral code hai: ${myReferralCode}`);
+        window.location.href = "login.html";
+
+    } catch (err) {
+        console.error(err);
+        alert("Registration me error aayi: " + (err.message || 'Database error'));
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "Complete Registration";
+    }
 }
 </script>
 
