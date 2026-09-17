@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const mysql = require('mysql2/promise');
+const { Pool } = require('pg');
 require('dotenv').config();
 
 const app = express();
@@ -8,15 +8,20 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
-// Database Connection Pool
-const pool = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'annapurna_seeds',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
+// Database Connection Pool (Supabase PostgreSQL)
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
+pool.connect((err) => {
+  if (err) {
+    console.error('Database connection error:', err.stack);
+  } else {
+    console.log('Connected to Supabase PostgreSQL Database successfully!');
+  }
 });
 
 // Allowed Fixed Slabs
