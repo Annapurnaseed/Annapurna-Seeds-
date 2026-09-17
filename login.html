@@ -3,247 +3,312 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login / Register - Annapurna Seeds</title>
-    <link rel="stylesheet" href="css/style.css">
-    <!-- Supabase JS Client CDN -->
+    <title>Annapurna Seeds - Login</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        .auth-container {
-            padding: 24px 18px;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
-        .auth-tabs {
+
+        body {
+            /* Fallback clean background + Agro poster */
+            background: linear-gradient(rgba(10, 35, 20, 0.5), rgba(10, 35, 20, 0.7)), url('bg-agro.png') center/cover no-repeat fixed;
+            background-color: #1b4332;
+            min-height: 100vh;
             display: flex;
-            background: #eef7f0;
-            border-radius: 16px;
-            padding: 4px;
-            margin-bottom: 24px;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 14px;
         }
-        .auth-tab {
-            flex: 1;
+
+        .screen-wrapper {
+            width: 100%;
+            max-width: 410px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Branding Head */
+        .brand-box {
             text-align: center;
-            padding: 10px;
+            margin-bottom: 20px;
+        }
+        .brand-logo-text {
+            font-size: 32px;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+        .brand-tagline {
+            font-size: 13px;
+            color: #a3e635;
+            font-weight: 700;
+            margin-top: 2px;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+        }
+
+        /* 3D Glass Card */
+        .auth-card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(14px);
+            width: 100%;
+            border-radius: 30px;
+            padding: 26px 20px 22px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+        }
+
+        .card-header {
+            margin-bottom: 18px;
+        }
+        .card-header h2 {
+            font-size: 21px;
+            font-weight: 900;
+            color: #123e24;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .card-header p {
+            font-size: 12px;
+            color: #4a775d;
+            margin-top: 3px;
+        }
+
+        /* 3D Inner-Shadow Capsule Inputs */
+        .pill-field {
+            display: flex;
+            align-items: center;
+            background: #f0f6f2;
+            border-radius: 28px;
+            padding: 6px 16px 6px 6px;
+            margin-bottom: 14px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.08);
+            border: 1px solid #dcece0;
+        }
+        .pill-field:focus-within {
+            background: #ffffff;
+            border-color: #27ae60;
+            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.2), inset 0 1px 2px rgba(0,0,0,0.04);
+        }
+
+        /* 3D Icons */
+        .field-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #ffffff;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .icon-phone { background: linear-gradient(135deg, #27ae60, #1e824c); }
+        .icon-lock { background: linear-gradient(135deg, #f43f5e, #be123c); }
+
+        .field-body {
+            display: flex;
+            flex-direction: column;
+            margin-left: 10px;
+            flex: 1;
+        }
+        .field-body label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #174d2e;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .input-row {
+            display: flex;
+            align-items: center;
+        }
+        .prefix {
             font-size: 14px;
             font-weight: 700;
-            color: #557262;
-            cursor: pointer;
-            border-radius: 12px;
-            transition: 0.2s;
+            color: #143e24;
+            margin-right: 6px;
         }
-        .auth-tab.active {
-            background: #ffffff;
-            color: #1b4332;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.06);
-        }
-        .input-group {
-            margin-bottom: 14px;
-        }
-        .input-group label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            color: #1b4332;
-            margin-bottom: 6px;
-        }
-        .input-group input {
-            width: 100%;
-            padding: 12px 14px;
-            border-radius: 12px;
-            border: 1px solid #c7e8cf;
-            background: #ffffff;
+        .field-body input {
+            border: none;
+            background: transparent;
             font-size: 14px;
+            font-weight: 600;
+            color: #143e24;
+            outline: none;
+            width: 100%;
+        }
+        .field-body input::placeholder {
+            color: #94b8a1;
+            font-weight: 400;
+        }
+
+        .option-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            margin: 12px 6px 18px;
+            color: #2d6a4f;
+            font-weight: 600;
+        }
+        .option-row label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        /* 3D Green Pill Button */
+        .btn-green-pill {
+            width: 100%;
+            background: linear-gradient(180deg, #2ecc71 0%, #1e824c 100%) !important;
+            border: none !important;
+            border-radius: 35px !important;
+            padding: 8px 10px 8px 24px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            color: #ffffff !important;
+            font-size: 16px !important;
+            font-weight: 800 !important;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(30, 130, 76, 0.4), inset 0 2px 1px rgba(255,255,255,0.5) !important;
             outline: none;
         }
-        .input-group input:focus {
-            border-color: #2d6a4f;
+        .btn-green-pill:active {
+            transform: scale(0.98);
         }
-        .brand-hero {
+        .btn-arrow-circle {
+            width: 40px;
+            height: 40px;
+            background: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1e824c;
+            font-size: 16px;
+            font-weight: 900;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .switch-footer {
             text-align: center;
-            padding: 30px 10px 10px;
-        }
-        .brand-hero h1 {
-            font-size: 24px;
-            color: #1b4332;
-            margin-bottom: 4px;
-        }
-        .brand-hero p {
             font-size: 13px;
-            color: #557262;
+            margin-top: 18px;
+            color: #557c64;
         }
-        button:disabled {
-            background: #a3b18a;
-            cursor: not-allowed;
+        .switch-footer a {
+            color: #1b683b;
+            font-weight: 800;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
 
-<div class="mobile-wrapper">
+<div class="screen-wrapper">
 
-    <div class="brand-hero">
-        <h1>🌱 Annapurna Seeds</h1>
-        <p>Official Farmer & Agro Partner Portal</p>
+    <div class="brand-box">
+        <div class="brand-logo-text">🌾 Annapurna Seeds</div>
+        <div class="brand-tagline">Quality Seeds • Better Harvest</div>
     </div>
 
-    <div class="auth-container">
-        <!-- Auth Tabs -->
-        <div class="auth-tabs">
-            <div class="auth-tab active" id="tabLogin" onclick="switchMode('login')">Login</div>
-            <div class="auth-tab" id="tabRegister" onclick="switchMode('register')">Register</div>
+    <div class="auth-card">
+        <div class="card-header">
+            <h2>Welcome Back 🍃</h2>
+            <p>Login to continue your journey with Annapurna Seeds</p>
         </div>
 
-        <!-- Form -->
-        <form id="authForm" onsubmit="handleAuth(event)">
-            <div class="input-group">
-                <label>Mobile Number</label>
-                <input type="tel" id="mobileNumber" placeholder="Enter 10-digit mobile" maxlength="10" required pattern="[0-9]{10}">
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <!-- Mobile Field -->
+            <div class="pill-field">
+                <div class="field-icon icon-phone">📞</div>
+                <div class="field-body">
+                    <label>Mobile Number</label>
+                    <div class="input-row">
+                        <span class="prefix">+91</span>
+                        <input type="tel" id="mobile" placeholder="Enter 10-digit mobile" maxlength="10" required pattern="[0-9]{10}">
+                    </div>
+                </div>
             </div>
 
-            <div class="input-group">
-                <label>Password</label>
-                <input type="password" id="password" placeholder="Enter your password" required minlength="6">
+            <!-- Password Field -->
+            <div class="pill-field">
+                <div class="field-icon icon-lock">🔒</div>
+                <div class="field-body">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required minlength="6">
+                </div>
             </div>
 
-            <div class="input-group" id="refGroup" style="display: none;">
-                <label>Invitation Code (Optional)</label>
-                <input type="text" id="inviteCode" placeholder="Enter Referral Code">
+            <div class="option-row">
+                <label><input type="checkbox" checked> Remember Me</label>
+                <span>Forgot Password?</span>
             </div>
 
-            <button type="submit" id="submitBtn" class="btn-solid" style="margin-top: 20px;">Secure Login</button>
+            <!-- 3D Pill Button -->
+            <button type="submit" id="submitBtn" class="btn-green-pill">
+                <span>🌱</span>
+                <span>Login</span>
+                <div class="btn-arrow-circle">➔</div>
+            </button>
         </form>
 
-        <p style="text-align: center; font-size: 12px; color: #777; margin-top: 20px;">
-            By continuing, you agree to Annapurna Seeds Certified Terms & Agro Policies.
-        </p>
+        <div class="switch-footer">
+            Don't have an account? <a href="register.html">Register Now &gt;</a>
+        </div>
     </div>
 
 </div>
 
 <script>
-// Supabase Client Setup
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-let currentMode = 'login';
-
-// URL se referral code auto-fill (?ref=ANP9901)
-const params = new URLSearchParams(window.location.search);
-const refParam = params.get('ref');
-if (refParam) {
-    switchMode('register');
-    document.getElementById('inviteCode').value = refParam;
-}
-
-function switchMode(mode) {
-    currentMode = mode;
-    const tabLogin = document.getElementById('tabLogin');
-    const tabRegister = document.getElementById('tabRegister');
-    const refGroup = document.getElementById('refGroup');
-    const submitBtn = document.getElementById('submitBtn');
-
-    if(mode === 'login') {
-        tabLogin.classList.add('active');
-        tabRegister.classList.remove('active');
-        refGroup.style.display = 'none';
-        submitBtn.innerText = 'Secure Login';
-    } else {
-        tabRegister.classList.add('active');
-        tabLogin.classList.remove('active');
-        refGroup.style.display = 'block';
-        submitBtn.innerText = 'Create Account';
-    }
-}
-
-function generateInviteCode() {
-    return 'ANP' + Math.floor(1000 + Math.random() * 9000);
-}
-
-async function handleAuth(e) {
+async function handleLogin(e) {
     e.preventDefault();
     const btn = document.getElementById('submitBtn');
-    const mobile = document.getElementById('mobileNumber').value.trim();
+    const mobile = document.getElementById('mobile').value.trim();
     const pass = document.getElementById('password').value;
-    const invite = document.getElementById('inviteCode').value.trim();
 
     btn.disabled = true;
+    btn.querySelector('span:nth-child(2)').innerText = "Verifying...";
 
     try {
-        if (currentMode === 'login') {
-            btn.innerText = 'Verifying...';
+        const { data, error } = await client
+            .from('users')
+            .select('*')
+            .eq('mobile', mobile)
+            .eq('password', pass)
+            .maybeSingle();
 
-            // User check karein
-            const { data, error } = await client
-                .from('users')
-                .select('*')
-                .eq('mobile', mobile)
-                .eq('password', pass)
-                .maybeSingle();
+        if (error) throw error;
 
-            if (error) throw error;
-
-            if (!data) {
-                alert('Mobile number ya password galat hai!');
-                btn.disabled = false;
-                btn.innerText = 'Secure Login';
-                return;
-            }
-
-            // Session store karke index.html par bhejein
-            localStorage.setItem('annapurna_user', JSON.stringify(data));
-            alert('Login safal raha!');
-            window.location.href = 'index.html';
-
-        } else {
-            // Register Mode
-            btn.innerText = 'Creating Account...';
-
-            // Pehle check karein duplicate mobile
-            const { data: existingUser } = await client
-                .from('users')
-                .select('mobile')
-                .eq('mobile', mobile)
-                .maybeSingle();
-
-            if (existingUser) {
-                alert('Yeh mobile number pehle se maujood hai! Login karein.');
-                switchMode('login');
-                btn.disabled = false;
-                btn.innerText = 'Secure Login';
-                return;
-            }
-
-            const myCode = generateInviteCode();
-            const { data: newUser, error: insertError } = await client
-                .from('users')
-                .insert([
-                    {
-                        mobile: mobile,
-                        password: pass,
-                        invite_code: myCode,
-                        referred_by: invite || null,
-                        balance: 0.00
-                    }
-                ])
-                .select()
-                .single();
-
-            if (insertError) throw insertError;
-
-            localStorage.setItem('annapurna_user', JSON.stringify(newUser));
-            alert(`Account ban gaya! Referral Code: ${myCode}`);
-            window.location.href = 'index.html';
+        if (!data) {
+            alert('Mobile number ya password galat hai!');
+            btn.disabled = false;
+            btn.querySelector('span:nth-child(2)').innerText = "Login";
+            return;
         }
+
+        localStorage.setItem('annapurna_user', JSON.stringify(data));
+        window.location.href = 'index.html';
 
     } catch (err) {
-        console.error(err);
-        alert('Error: ' + (err.message || 'Database se connect nahi ho paya'));
+        alert('Error: ' + err.message);
     } finally {
         btn.disabled = false;
-        if (currentMode === 'login') {
-            btn.innerText = 'Secure Login';
-        } else {
-            btn.innerText = 'Create Account';
-        }
+        btn.querySelector('span:nth-child(2)').innerText = "Login";
     }
 }
 </script>
