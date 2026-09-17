@@ -3,179 +3,360 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Annapurna Admin Console</title>
-    <link rel="stylesheet" href="css/style.css">
-    <!-- Supabase JS Client CDN -->
+    <title>Master Control Console - Annapurna Seeds</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { background: #0f172a; color: #e2e8f0; }
-        .mobile-wrapper { max-width: 600px; background: #1e293b; color: #f8fafc; border: 1px solid #334155; margin: 0 auto; min-height: 100vh; }
-        .admin-header { background: #0f172a; padding: 20px; border-bottom: 1px solid #334155; }
-        .tab-btn { background: #334155; color: #94a3b8; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-        .tab-btn.active { background: #2d6a4f; color: #fff; }
-        .data-card { background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 14px; margin-bottom: 12px; }
-        .data-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
-        .badge-pending { background: #854d0e; color: #fef08a; padding: 2px 8px; border-radius: 6px; font-size: 11px; }
-        .btn-action { padding: 6px 12px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; font-size: 12px; }
-        .btn-approve { background: #15803d; color: #fff; }
-        .btn-reject { background: #b91c1c; color: #fff; margin-left: 6px; }
-        .empty-text { text-align: center; color: #64748b; padding: 30px 10px; font-size: 13px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background: #0c1f14; color: #1e293b; min-height: 100vh; display: flex; justify-content: center; padding: 12px; }
+        .admin-shell { width: 100%; max-width: 900px; background: #f8fafc; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
+        
+        /* Top Navigation Bar */
+        .admin-top { background: linear-gradient(135deg, #133e24, #0a2314); color: #fff; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .admin-top h2 { font-size: 19px; font-weight: 900; display: flex; align-items: center; gap: 8px; }
+        .badge-secure { background: #22c55e; color: #052e16; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 12px; }
+        
+        /* Navigation Tabs */
+        .admin-tabs { display: flex; background: #e2e8f0; overflow-x: auto; border-bottom: 2px solid #cbd5e1; }
+        .tab-btn { flex: 1; min-width: 120px; padding: 14px 12px; border: none; background: transparent; font-weight: 800; font-size: 13px; color: #475569; cursor: pointer; text-align: center; }
+        .tab-btn.active { background: #fff; color: #15803d; border-bottom: 3px solid #16a34a; }
+
+        .tab-pane { display: none; padding: 20px; }
+        .tab-pane.active { display: block; }
+
+        /* Stats Grid */
+        .stats-quad { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 20px; }
+        .stat-box { background: #fff; border: 1.5px solid #e2e8f0; border-radius: 18px; padding: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .stat-box span { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+        .stat-box b { font-size: 20px; font-weight: 900; color: #0f172a; display: block; margin-top: 4px; }
+
+        /* Tables & Lists */
+        .card-panel { background: #fff; border-radius: 20px; border: 1.5px solid #e2e8f0; padding: 18px; margin-bottom: 20px; box-shadow: 0 4px 14px rgba(0,0,0,0.02); }
+        .panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .panel-head h3 { font-size: 16px; font-weight: 900; color: #0f172a; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        th { text-align: left; padding: 10px; background: #f1f5f9; color: #475569; font-weight: 800; }
+        td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-weight: 600; vertical-align: middle; }
+
+        /* Action Buttons */
+        .btn-action { border: none; border-radius: 10px; padding: 6px 12px; font-size: 11px; font-weight: 800; cursor: pointer; transition: 0.15s; }
+        .btn-green { background: #22c55e; color: #fff; }
+        .btn-red { background: #ef4444; color: #fff; }
+        .btn-blue { background: #3b82f6; color: #fff; }
+        .btn-export { background: #0f766e; color: #fff; padding: 8px 16px; border-radius: 12px; font-weight: 800; border: none; cursor: pointer; }
+
+        /* Forms */
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+        .input-group label { display: block; font-size: 11px; font-weight: 800; color: #475569; margin-bottom: 6px; }
+        .input-group input, .input-group textarea, .input-group select { width: 100%; padding: 10px 14px; border-radius: 12px; border: 1.5px solid #cbd5e1; font-weight: 700; font-size: 13px; outline: none; }
+        .input-group input:focus { border-color: #16a34a; }
     </style>
 </head>
 <body>
 
-<div class="mobile-wrapper">
-    <div class="admin-header">
-        <h2 style="font-size: 18px; color: #4ade80;">Annapurna Seeds Admin Console 🔒</h2>
-        <p style="font-size: 12px; color: #94a3b8; margin-top: 4px;">Manual UTR Approval & Fixed Slab Payouts</p>
-        <div style="display: flex; gap: 8px; margin-top: 14px;">
-            <button class="tab-btn active" id="tabRecBtn" onclick="switchAdminTab('recharge')">Recharge Approvals</button>
-            <button class="tab-btn" id="tabWdBtn" onclick="switchAdminTab('withdraw')">Withdrawal Requests</button>
+<div class="admin-shell">
+
+    <!-- Top Admin Status -->
+    <div class="admin-top">
+        <h2>🛡️ Annapurna Master Console</h2>
+        <span class="badge-secure">ROOT: 7983678835</span>
+    </div>
+
+    <!-- Tab Bar -->
+    <div class="admin-tabs">
+        <button class="tab-btn active" onclick="openTab('dashTab', this)">📊 Financials</button>
+        <button class="tab-btn" onclick="openTab('rechargeTab', this)">💳 Recharges (UTRs)</button>
+        <button class="tab-btn" onclick="openTab('withdrawTab', this)">🏦 Withdrawals</button>
+        <button class="tab-btn" onclick="openTab('membersTab', this)">👥 Directory</button>
+        <button class="tab-btn" onclick="openTab('settingsTab', this)">⚙️ Controls</button>
+    </div>
+
+    <!-- TAB 1: FINANCIAL OVERVIEW -->
+    <div id="dashTab" class="tab-pane active">
+        <div class="stats-quad">
+            <div class="stat-box">
+                <span>Total Inflow (Recharges)</span>
+                <b id="statInflow" style="color: #16a34a;">₹0</b>
+            </div>
+            <div class="stat-box">
+                <span>Total Outflow (Paid Payouts)</span>
+                <b id="statOutflow" style="color: #ef4444;">₹0</b>
+            </div>
+            <div class="stat-box">
+                <span>Net Reserve / Profit</span>
+                <b id="statNet" style="color: #0284c7;">₹0</b>
+            </div>
+            <div class="stat-box">
+                <span>Active vs Inactive</span>
+                <b id="statUserRatio">0 / 0</b>
+            </div>
+        </div>
+
+        <div class="card-panel">
+            <div class="panel-head">
+                <h3>⚡ Quick Actions</h3>
+            </div>
+            <p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">App par instant announcements aur operational toggles lagayein:</p>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn-action btn-blue" onclick="openTab('rechargeTab', document.querySelectorAll('.tab-btn')[1])">Verify Pending UTRs</button>
+                <button class="btn-action btn-green" onclick="exportWithdrawalsCSV()">Download Today's Bank CSV</button>
+                <button class="btn-action btn-red" onclick="toggleMaintenance()">Toggle Maintenance Mode</button>
+            </div>
         </div>
     </div>
 
-    <!-- Tab 1: Pending Recharges -->
-    <div id="rechargeSection" style="padding: 15px;">
-        <h3 style="font-size: 14px; margin-bottom: 12px; color: #94a3b8;">Pending UTR Submissions</h3>
-        <div id="rechargeList">
-            <div class="empty-text">Loading requests from Supabase...</div>
+    <!-- TAB 2: RECHARGES & UTR VERIFICATION -->
+    <div id="rechargeTab" class="tab-pane">
+        <div class="card-panel">
+            <div class="panel-head">
+                <h3>Pending UTR Approvals (Instant 15%-5%-2% MLM Split)</h3>
+                <button class="btn-action btn-blue" onclick="loadRecharges()">🔄 Refresh</button>
+            </div>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>User Mobile</th>
+                            <th>Amount</th>
+                            <th>12-Digit UTR</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rechargeTableBody">
+                        <tr><td colspan="5" style="text-align: center;">Loading pending requests...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-    <!-- Tab 2: Fixed Slab Withdrawals -->
-    <div id="withdrawSection" style="padding: 15px; display: none;">
-        <h3 style="font-size: 14px; margin-bottom: 12px; color: #94a3b8;">Pending Withdrawal Requests</h3>
-        <div id="withdrawList">
-            <div class="empty-text">Loading requests from Supabase...</div>
+    <!-- TAB 3: WITHDRAWAL MANAGEMENT -->
+    <div id="withdrawTab" class="tab-pane">
+        <div class="card-panel">
+            <div class="panel-head">
+                <h3>Pending Bank Withdrawals</h3>
+                <button class="btn-export" onclick="exportWithdrawalsCSV()">📥 Export Excel / CSV</button>
+            </div>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Amount</th>
+                            <th>Account Holder</th>
+                            <th>Account No & IFSC</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="withdrawTableBody">
+                        <tr><td colspan="5" style="text-align: center;">Loading withdrawal requests...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+
+    <!-- TAB 4: MEMBERS DIRECTORY -->
+    <div id="membersTab" class="tab-pane">
+        <div class="card-panel">
+            <div class="panel-head">
+                <h3>All Registered Members</h3>
+                <input type="text" id="memberSearch" placeholder="Search by mobile number..." onkeyup="filterMembers()"
+                       style="padding: 6px 12px; border-radius: 10px; border: 1.5px solid #cbd5e1; font-size: 12px;">
+            </div>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mobile</th>
+                            <th>Balance</th>
+                            <th>Plan</th>
+                            <th>Referred By</th>
+                            <th>Account Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="membersTableBody">
+                        <tr><td colspan="5" style="text-align: center;">Loading member directory...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 5: SYSTEM CONTROLS -->
+    <div id="settingsTab" class="tab-pane">
+        <!-- UPI & QR Config -->
+        <div class="card-panel">
+            <div class="panel-head">
+                <h3>Dynamic Payment Gateway UPI & QR</h3>
+            </div>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Active UPI ID (for PAY-A / PAY-B)</label>
+                    <input type="text" id="cfgUpi" placeholder="e.g. annapurnaseeds@icici">
+                </div>
+                <div class="input-group">
+                    <label>QR Code Image URL</label>
+                    <input type="text" id="cfgQr" placeholder="e.g. https://.../qr.png">
+                </div>
+            </div>
+            <button class="btn-action btn-green" style="margin-top: 14px;" onclick="saveUpiConfig()">Save UPI Gateway</button>
+        </div>
+
+        <!-- Pop-Up Notice -->
+        <div class="card-panel">
+            <div class="panel-head">
+                <h3>Broadcast In-App Notice</h3>
+            </div>
+            <div class="input-group">
+                <label>Notice Content (Displays on User Home Screen)</label>
+                <textarea id="cfgNotice" rows="3" placeholder="Important announcement text..."></textarea>
+            </div>
+            <button class="btn-action btn-blue" style="margin-top: 10px;" onclick="saveNoticeConfig()">Publish Notice</button>
+        </div>
+
+        <!-- Voucher Generator -->
+        <div class="card-panel">
+            <div class="panel-head">
+                <h3>Generate Telegram Gift Voucher</h3>
+            </div>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Voucher Code</label>
+                    <input type="text" id="vCode" placeholder="e.g. SEED100">
+                </div>
+                <div class="input-group">
+                    <label>Reward Amount (₹)</label>
+                    <input type="number" id="vAmt" value="100">
+                </div>
+            </div>
+            <button class="btn-action btn-green" style="margin-top: 14px;" onclick="createVoucher()">Create Gift Code</button>
+        </div>
+    </div>
+
 </div>
 
 <script>
-// Supabase Client Setup
+// Supabase Credentials
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-// Simple Admin Access Gate (Default PIN: 1122)
-const adminPin = prompt("Admin Security PIN darj karein:");
-if (adminPin !== "1122") {
-    alert("Unauthorized access!");
+// 1. Strict Identity Validation Gate
+const loggedUser = JSON.parse(localStorage.getItem('annapurna_user') || '{}');
+if (loggedUser.mobile !== '7983678835') {
+    alert("Unauthorized! Sirf Admin Mobile 7983678835 is page ko open kar sakta hai.");
     window.location.href = "index.html";
 }
 
-function switchAdminTab(tab) {
-    document.getElementById('tabRecBtn').classList.toggle('active', tab === 'recharge');
-    document.getElementById('tabWdBtn').classList.toggle('active', tab === 'withdraw');
-    document.getElementById('rechargeSection').style.display = (tab === 'recharge') ? 'block' : 'none';
-    document.getElementById('withdrawSection').style.display = (tab === 'withdraw') ? 'block' : 'none';
+const adminPin = prompt("Enter Admin Security PIN:");
+if (adminPin !== "1122") {
+    alert("Incorrect Security PIN!");
+    window.location.href = "index.html";
 }
 
-// 1. Fetch & Render Pending Recharges
+let allMembersCache = [];
+let pendingWithdrawalsCache = [];
+
+function openTab(tabId, el) {
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    el.classList.add('active');
+}
+
+// 2. Load Stats & Balances
+async function loadFinancialStats() {
+    try {
+        const { data: recharges } = await client.from('recharges').select('amount, status');
+        const { data: withdrawals } = await client.from('withdrawals').select('amount, status');
+        const { data: users } = await client.from('users').select('*');
+
+        allMembersCache = users || [];
+
+        const totalIn = (recharges || []).filter(r => r.status === 'approved').reduce((acc, r) => acc + Number(r.amount), 0);
+        const totalOut = (withdrawals || []).filter(w => w.status === 'approved').reduce((acc, w) => acc + Number(w.amount), 0);
+        
+        document.getElementById('statInflow').innerText = "₹" + totalIn.toLocaleString('en-IN');
+        document.getElementById('statOutflow').innerText = "₹" + totalOut.toLocaleString('en-IN');
+        document.getElementById('statNet').innerText = "₹" + (totalIn - totalOut).toLocaleString('en-IN');
+
+        const activeCount = allMembersCache.filter(u => u.active_plan && u.active_plan > 0).length;
+        document.getElementById('statUserRatio').innerText = `${activeCount} Active / ${allMembersCache.length - activeCount} Free`;
+
+        renderMembers(allMembersCache);
+    } catch (e) { console.error(e); }
+}
+
+// 3. Recharge Approvals & 3-Tier Distribution
 async function loadRecharges() {
-    const listDiv = document.getElementById('rechargeList');
-    try {
-        const { data, error } = await client
-            .from('recharges')
-            .select('*')
-            .eq('status', 'pending')
-            .order('created_at', { ascending: false });
+    const { data: pending } = await client.from('recharges').select('*').eq('status', 'pending').order('id', { ascending: false });
+    const tbody = document.getElementById('rechargeTableBody');
+    tbody.innerHTML = "";
 
-        if (error) throw error;
-        if (!data || data.length === 0) {
-            listDiv.innerHTML = `<div class="empty-text">Koi bhi pending recharge request nahi hai 👍</div>`;
-            return;
-        }
-
-        listDiv.innerHTML = data.map(item => `
-            <div class="data-card" id="rec-card-${item.id}">
-                <div class="data-row">
-                    <span>User: <b>+91 ${item.mobile}</b></span>
-                    <span class="badge-pending">Pending</span>
-                </div>
-                <div class="data-row">
-                    <span>Amount:</span>
-                    <span style="color: #4ade80; font-weight: bold;">₹${item.amount}</span>
-                </div>
-                <div class="data-row">
-                    <span>UTR: <b style="letter-spacing: 1px; color: #38bdf8;">${item.utr}</b></span>
-                    <span style="font-size: 11px; color: #64748b;">${new Date(item.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                </div>
-                <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
-                    <button class="btn-action btn-approve" onclick="approveRecharge(${item.id}, '${item.mobile}', ${item.amount})">Approve & Distribute MLM</button>
-                    <button class="btn-action btn-reject" onclick="rejectRecharge(${item.id})">Reject</button>
-                </div>
-            </div>
-        `).join('');
-
-    } catch (err) {
-        listDiv.innerHTML = `<div class="empty-text" style="color:#f87171;">Load nahi ho saka: ${err.message}</div>`;
+    if (!pending || pending.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#64748b;">No pending recharges!</td></tr>`;
+        return;
     }
+
+    pending.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${new Date(r.created_at || Date.now()).toLocaleTimeString()}</td>
+            <td><b>${r.mobile}</b></td>
+            <td style="color:#16a34a; font-weight:900;">₹${r.amount}</td>
+            <td><code>${r.utr}</code></td>
+            <td>
+                <button class="btn-action btn-green" onclick="approveRecharge(${r.id}, '${r.mobile}', ${r.amount})">Approve & Split MLM</button>
+                <button class="btn-action btn-red" onclick="rejectRecharge(${r.id})">Reject</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
 }
 
-// 2. Approve Recharge & Auto MLM Distribution (15%, 5%, 2%)
-async function approveRecharge(id, mobile, amount) {
-    if (!confirm(`Confirm approve ₹${amount} recharge for +91 ${mobile}?`)) return;
+async function approveRecharge(recId, mobile, amount) {
+    if (!confirm(`Approve ₹${amount} for ${mobile}? Ye user ka plan activate karega aur downline MLM share credit karega.`)) return;
 
     try {
-        // Step A: Mark recharge approved
-        await client.from('recharges').update({ status: 'approved' }).eq('id', id);
+        // 1. Mark Recharge Approved
+        await client.from('recharges').update({ status: 'approved' }).eq('id', recId);
 
-        // Step B: Set active plan on user
-        const { data: buyer } = await client
-            .from('users')
-            .select('*')
-            .eq('mobile', mobile)
-            .single();
+        // 2. Activate User Plan
+        const { data: user } = await client.from('users').select('*').eq('mobile', mobile).single();
+        await client.from('users').update({ active_plan: amount }).eq('mobile', mobile);
 
-        if (buyer) {
-            await client.from('users').update({ active_plan: amount }).eq('mobile', mobile);
+        // 3. 3-Tier Commission Engine (15%, 5%, 2%)
+        if (user && user.referred_by) {
+            // Level 1 Upline (15%)
+            const { data: l1User } = await client.from('users').select('*').eq('invite_code', user.referred_by).single();
+            if (l1User) {
+                const l1Share = amount * 0.15;
+                await client.from('users').update({
+                    balance: Number(l1User.balance || 0) + l1Share,
+                    commission: Number(l1User.commission || 0) + l1Share
+                }).eq('mobile', l1User.mobile);
 
-            // Step C: Distribute Level 1 (15%)
-            if (buyer.referred_by) {
-                const { data: upline1 } = await client
-                    .from('users')
-                    .select('*')
-                    .eq('invite_code', buyer.referred_by)
-                    .maybeSingle();
+                // Level 2 Upline (5%)
+                if (l1User.referred_by) {
+                    const { data: l2User } = await client.from('users').select('*').eq('invite_code', l1User.referred_by).single();
+                    if (l2User) {
+                        const l2Share = amount * 0.05;
+                        await client.from('users').update({
+                            balance: Number(l2User.balance || 0) + l2Share,
+                            commission: Number(l2User.commission || 0) + l2Share
+                        }).eq('mobile', l2User.mobile);
 
-                if (upline1) {
-                    const comm1 = (amount * 0.15);
-                    await client.from('users').update({
-                        balance: Number(upline1.balance || 0) + comm1,
-                        commission: Number(upline1.commission || 0) + comm1
-                    }).eq('id', upline1.id);
-
-                    // Distribute Level 2 (5%)
-                    if (upline1.referred_by) {
-                        const { data: upline2 } = await client
-                            .from('users')
-                            .select('*')
-                            .eq('invite_code', upline1.referred_by)
-                            .maybeSingle();
-
-                        if (upline2) {
-                            const comm2 = (amount * 0.05);
-                            await client.from('users').update({
-                                balance: Number(upline2.balance || 0) + comm2,
-                                commission: Number(upline2.commission || 0) + comm2
-                            }).eq('id', upline2.id);
-
-                            // Distribute Level 3 (2%)
-                            if (upline2.referred_by) {
-                                const { data: upline3 } = await client
-                                    .from('users')
-                                    .select('*')
-                                    .eq('invite_code', upline2.referred_by)
-                                    .maybeSingle();
-
-                                if (upline3) {
-                                    const comm3 = (amount * 0.02);
-                                    await client.from('users').update({
-                                        balance: Number(upline3.balance || 0) + comm3,
-                                        commission: Number(upline3.commission || 0) + comm3
-                                    }).eq('id', upline3.id);
-                                }
+                        // Level 3 Upline (2%)
+                        if (l2User.referred_by) {
+                            const { data: l3User } = await client.from('users').select('*').eq('invite_code', l2User.referred_by).single();
+                            if (l3User) {
+                                const l3Share = amount * 0.02;
+                                await client.from('users').update({
+                                    balance: Number(l3User.balance || 0) + l3Share,
+                                    commission: Number(l3User.commission || 0) + l3Share
+                                }).eq('mobile', l3User.mobile);
                             }
                         }
                     }
@@ -183,112 +364,56 @@ async function approveRecharge(id, mobile, amount) {
             }
         }
 
-        alert("Recharge approved and MLM Commission distributed successfully!");
+        alert("Recharge Approved and MLM Commissions Credited!");
         loadRecharges();
-
-    } catch (err) {
-        alert("Action error: " + err.message);
-    }
-}
-
-// 3. Reject Recharge
-async function rejectRecharge(id) {
-    if (!confirm("Reject this recharge submission?")) return;
-    try {
-        await client.from('recharges').update({ status: 'rejected' }).eq('id', id);
-        alert("Recharge submission rejected.");
-        loadRecharges();
-    } catch (err) {
+        loadFinancialStats();
+    } catch(err) {
         alert("Error: " + err.message);
     }
 }
 
-// 4. Fetch & Render Pending Withdrawals
+async function rejectRecharge(recId) {
+    if (!confirm("Reject this recharge record?")) return;
+    await client.from('recharges').update({ status: 'rejected' }).eq('id', recId);
+    loadRecharges();
+}
+
+// 4. Withdrawal Engine & CSV Export
 async function loadWithdrawals() {
-    const listDiv = document.getElementById('withdrawList');
-    try {
-        const { data, error } = await client
-            .from('withdrawals')
-            .select('*')
-            .eq('status', 'pending')
-            .order('created_at', { ascending: false });
+    const { data: pending } = await client.from('withdrawals').select('*').eq('status', 'pending').order('id', { ascending: false });
+    pendingWithdrawalsCache = pending || [];
+    const tbody = document.getElementById('withdrawTableBody');
+    tbody.innerHTML = "";
 
-        if (error) throw error;
-        if (!data || data.length === 0) {
-            listDiv.innerHTML = `<div class="empty-text">Koi bhi pending withdrawal request nahi hai 👍</div>`;
-            return;
-        }
-
-        listDiv.innerHTML = data.map(item => `
-            <div class="data-card" id="wd-card-${item.id}">
-                <div class="data-row">
-                    <span>User: <b>+91 ${item.mobile}</b></span>
-                    <span class="badge-pending">Queue</span>
-                </div>
-                <div class="data-row">
-                    <span>A/C: <b>${item.bank_account || 'N/A'}</b></span>
-                    <span style="color: #38bdf8; font-weight: bold;">₹${item.amount}</span>
-                </div>
-                <div class="data-row">
-                    <span>IFSC: <b>${item.bank_ifsc || 'N/A'}</b></span>
-                    <span>Holder: <b>${item.bank_holder || 'N/A'}</b></span>
-                </div>
-                <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
-                    <button class="btn-action btn-approve" onclick="markPaid(${item.id})">Mark Paid</button>
-                    <button class="btn-action btn-reject" onclick="rejectWd(${item.id}, '${item.mobile}', ${item.amount})">Reject & Refund</button>
-                </div>
-            </div>
-        `).join('');
-
-    } catch (err) {
-        listDiv.innerHTML = `<div class="empty-text" style="color:#f87171;">Load nahi ho saka: ${err.message}</div>`;
+    if (!pending || pending.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#64748b;">No pending payouts!</td></tr>`;
+        return;
     }
+
+    pending.forEach(w => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><b>${w.mobile}</b></td>
+            <td style="color:#ef4444; font-weight:900;">₹${w.amount}</td>
+            <td>${w.bank_holder || 'N/A'}</td>
+            <td>A/C: ${w.bank_account || 'N/A'}<br><small style="color:#64748b;">IFSC: ${w.bank_ifsc || 'N/A'}</small></td>
+            <td>
+                <button class="btn-action btn-green" onclick="approveWithdrawal(${w.id})">Mark Paid</button>
+                <button class="btn-action btn-red" onclick="refundWithdrawal(${w.id}, '${w.mobile}', ${w.amount})">Reject & Refund</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
 }
 
-// 5. Mark Withdrawal Paid
-async function markPaid(id) {
-    if (!confirm("Confirm bank transfer complete?")) return;
-    try {
-        await client.from('withdrawals').update({ status: 'paid' }).eq('id', id);
-        alert("Marked as paid.");
-        loadWithdrawals();
-    } catch (err) {
-        alert("Error: " + err.message);
-    }
+async function approveWithdrawal(wId) {
+    if (!confirm("Confirm payment transfer to user bank?")) return;
+    await client.from('withdrawals').update({ status: 'approved' }).eq('id', wId);
+    loadWithdrawals();
+    loadFinancialStats();
 }
 
-// 6. Reject Withdrawal & Refund Balance
-async function rejectWd(id, mobile, amount) {
-    if (!confirm(`Reject withdrawal of ₹${amount} and refund balance to user?`)) return;
-    try {
-        // Mark rejected
-        await client.from('withdrawals').update({ status: 'rejected' }).eq('id', id);
-
-        // Refund balance to user
-        const { data: user } = await client
-            .from('users')
-            .select('balance')
-            .eq('mobile', mobile)
-            .single();
-
-        if (user) {
-            await client
-                .from('users')
-                .update({ balance: Number(user.balance || 0) + Number(amount) })
-                .eq('mobile', mobile);
-        }
-
-        alert("Withdrawal rejected and amount refunded to wallet!");
-        loadWithdrawals();
-    } catch (err) {
-        alert("Error: " + err.message);
-    }
-}
-
-// Initial Load
-loadRecharges();
-loadWithdrawals();
-</script>
-
-</body>
-</html>
+async function refundWithdrawal(wId, mobile, amount) {
+    if (!confirm(`Reject & Refund ₹${amount} back to wallet of ${mobile}?`)) return;
+    await client.from('withdrawals').update({ status: 'rejected' }).eq('id', wId);
+    const { data: user } = await client.from('users').select('
