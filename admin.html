@@ -69,6 +69,10 @@
         .btn-green { background: #22c55e; color: #fff; }
         .btn-red { background: #ef4444; color: #fff; }
         .btn-blue { background: #3b82f6; color: #fff; }
+        
+        .upi-label { font-size: 11px; font-weight: 800; color: #475569; display: block; margin-top: 8px; margin-bottom: 4px; }
+        .upi-input { width: 100%; padding: 10px; border-radius: 10px; border: 1.5px solid #cbd5e1; font-weight: 700; font-size: 13px; outline: none; margin-bottom: 6px; }
+        .upi-input:focus { border-color: #16a34a; }
     </style>
 </head>
 <body>
@@ -192,8 +196,27 @@
         </div>
     </div>
 
-    <!-- 5. Controls Tab -->
+    <!-- 5. Controls Tab (4 Multi-UPI Gateways Integrated) -->
     <div id="settingsTab" class="tab-pane">
+        <div class="card-panel">
+            <h3 style="margin-bottom: 6px;">💳 Multi-Channel UPI Setup</h3>
+            <p style="font-size: 11px; color: #64748b; margin-bottom: 12px;">Ye chaaron UPI IDs direct Recharge page (PAY-A, B, C, D) se connect hain:</p>
+
+            <span class="upi-label">PAY-A Channel UPI (Default)</span>
+            <input type="text" id="upiA" class="upi-input" placeholder="e.g. primary@paytm">
+
+            <span class="upi-label">PAY-B Channel UPI</span>
+            <input type="text" id="upiB" class="upi-input" placeholder="e.g. secondary@ybl">
+
+            <span class="upi-label">PAY-C Channel UPI</span>
+            <input type="text" id="upiC" class="upi-input" placeholder="e.g. backup@icici">
+
+            <span class="upi-label">PAY-D Channel UPI</span>
+            <input type="text" id="upiD" class="upi-input" placeholder="e.g. merchant@sbi">
+
+            <button class="btn-action btn-green" style="width: 100%; padding: 12px; font-size: 13px; margin-top: 10px;" onclick="saveAllUpiChannels()">💾 Save All 4 UPI Channels</button>
+        </div>
+
         <div class="card-panel">
             <h3 style="margin-bottom: 10px;">Broadcast Home Alert</h3>
             <input type="text" id="cfgNotice" placeholder="Important announcement..." style="width: 100%; padding: 10px; border-radius: 10px; border: 1.5px solid #cbd5e1; margin-bottom: 10px;">
@@ -202,13 +225,12 @@
     </div>
 
 </div>
-
 <script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-// Touch Tab Event Binding (100% Mobile Compatible)
+// Touch Tab Event Binding
 document.querySelectorAll('.tab-btn').forEach(button => {
     button.addEventListener('click', function(e) {
         e.preventDefault();
@@ -223,6 +245,7 @@ document.querySelectorAll('.tab-btn').forEach(button => {
 
         if (targetTab === 'rechargeTab') loadRecharges();
         if (targetTab === 'withdrawTab') loadWithdrawals();
+        if (targetTab === 'settingsTab') loadAllUpiChannels();
     });
 });
 
@@ -338,6 +361,7 @@ async function approveWithdrawal(id) {
     loadFinancialStats();
 }
 
+// 4. Directory Engine
 function renderMembers(users) {
     const tbody = document.getElementById('membersTableBody');
     tbody.innerHTML = "";
@@ -366,8 +390,45 @@ async function editUserBal(mobile) {
     }
 }
 
-// Initial Sync
+// 5. Multi-Channel UPI Engine (Load & Save to Supabase)
+async function loadAllUpiChannels() {
+    try {
+        const { data } = await client.from('app_settings').select('upi_a, upi_b, upi_c, upi_d').eq('id', 1).single();
+        if (data) {
+            document.getElementById('upiA').value = data.upi_a || '';
+            document.getElementById('upiB').value = data.upi_b || '';
+            document.getElementById('upiC').value = data.upi_c || '';
+            document.getElementById('upiD').value = data.upi_d || '';
+        }
+    } catch (e) {
+        console.error("UPI Load Error:", e);
+    }
+}
+
+async function saveAllUpiChannels() {
+    const a = document.getElementById('upiA').value.trim();
+    const b = document.getElementById('upiB').value.trim();
+    const c = document.getElementById('upiC').value.trim();
+    const d = document.getElementById('upiD').value.trim();
+
+    const { error } = await client.from('app_settings').upsert({
+        id: 1,
+        upi_a: a,
+        upi_b: b,
+        upi_c: c,
+        upi_d: d
+    });
+
+    if (error) {
+        alert("Save Error: " + error.message);
+    } else {
+        alert("✅ Chaaron UPI Channels successfully save aur update ho gaye!");
+    }
+}
+
+// Initial Run
 loadFinancialStats();
+loadAllUpiChannels();
 </script>
 
 </body>
