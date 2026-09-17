@@ -40,6 +40,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 8px;
+            position: relative;
+            z-index: 10;
         }
 
         .btn-circle-back {
@@ -73,35 +75,29 @@
         .wallet-pill .meta span { font-size: 10px; opacity: 0.9; }
         .wallet-pill .meta b { font-size: 14px; font-weight: 800; letter-spacing: 0.3px; }
 
-        /* Brand Center */
-        .brand-section {
-            text-align: center;
-            margin: 6px 0 16px;
+        /* Official Image Header Banner */
+        .brand-banner-box {
+            width: 100%;
+            border-radius: 22px;
+            overflow: hidden;
+            margin: 4px 0 12px;
+            box-shadow: 0 8px 22px rgba(27, 67, 50, 0.12);
+            border: 1.5px solid #ffffff;
+            background: #ffffff;
         }
-        .brand-section h1 {
-            font-size: 26px;
-            font-weight: 900;
-            color: #0d3820;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
+        .brand-banner-box img {
+            width: 100%;
+            display: block;
+            object-fit: cover;
         }
-        .brand-section p {
-            font-size: 11px;
-            color: #2d6a4f;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-top: 2px;
-        }
+
         .banner-slogan {
-            font-size: 16px;
+            text-align: center;
+            font-size: 14px;
             font-weight: 800;
             color: #123e24;
             font-style: italic;
-            margin-top: 8px;
+            margin-bottom: 14px;
         }
 
         /* Clay 3D Cards */
@@ -206,7 +202,7 @@
             box-shadow: 0 6px 14px rgba(21, 128, 61, 0.35);
         }
 
-        /* Payment Channel Buttons (PAY-A, B, C, D) */
+        /* Payment Channel Buttons */
         .gateway-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -261,7 +257,7 @@
             box-shadow: 0 0 0 2px #dcfce7;
         }
 
-        /* 3D Big Glossy Proceed Button */
+        /* 3D Glossy Proceed Button */
         .btn-proceed {
             width: 100%;
             background: linear-gradient(180deg, #22c55e 0%, #15803d 100%);
@@ -363,12 +359,11 @@
         </div>
     </div>
 
-    <!-- Annapurna Brand Head -->
-    <div class="brand-section">
-        <h1>🌾 Annapurna</h1>
-        <p>Seeds For A Better Tomorrow</p>
-        <div class="banner-slogan">Recharge Today • Grow Tomorrow 🌱</div>
+    <!-- Official Annapurna Seeds Header Banner Image -->
+    <div class="brand-banner-box">
+        <img src="banner-top.png" alt="Annapurna Seeds Official Banner">
     </div>
+    <div class="banner-slogan">Recharge Today • Grow Tomorrow 🌱</div>
 
     <!-- Card 1: Amount Selection -->
     <div class="clay-card">
@@ -380,14 +375,12 @@
             </div>
         </div>
 
-        <!-- Sunken Input Box -->
         <div class="sunken-input-box">
             <span class="currency-symbol">₹</span>
             <input type="number" id="amtInput" value="520">
             <span class="clear-btn" onclick="clearInput()">✕</span>
         </div>
 
-        <!-- Slabs Grid -->
         <div class="slabs-grid">
             <div class="slab-pill active" onclick="pickSlab(520, this)">₹520</div>
             <div class="slab-pill" onclick="pickSlab(2120, this)">₹2,120</div>
@@ -447,7 +440,7 @@
         </button>
     </div>
 
-    <!-- 4 Round Circular Bottom Nav Floating Icons -->
+    <!-- Floating 4-Circle Bottom Icons -->
     <div class="floating-bottom-bar">
         <a href="index.html" class="circle-nav-btn" title="Home">⚡</a>
         <a href="profile.html" class="circle-nav-btn" title="Lock Bank">🔒</a>
@@ -554,4 +547,5 @@ async function submitUTR() {
 </script>
 
 </body>
-</html>
+                        </html>
+            
