@@ -6,85 +6,307 @@
     <title>My Profile - Annapurna Seeds</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background: #eef6f0 url('bg-agro.png') center top/contain no-repeat fixed; min-height: 100vh; display: flex; justify-content: center; }
-        .mobile-wrapper { width: 100%; max-width: 420px; background: rgba(244, 250, 245, 0.94); backdrop-filter: blur(12px); min-height: 100vh; padding-bottom: 95px; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
 
-        /* Top Bar */
-        .top-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; }
-        .back-circle { width: 36px; height: 36px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: #1e5e3a; text-decoration: none; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
-        .gear-circle { width: 36px; height: 36px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #1e5e3a; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+        body {
+            /* Aapki khet aur kisan wali image natural frame ki tarah fit hogi */
+            background: linear-gradient(rgba(240, 248, 242, 0.4), rgba(240, 248, 242, 0.5)), url('bg-nature.png') center top/cover no-repeat fixed;
+            background-color: #1b4332;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
 
-        /* Brand Logo Top */
-        .brand-logo-row { text-align: center; margin-bottom: 12px; }
-        .brand-logo-row h2 { font-size: 20px; font-weight: 900; color: #0d3820; }
-        .brand-logo-row span { font-size: 11px; color: #2e7d32; font-style: italic; }
+        .mobile-wrapper {
+            width: 100%;
+            max-width: 420px;
+            /* Sides me leaves dikhane ke liye frosted glass look */
+            background: rgba(244, 250, 245, 0.88);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            min-height: 100vh;
+            padding-bottom: 95px;
+            box-shadow: 0 0 35px rgba(0, 0, 0, 0.25);
+            border-left: 2px solid rgba(255,255,255,0.7);
+            border-right: 2px solid rgba(255,255,255,0.7);
+        }
 
-        /* Profile Top Card (Kaveri Screenshot) */
-        .profile-hero-card { background: #ffffff; margin: 0 14px 14px; border-radius: 28px; padding: 18px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1.5px solid #e1eee4; }
-        .user-info-row { display: flex; align-items: center; gap: 14px; }
-        .user-avatar-ring { width: 64px; height: 64px; border-radius: 50%; background: #d8f3dc; display: flex; align-items: center; justify-content: center; font-size: 24px; border: 3px solid #2ecc71; box-shadow: 0 4px 12px rgba(46,204,113,0.25); flex-shrink: 0; }
-        .user-meta h3 { font-size: 18px; font-weight: 900; color: #123e24; }
-        .user-id-row { font-size: 12px; color: #648a72; font-weight: 700; margin: 3px 0 6px; display: flex; align-items: center; gap: 6px; }
-        .vip-badge { background: #eef8f1; color: #1e824c; border: 1px solid #cce8d4; font-size: 11px; font-weight: 900; padding: 3px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px; }
+        /* Top Brand Head */
+        .brand-logo-row {
+            text-align: center;
+            padding: 16px 10px 10px;
+        }
+        .brand-logo-row h2 {
+            font-size: 22px;
+            font-weight: 900;
+            color: #0d3820;
+            letter-spacing: -0.5px;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+        }
+        .brand-logo-row span {
+            font-size: 11px;
+            color: #1b683b;
+            font-style: italic;
+            font-weight: 700;
+        }
 
-        .slogan-bar { text-align: center; font-size: 11px; color: #2d6a4f; font-style: italic; font-weight: 600; margin-top: 12px; padding-top: 10px; border-top: 1px dashed #e1eee4; }
+        /* Profile Top Card (Kaveri Screenshot Exact) */
+        .profile-hero-card {
+            background: rgba(255, 255, 255, 0.95);
+            margin: 6px 14px 14px;
+            border-radius: 28px;
+            padding: 18px;
+            box-shadow: 0 10px 24px rgba(18, 62, 36, 0.08);
+            border: 1.5px solid #ffffff;
+        }
+        .user-info-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .user-avatar-ring {
+            width: 66px;
+            height: 66px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #d8f3dc, #b7e4c7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            border: 3px solid #2ecc71;
+            box-shadow: 0 6px 16px rgba(46,204,113,0.3);
+            flex-shrink: 0;
+        }
+        .user-meta h3 {
+            font-size: 18px;
+            font-weight: 900;
+            color: #123e24;
+        }
+        .user-id-row {
+            font-size: 12px;
+            color: #557c64;
+            font-weight: 700;
+            margin: 3px 0 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .vip-badge {
+            background: #eef8f1;
+            color: #1e824c;
+            border: 1.5px solid #cce8d4;
+            font-size: 11px;
+            font-weight: 900;
+            padding: 3px 10px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .slogan-bar {
+            text-align: center;
+            font-size: 11px;
+            color: #2d6a4f;
+            font-style: italic;
+            font-weight: 700;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px dashed #dcece0;
+        }
 
-        /* 3 Sunken Metrics (Balance, Recharge, TT Income) */
-        .metrics-tri-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0 14px 14px; }
-        .metric-clay-box { background: #ffffff; border-radius: 22px; padding: 14px 8px; text-align: center; border: 1.5px solid #e1eee4; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-        .clay-icon { width: 38px; height: 38px; border-radius: 14px; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        /* 3 Sunken Clay Metrics */
+        .metrics-tri-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 0 14px 14px;
+        }
+        .metric-clay-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 22px;
+            padding: 14px 6px;
+            text-align: center;
+            border: 1.5px solid #ffffff;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+        }
+        .clay-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 16px;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+        }
         .icon-green { background: linear-gradient(135deg, #2ecc71, #1e824c); }
         .icon-orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
         .icon-purple { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
-        .metric-clay-box b { font-size: 15px; color: #123e24; font-weight: 900; display: block; }
-        .metric-clay-box span { font-size: 11px; color: #648a72; font-weight: 600; margin-top: 2px; display: block; }
+        .metric-clay-box b {
+            font-size: 15px;
+            color: #123e24;
+            font-weight: 900;
+            display: block;
+        }
+        .metric-clay-box span {
+            font-size: 11px;
+            color: #557c64;
+            font-weight: 700;
+            margin-top: 2px;
+            display: block;
+        }
 
-        /* Banner Middle */
-        .mid-banner { margin: 0 14px 14px; background: linear-gradient(135deg, #d8f3dc, #b7e4c7); border-radius: 20px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #c2e5ce; }
-        .mid-banner h4 { font-size: 13px; color: #0d3820; font-weight: 800; }
-        .mid-banner p { font-size: 10px; color: #245738; }
+        /* Banner Strip */
+        .mid-banner {
+            margin: 0 14px 14px;
+            background: linear-gradient(135deg, rgba(216,243,220,0.9), rgba(183,228,199,0.9));
+            border-radius: 20px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1.5px solid #ffffff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+        .mid-banner h4 {
+            font-size: 13px;
+            color: #0d3820;
+            font-weight: 800;
+        }
+        .mid-banner p {
+            font-size: 10px;
+            color: #245738;
+            font-weight: 600;
+        }
 
-        /* List Action Items */
-        .list-group { margin: 0 14px; display: flex; flex-direction: column; gap: 10px; }
-        .list-item-btn { background: #ffffff; border-radius: 20px; padding: 10px 16px 10px 12px; display: flex; align-items: center; justify-content: space-between; text-decoration: none; border: 1.5px solid #e1eee4; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
-        .list-left { display: flex; align-items: center; gap: 12px; }
-        .item-icon-box { width: 40px; height: 40px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff; }
-        .item-meta h4 { font-size: 13px; font-weight: 800; color: #123e24; }
-        .item-meta p { font-size: 10px; color: #648a72; font-weight: 600; }
-        .arrow-bubble { width: 24px; height: 24px; border-radius: 50%; background: #f0f7f2; color: #2d6a4f; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
+        /* 3D List Action Items */
+        .list-group {
+            margin: 0 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .list-item-btn {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 22px;
+            padding: 10px 16px 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            border: 1.5px solid #ffffff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .list-item-btn:active {
+            transform: scale(0.98);
+        }
+        .list-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .item-icon-box {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            color: #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .item-meta h4 {
+            font-size: 13px;
+            font-weight: 800;
+            color: #123e24;
+        }
+        .item-meta p {
+            font-size: 10px;
+            color: #648a72;
+            font-weight: 600;
+        }
+        .arrow-bubble {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #f0f7f2;
+            color: #2d6a4f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 900;
+        }
 
-        /* Bottom Floating Bar */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); display: flex; justify-content: space-around; align-items: center; padding: 8px 0; border-top: 1px solid #e2eee5; box-shadow: 0 -4px 16px rgba(0,0,0,0.04); z-index: 100; }
-        .nav-link { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #6c8a77; font-size: 10px; font-weight: 700; gap: 3px; }
-        .nav-link.active-pill { background: linear-gradient(180deg, #2ecc71 0%, #1e824c 100%); color: #fff; padding: 6px 18px; border-radius: 16px; box-shadow: 0 4px 12px rgba(30,130,76,0.3); }
-        .nav-link.active-pill span { color: #fff !important; }
-        .nav-icon { font-size: 18px; }
+        /* Kaveri Floating Bottom Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 420px;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            border-top: 1px solid #e2eee5;
+            box-shadow: 0 -4px 16px rgba(0,0,0,0.04);
+            z-index: 100;
+        }
+        .nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #6c8a77;
+            font-size: 10px;
+            font-weight: 700;
+            gap: 3px;
+        }
+        .nav-link.active-pill {
+            background: linear-gradient(180deg, #2ecc71 0%, #1e824c 100%);
+            color: #fff;
+            padding: 6px 18px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(30,130,76,0.3);
+        }
+        .nav-link.active-pill span {
+            color: #fff !important;
+        }
+        .nav-icon {
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
 
 <div class="mobile-wrapper">
 
-    <!-- Top Navigation -->
-    <div class="top-header">
-        <a href="index.html" class="back-circle">✕</a>
-        <div class="gear-circle" id="logoutBtn" title="Logout">🚪</div>
-    </div>
-
+    <!-- Brand Header -->
     <div class="brand-logo-row">
         <h2>🌾 Annapurna Seeds</h2>
         <span>Grow Together, Naturally</span>
     </div>
 
-    <!-- User Header Card -->
+    <!-- User Profile Hero Card -->
     <div class="profile-hero-card">
         <div class="user-info-row">
             <div class="user-avatar-ring">🌱</div>
             <div class="user-meta">
-                <h3 id="displayPhone">9876543210</h3>
+                <h3 id="displayPhone">8937985224</h3>
                 <div class="user-id-row">
-                    <span>ID: <b id="displayId">ANP0000</b></span>
+                    <span>ID: <b id="displayId">ANP1812</b></span>
                     <span onclick="copyId()" style="cursor: pointer;">📋</span>
                 </div>
                 <div class="vip-badge">👑 <span id="vipLevel">VIP 1</span></div>
@@ -102,7 +324,7 @@
         </div>
         <div class="metric-clay-box">
             <div class="clay-icon icon-orange">💳</div>
-            <b id="userPlanVal">₹0.00</b>
+            <b id="userPlanVal">₹0</b>
             <span>Active Plan</span>
         </div>
         <div class="metric-clay-box">
@@ -121,7 +343,7 @@
         <div style="font-size: 24px;">🌾</div>
     </div>
 
-    <!-- Action Rows -->
+    <!-- 3D Action Rows -->
     <div class="list-group">
         <a href="recharge.html" class="list-item-btn">
             <div class="list-left">
@@ -139,7 +361,7 @@
                 <div class="item-icon-box" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">🏦</div>
                 <div class="item-meta">
                     <h4>Bank Details</h4>
-                    <p id="bankStatusText">Manage bank account for withdrawals</p>
+                    <p id="bankStatusText">Manage bank account for payouts</p>
                 </div>
             </div>
             <div class="arrow-bubble">➔</div>
@@ -156,7 +378,7 @@
             <div class="arrow-bubble">➔</div>
         </div>
 
-        <div class="list-item-btn" id="logoutAction" style="cursor: pointer;">
+        <div class="list-item-btn" id="logoutAction">
             <div class="list-left">
                 <div class="item-icon-box" style="background: linear-gradient(135deg, #ef4444, #b91c1c);">🚪</div>
                 <div class="item-meta">
@@ -168,7 +390,7 @@
         </div>
     </div>
 
-    <!-- Bottom Navigation -->
+    <!-- Kaveri Floating Bottom Bar -->
     <div class="bottom-nav">
         <a href="index.html" class="nav-link">
             <span class="nav-icon">🏠</span>
@@ -211,7 +433,7 @@ async function syncProfile() {
             currentUser = data;
             localStorage.setItem('annapurna_user', JSON.stringify(data));
             document.getElementById('displayPhone').innerText = data.mobile;
-            document.getElementById('displayId').innerText = data.invite_code || 'ANP0000';
+            document.getElementById('displayId').innerText = data.invite_code || 'ANP1812';
             document.getElementById('walletBal').innerText = "₹" + Number(data.balance || 0).toFixed(2);
             document.getElementById('userPlanVal').innerText = "₹" + Number(data.active_plan || 0).toFixed(0);
             document.getElementById('totalCommissionVal').innerText = "₹" + Number(data.commission || 0).toFixed(2);
@@ -293,19 +515,16 @@ async function applyWithdrawal() {
     }
 }
 
-document.getElementById('logoutBtn').onclick = logout;
-document.getElementById('logoutAction').onclick = logout;
-
-function logout() {
+document.getElementById('logoutAction').onclick = function() {
     if (confirm("Kya aap sign out karna chahte hain?")) {
         localStorage.removeItem('annapurna_user');
         window.location.href = 'login.html';
     }
-}
+};
 
 syncProfile();
 </script>
 
 </body>
     </html>
-    
+                        
