@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login / Register - Annapurna Seeds</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- Supabase JS Client CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .auth-container {
             padding: 24px 18px;
@@ -67,6 +69,10 @@
             font-size: 13px;
             color: #557262;
         }
+        button:disabled {
+            background: #a3b18a;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -113,12 +119,17 @@
 </div>
 
 <script>
+// Supabase Client Setup
+const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
+const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+
 let currentMode = 'login';
 
 // URL se referral code auto-fill (?ref=ANP9901)
 const params = new URLSearchParams(window.location.search);
 const refParam = params.get('ref');
-if(refParam) {
+if (refParam) {
     switchMode('register');
     document.getElementById('inviteCode').value = refParam;
 }
@@ -143,11 +154,97 @@ function switchMode(mode) {
     }
 }
 
-function handleAuth(e) {
+function generateInviteCode() {
+    return 'ANP' + Math.floor(1000 + Math.random() * 9000);
+}
+
+async function handleAuth(e) {
     e.preventDefault();
-    const mobile = document.getElementById('mobileNumber').value;
-    alert(`${currentMode === 'login' ? 'Login' : 'Registration'} successful for +91 ${mobile}!`);
-    window.location.href = "index.html";
+    const btn = document.getElementById('submitBtn');
+    const mobile = document.getElementById('mobileNumber').value.trim();
+    const pass = document.getElementById('password').value;
+    const invite = document.getElementById('inviteCode').value.trim();
+
+    btn.disabled = true;
+
+    try {
+        if (currentMode === 'login') {
+            btn.innerText = 'Verifying...';
+
+            // User check karein
+            const { data, error } = await client
+                .from('users')
+                .select('*')
+                .eq('mobile', mobile)
+                .eq('password', pass)
+                .maybeSingle();
+
+            if (error) throw error;
+
+            if (!data) {
+                alert('Mobile number ya password galat hai!');
+                btn.disabled = false;
+                btn.innerText = 'Secure Login';
+                return;
+            }
+
+            // Session store karke index.html par bhejein
+            localStorage.setItem('annapurna_user', JSON.stringify(data));
+            alert('Login safal raha!');
+            window.location.href = 'index.html';
+
+        } else {
+            // Register Mode
+            btn.innerText = 'Creating Account...';
+
+            // Pehle check karein duplicate mobile
+            const { data: existingUser } = await client
+                .from('users')
+                .select('mobile')
+                .eq('mobile', mobile)
+                .maybeSingle();
+
+            if (existingUser) {
+                alert('Yeh mobile number pehle se maujood hai! Login karein.');
+                switchMode('login');
+                btn.disabled = false;
+                btn.innerText = 'Secure Login';
+                return;
+            }
+
+            const myCode = generateInviteCode();
+            const { data: newUser, error: insertError } = await client
+                .from('users')
+                .insert([
+                    {
+                        mobile: mobile,
+                        password: pass,
+                        invite_code: myCode,
+                        referred_by: invite || null,
+                        balance: 0.00
+                    }
+                ])
+                .select()
+                .single();
+
+            if (insertError) throw insertError;
+
+            localStorage.setItem('annapurna_user', JSON.stringify(newUser));
+            alert(`Account ban gaya! Referral Code: ${myCode}`);
+            window.location.href = 'index.html';
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert('Error: ' + (err.message || 'Database se connect nahi ho paya'));
+    } finally {
+        btn.disabled = false;
+        if (currentMode === 'login') {
+            btn.innerText = 'Secure Login';
+        } else {
+            btn.innerText = 'Create Account';
+        }
+    }
 }
 </script>
 
