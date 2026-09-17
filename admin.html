@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Annapurna Admin Console</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- Supabase JS Client CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { background: #0f172a; color: #e2e8f0; }
-        .mobile-wrapper { max-width: 600px; background: #1e293b; color: #f8fafc; border: 1px solid #334155; }
+        .mobile-wrapper { max-width: 600px; background: #1e293b; color: #f8fafc; border: 1px solid #334155; margin: 0 auto; min-height: 100vh; }
         .admin-header { background: #0f172a; padding: 20px; border-bottom: 1px solid #334155; }
         .tab-btn { background: #334155; color: #94a3b8; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; }
         .tab-btn.active { background: #2d6a4f; color: #fff; }
@@ -17,6 +19,7 @@
         .btn-action { padding: 6px 12px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; font-size: 12px; }
         .btn-approve { background: #15803d; color: #fff; }
         .btn-reject { background: #b91c1c; color: #fff; margin-left: 6px; }
+        .empty-text { text-align: center; color: #64748b; padding: 30px 10px; font-size: 13px; }
     </style>
 </head>
 <body>
@@ -26,99 +29,265 @@
         <h2 style="font-size: 18px; color: #4ade80;">Annapurna Seeds Admin Console 🔒</h2>
         <p style="font-size: 12px; color: #94a3b8; margin-top: 4px;">Manual UTR Approval & Fixed Slab Payouts</p>
         <div style="display: flex; gap: 8px; margin-top: 14px;">
-            <button class="tab-btn active" onclick="switchAdminTab('recharge')">Recharge Approvals</button>
-            <button class="tab-btn" onclick="switchAdminTab('withdraw')">Withdrawal Requests</button>
+            <button class="tab-btn active" id="tabRecBtn" onclick="switchAdminTab('recharge')">Recharge Approvals</button>
+            <button class="tab-btn" id="tabWdBtn" onclick="switchAdminTab('withdraw')">Withdrawal Requests</button>
         </div>
     </div>
 
     <!-- Tab 1: Pending Recharges -->
     <div id="rechargeSection" style="padding: 15px;">
         <h3 style="font-size: 14px; margin-bottom: 12px; color: #94a3b8;">Pending UTR Submissions</h3>
-        
-        <div class="data-card" id="rec-card-1">
-            <div class="data-row">
-                <span>User: <b>+91 9876543210</b></span>
-                <span class="badge-pending">Pending</span>
-            </div>
-            <div class="data-row">
-                <span>Plan: <b>Sprout Plan (A)</b></span>
-                <span style="color: #4ade80; font-weight: bold;">₹520</span>
-            </div>
-            <div class="data-row">
-                <span>UTR: <b style="letter-spacing: 1px; color: #38bdf8;">412356789012</b></span>
-                <span style="font-size: 11px; color: #64748b;">10 mins ago</span>
-            </div>
-            <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
-                <button class="btn-action btn-approve" onclick="approveRecharge(1, 520)">Approve & Distribute MLM</button>
-                <button class="btn-action btn-reject" onclick="rejectRecharge(1)">Reject</button>
-            </div>
+        <div id="rechargeList">
+            <div class="empty-text">Loading requests from Supabase...</div>
         </div>
     </div>
 
     <!-- Tab 2: Fixed Slab Withdrawals -->
     <div id="withdrawSection" style="padding: 15px; display: none;">
-        <h3 style="font-size: 14px; margin-bottom: 12px; color: #94a3b8;">Today's Withdrawal Requests</h3>
-        
-        <div class="data-card" id="wd-card-1">
-            <div class="data-row">
-                <span>User: <b>+91 9123456789</b></span>
-                <span class="badge-pending">Monday Queue</span>
-            </div>
-            <div class="data-row">
-                <span>Bank: <b>SBI (A/C: **********4412)</b></span>
-                <span style="color: #38bdf8; font-weight: bold;">₹330 (Slab)</span>
-            </div>
-            <div class="data-row">
-                <span>IFSC: <b>SBIN0001234</b></span>
-                <span>Holder: <b>Mohammad Sahud</b></span>
-            </div>
-            <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
-                <button class="btn-action btn-approve" onclick="markPaid(1)">Mark Paid</button>
-                <button class="btn-action btn-reject" onclick="rejectWd(1)">Reject</button>
-            </div>
+        <h3 style="font-size: 14px; margin-bottom: 12px; color: #94a3b8;">Pending Withdrawal Requests</h3>
+        <div id="withdrawList">
+            <div class="empty-text">Loading requests from Supabase...</div>
         </div>
     </div>
 </div>
 
 <script>
+// Supabase Client Setup
+const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
+const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+// Simple Admin Access Gate (Default PIN: 1122)
+const adminPin = prompt("Admin Security PIN darj karein:");
+if (adminPin !== "1122") {
+    alert("Unauthorized access!");
+    window.location.href = "index.html";
+}
+
 function switchAdminTab(tab) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    if(tab === 'recharge') {
-        event.target.classList.add('active');
-        document.getElementById('rechargeSection').style.display = 'block';
-        document.getElementById('withdrawSection').style.display = 'none';
-    } else {
-        event.target.classList.add('active');
-        document.getElementById('rechargeSection').style.display = 'none';
-        document.getElementById('withdrawSection').style.display = 'block';
+    document.getElementById('tabRecBtn').classList.toggle('active', tab === 'recharge');
+    document.getElementById('tabWdBtn').classList.toggle('active', tab === 'withdraw');
+    document.getElementById('rechargeSection').style.display = (tab === 'recharge') ? 'block' : 'none';
+    document.getElementById('withdrawSection').style.display = (tab === 'withdraw') ? 'block' : 'none';
+}
+
+// 1. Fetch & Render Pending Recharges
+async function loadRecharges() {
+    const listDiv = document.getElementById('rechargeList');
+    try {
+        const { data, error } = await client
+            .from('recharges')
+            .select('*')
+            .eq('status', 'pending')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        if (!data || data.length === 0) {
+            listDiv.innerHTML = `<div class="empty-text">Koi bhi pending recharge request nahi hai 👍</div>`;
+            return;
+        }
+
+        listDiv.innerHTML = data.map(item => `
+            <div class="data-card" id="rec-card-${item.id}">
+                <div class="data-row">
+                    <span>User: <b>+91 ${item.mobile}</b></span>
+                    <span class="badge-pending">Pending</span>
+                </div>
+                <div class="data-row">
+                    <span>Amount:</span>
+                    <span style="color: #4ade80; font-weight: bold;">₹${item.amount}</span>
+                </div>
+                <div class="data-row">
+                    <span>UTR: <b style="letter-spacing: 1px; color: #38bdf8;">${item.utr}</b></span>
+                    <span style="font-size: 11px; color: #64748b;">${new Date(item.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                </div>
+                <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
+                    <button class="btn-action btn-approve" onclick="approveRecharge(${item.id}, '${item.mobile}', ${item.amount})">Approve & Distribute MLM</button>
+                    <button class="btn-action btn-reject" onclick="rejectRecharge(${item.id})">Reject</button>
+                </div>
+            </div>
+        `).join('');
+
+    } catch (err) {
+        listDiv.innerHTML = `<div class="empty-text" style="color:#f87171;">Load nahi ho saka: ${err.message}</div>`;
     }
 }
 
-function approveRecharge(id, amount) {
-    if(confirm(`Approve ₹${amount} recharge? Isse user ka plan activate hoga aur upline me 15%, 5%, 2% commission chala jayega.`)) {
-        document.getElementById(`rec-card-${id}`).style.display = 'none';
-        alert("Recharge approved and MLM tree updated!");
+// 2. Approve Recharge & Auto MLM Distribution (15%, 5%, 2%)
+async function approveRecharge(id, mobile, amount) {
+    if (!confirm(`Confirm approve ₹${amount} recharge for +91 ${mobile}?`)) return;
+
+    try {
+        // Step A: Mark recharge approved
+        await client.from('recharges').update({ status: 'approved' }).eq('id', id);
+
+        // Step B: Set active plan on user
+        const { data: buyer } = await client
+            .from('users')
+            .select('*')
+            .eq('mobile', mobile)
+            .single();
+
+        if (buyer) {
+            await client.from('users').update({ active_plan: amount }).eq('mobile', mobile);
+
+            // Step C: Distribute Level 1 (15%)
+            if (buyer.referred_by) {
+                const { data: upline1 } = await client
+                    .from('users')
+                    .select('*')
+                    .eq('invite_code', buyer.referred_by)
+                    .maybeSingle();
+
+                if (upline1) {
+                    const comm1 = (amount * 0.15);
+                    await client.from('users').update({
+                        balance: Number(upline1.balance || 0) + comm1,
+                        commission: Number(upline1.commission || 0) + comm1
+                    }).eq('id', upline1.id);
+
+                    // Distribute Level 2 (5%)
+                    if (upline1.referred_by) {
+                        const { data: upline2 } = await client
+                            .from('users')
+                            .select('*')
+                            .eq('invite_code', upline1.referred_by)
+                            .maybeSingle();
+
+                        if (upline2) {
+                            const comm2 = (amount * 0.05);
+                            await client.from('users').update({
+                                balance: Number(upline2.balance || 0) + comm2,
+                                commission: Number(upline2.commission || 0) + comm2
+                            }).eq('id', upline2.id);
+
+                            // Distribute Level 3 (2%)
+                            if (upline2.referred_by) {
+                                const { data: upline3 } = await client
+                                    .from('users')
+                                    .select('*')
+                                    .eq('invite_code', upline2.referred_by)
+                                    .maybeSingle();
+
+                                if (upline3) {
+                                    const comm3 = (amount * 0.02);
+                                    await client.from('users').update({
+                                        balance: Number(upline3.balance || 0) + comm3,
+                                        commission: Number(upline3.commission || 0) + comm3
+                                    }).eq('id', upline3.id);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        alert("Recharge approved and MLM Commission distributed successfully!");
+        loadRecharges();
+
+    } catch (err) {
+        alert("Action error: " + err.message);
     }
 }
 
-function rejectRecharge(id) {
-    if(confirm("Reject this recharge submission?")) {
-        document.getElementById(`rec-card-${id}`).style.display = 'none';
+// 3. Reject Recharge
+async function rejectRecharge(id) {
+    if (!confirm("Reject this recharge submission?")) return;
+    try {
+        await client.from('recharges').update({ status: 'rejected' }).eq('id', id);
+        alert("Recharge submission rejected.");
+        loadRecharges();
+    } catch (err) {
+        alert("Error: " + err.message);
     }
 }
 
-function markPaid(id) {
-    if(confirm("Confirm payout transfer?")) {
-        document.getElementById(`wd-card-${id}`).style.display = 'none';
+// 4. Fetch & Render Pending Withdrawals
+async function loadWithdrawals() {
+    const listDiv = document.getElementById('withdrawList');
+    try {
+        const { data, error } = await client
+            .from('withdrawals')
+            .select('*')
+            .eq('status', 'pending')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        if (!data || data.length === 0) {
+            listDiv.innerHTML = `<div class="empty-text">Koi bhi pending withdrawal request nahi hai 👍</div>`;
+            return;
+        }
+
+        listDiv.innerHTML = data.map(item => `
+            <div class="data-card" id="wd-card-${item.id}">
+                <div class="data-row">
+                    <span>User: <b>+91 ${item.mobile}</b></span>
+                    <span class="badge-pending">Queue</span>
+                </div>
+                <div class="data-row">
+                    <span>A/C: <b>${item.bank_account || 'N/A'}</b></span>
+                    <span style="color: #38bdf8; font-weight: bold;">₹${item.amount}</span>
+                </div>
+                <div class="data-row">
+                    <span>IFSC: <b>${item.bank_ifsc || 'N/A'}</b></span>
+                    <span>Holder: <b>${item.bank_holder || 'N/A'}</b></span>
+                </div>
+                <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
+                    <button class="btn-action btn-approve" onclick="markPaid(${item.id})">Mark Paid</button>
+                    <button class="btn-action btn-reject" onclick="rejectWd(${item.id}, '${item.mobile}', ${item.amount})">Reject & Refund</button>
+                </div>
+            </div>
+        `).join('');
+
+    } catch (err) {
+        listDiv.innerHTML = `<div class="empty-text" style="color:#f87171;">Load nahi ho saka: ${err.message}</div>`;
+    }
+}
+
+// 5. Mark Withdrawal Paid
+async function markPaid(id) {
+    if (!confirm("Confirm bank transfer complete?")) return;
+    try {
+        await client.from('withdrawals').update({ status: 'paid' }).eq('id', id);
         alert("Marked as paid.");
+        loadWithdrawals();
+    } catch (err) {
+        alert("Error: " + err.message);
     }
 }
 
-function rejectWd(id) {
-    if(confirm("Reject this withdrawal? Amount wallet me revert ho jayega.")) {
-        document.getElementById(`wd-card-${id}`).style.display = 'none';
+// 6. Reject Withdrawal & Refund Balance
+async function rejectWd(id, mobile, amount) {
+    if (!confirm(`Reject withdrawal of ₹${amount} and refund balance to user?`)) return;
+    try {
+        // Mark rejected
+        await client.from('withdrawals').update({ status: 'rejected' }).eq('id', id);
+
+        // Refund balance to user
+        const { data: user } = await client
+            .from('users')
+            .select('balance')
+            .eq('mobile', mobile)
+            .single();
+
+        if (user) {
+            await client
+                .from('users')
+                .update({ balance: Number(user.balance || 0) + Number(amount) })
+                .eq('mobile', mobile);
+        }
+
+        alert("Withdrawal rejected and amount refunded to wallet!");
+        loadWithdrawals();
+    } catch (err) {
+        alert("Error: " + err.message);
     }
 }
+
+// Initial Load
+loadRecharges();
+loadWithdrawals();
 </script>
 
 </body>
