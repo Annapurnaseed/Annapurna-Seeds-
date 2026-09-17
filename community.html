@@ -4,86 +4,338 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community Feed - Annapurna Seeds</title>
-    <link rel="stylesheet" href="css/style.css">
-    <!-- Supabase JS Client CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        .feed-container {
-            padding: 15px;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
-        .post-card {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 16px;
-            margin-bottom: 16px;
-            border: 1px solid #ddecde;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+
+        body {
+            background: #0d2818 url('bg-nature.png') center top/cover no-repeat fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
         }
-        .post-header {
+
+        .mobile-wrapper {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(244, 250, 245, 0.94);
+            backdrop-filter: blur(12px);
+            min-height: 100vh;
+            padding: 14px 14px 105px;
+            position: relative;
+            box-shadow: 0 0 35px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Top Header */
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .header-title h2 {
+            font-size: 20px;
+            font-weight: 900;
+            color: #0d3820;
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
+            gap: 6px;
         }
-        .post-avatar-img {
+        .header-title span {
+            font-size: 11px;
+            color: #2d6a4f;
+            font-weight: 700;
+        }
+
+        .btn-post-create {
+            background: linear-gradient(180deg, #22c55e 0%, #15803d 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(21, 128, 61, 0.35);
+        }
+
+        /* Notice Banner */
+        .pinned-notice-card {
+            background: linear-gradient(135deg, #1e5e3a, #0d3820);
+            border-radius: 24px;
+            padding: 16px;
+            color: #ffffff;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 20px rgba(13, 56, 32, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .notice-tag {
+            display: inline-block;
+            background: #a3e635;
+            color: #0d3820;
+            font-size: 9px;
+            font-weight: 900;
+            padding: 3px 8px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .pinned-notice-card h3 {
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        .pinned-notice-card p {
+            font-size: 11px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        /* Post Cards */
+        .post-card {
+            background: #ffffff;
+            border-radius: 26px;
+            padding: 18px 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 6px 18px rgba(18, 62, 36, 0.05);
+            border: 1.5px solid #e1eee4;
+        }
+
+        /* Author Row */
+        .author-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .author-avatar {
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            background: #d8f3dc;
+            background: linear-gradient(135deg, #d8f3dc, #b7e4c7);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
+            border: 2px solid #2ecc71;
         }
-        .post-user-info h4 {
+        .author-meta h4 {
             font-size: 14px;
-            color: #1b4332;
+            font-weight: 900;
+            color: #123e24;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
-        .post-user-info span {
-            font-size: 11px;
-            color: #557262;
+        .verified-tick {
+            color: #10b981;
+            font-size: 12px;
         }
+        .author-meta span {
+            font-size: 10px;
+            color: #648a72;
+            font-weight: 600;
+        }
+        .plan-tag-badge {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        /* Post Body */
         .post-text {
             font-size: 13px;
+            color: #2c4a38;
             line-height: 1.5;
-            color: #2d4a22;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        /* Visual Attachment / Proof Badge */
+        .proof-box {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border: 1.5px solid #86efac;
+            border-radius: 18px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             margin-bottom: 12px;
         }
-        .post-banner-placeholder {
-            width: 100%;
-            height: 170px;
-            background: linear-gradient(135deg, #d8f3dc 0%, #b7e4c7 100%);
-            border-radius: 14px;
+        .proof-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .proof-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: #16a34a;
+            color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #1b4332;
+            font-size: 18px;
+        }
+        .proof-text b {
+            font-size: 13px;
+            color: #14532d;
+            display: block;
+        }
+        .proof-text span {
+            font-size: 10px;
+            color: #166534;
             font-weight: 700;
-            font-size: 14px;
-            margin-bottom: 12px;
         }
-        .post-actions {
+        .proof-amount {
+            font-size: 16px;
+            font-weight: 900;
+            color: #15803d;
+        }
+
+        /* Interactive Footer (Likes & Comments) */
+        .interaction-row {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            border-top: 1px solid #f0f7f1;
+            justify-content: space-between;
             padding-top: 10px;
-            font-size: 12px;
-            color: #557262;
+            border-top: 1px dashed #e1eee4;
         }
-        .btn-like {
-            background: transparent;
-            border: none;
+        .interact-btn {
+            background: #f8faf9;
+            border: 1px solid #e1eee4;
+            border-radius: 14px;
+            padding: 6px 14px;
+            font-size: 11px;
+            font-weight: 800;
             color: #2d6a4f;
-            font-weight: 600;
-            cursor: pointer;
             display: flex;
             align-items: center;
             gap: 6px;
-            user-select: none;
+            cursor: pointer;
+            transition: all 0.15s;
         }
-        .btn-like:disabled {
-            cursor: default;
+        .interact-btn:active {
+            transform: scale(0.95);
+            background: #eef8f2;
+        }
+        .interact-btn.liked {
+            color: #e11d48;
+            border-color: #fecdd3;
+            background: #fff1f2;
+        }
+
+        /* Post Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .modal-box {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 22px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .modal-box h3 {
+            font-size: 17px;
+            font-weight: 900;
+            color: #113820;
+            margin-bottom: 12px;
+        }
+        .modal-textarea {
+            width: 100%;
+            height: 90px;
+            background: #f1f8f3;
+            border: 1.5px solid #dcece0;
+            border-radius: 16px;
+            padding: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #113820;
+            outline: none;
+            resize: none;
+            margin-bottom: 12px;
+        }
+        .btn-submit-post {
+            width: 100%;
+            background: linear-gradient(180deg, #22c55e 0%, #15803d 100%);
+            border: none;
+            border-radius: 20px;
+            padding: 14px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        /* Bottom Floating Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 420px;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            border-top: 1px solid #e2eee5;
+            box-shadow: 0 -4px 16px rgba(0,0,0,0.04);
+            z-index: 100;
+        }
+        .nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #6c8a77;
+            font-size: 10px;
+            font-weight: 700;
+            gap: 3px;
+        }
+        .nav-link.active-pill {
+            background: linear-gradient(180deg, #2ecc71 0%, #1e824c 100%);
+            color: #fff;
+            padding: 6px 18px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(30,130,76,0.3);
+        }
+        .nav-link.active-pill span {
+            color: #fff !important;
+        }
+        .nav-icon {
+            font-size: 18px;
         }
     </style>
 </head>
@@ -91,130 +343,197 @@
 
 <div class="mobile-wrapper">
 
-    <!-- Header -->
-    <div class="brand-header">
-        <div class="brand-nav">
-            <div class="brand-title">🌱 Agro Community</div>
-            <div class="brand-badge">Official Updates</div>
+    <!-- Top Header -->
+    <div class="feed-header">
+        <div class="header-title">
+            <h2>🌾 Community Feed</h2>
+            <span>Farmer Reviews & Payout Proofs</span>
         </div>
-        <p style="font-size: 12px; margin-top: 6px; opacity: 0.85;">Field reports, withdrawal receipts & grower achievements</p>
+        <button class="btn-post-create" onclick="openCreateModal()">✍️ Post</button>
     </div>
 
-    <!-- Feed Container -->
-    <div class="feed-container">
+    <!-- Official Pinned Notice -->
+    <div class="pinned-notice-card">
+        <span class="notice-tag">📢 Official Announcement</span>
+        <h3>3-Level Referral Reward Active</h3>
+        <p>Invite your agricultural partners and earn 15% on Level 1 direct recharges instantly in your wallet! Regular payouts processed daily.</p>
+    </div>
 
-        <!-- Post 1: Management Notice -->
-        <div class="post-card" id="post-1">
-            <div class="post-header">
-                <div class="post-avatar-img">🌾</div>
-                <div class="post-user-info">
-                    <h4>Annapurna HQ Support ✅</h4>
-                    <span>Official Desk • 2 hours ago</span>
+    <!-- Live Posts Container -->
+    <div id="postsList">
+
+        <!-- Post 1 (Payout Proof) -->
+        <div class="post-card">
+            <div class="author-row">
+                <div class="author-info">
+                    <div class="author-avatar">👨‍🌾</div>
+                    <div class="author-meta">
+                        <h4>Rameshwar Patel <span class="verified-tick">✓</span></h4>
+                        <span>20 mins ago • Bijnor</span>
+                    </div>
                 </div>
+                <div class="plan-tag-badge">VIP 2 Member</div>
             </div>
-            <p class="post-text">
-                Kisan bhaiyo aur sathiyo, aaj ke saare Monday withdrawal payouts successfully process ho chuke hain. Aap apne bank statements check kar sakte hain! Sunday maintenance regular rahegi.
-            </p>
-            <div class="post-actions">
-                <button class="btn-like" onclick="likePost(this, 'post-1')">👍 <span>142 Likes</span></button>
-                <span>💬 18 Comments</span>
+            <p class="post-text">Aaj ka mera ₹950 ka withdrawal sirf 15 minute mein direct SBI bank account me credit ho gaya! Annapurna Seeds par bharosa bilkul pakka hai.</p>
+            
+            <div class="proof-box">
+                <div class="proof-left">
+                    <div class="proof-icon">💰</div>
+                    <div class="proof-text">
+                        <b>Bank Withdrawal Successful</b>
+                        <span>UTR: 409281729102 • Approved</span>
+                    </div>
+                </div>
+                <div class="proof-amount">+₹950</div>
+            </div>
+
+            <div class="interaction-row">
+                <button class="interact-btn" onclick="toggleLike(this, 142)">
+                    <span>👍</span> <b class="like-cnt">142</b> Likes
+                </button>
+                <button class="interact-btn" onclick="alert('Comments will open in next update!')">
+                    <span>💬</span> 18 Comments
+                </button>
             </div>
         </div>
 
-        <!-- Post 2: Yield / Harvest Success -->
-        <div class="post-card" id="post-2">
-            <div class="post-header">
-                <div class="post-avatar-img">🧑‍🌾</div>
-                <div class="post-user-info">
-                    <h4>Rameshwar Sharma</h4>
-                    <span>Sprout Plan Active • 5 hours ago</span>
+        <!-- Post 2 (Daily Quality Task Proof) -->
+        <div class="post-card">
+            <div class="author-row">
+                <div class="author-info">
+                    <div class="author-avatar">🌱</div>
+                    <div class="author-meta">
+                        <h4>Suresh Verma <span class="verified-tick">✓</span></h4>
+                        <span>2 hours ago • Meerut</span>
+                    </div>
                 </div>
+                <div class="plan-tag-badge">Plan B Active</div>
             </div>
-            <p class="post-text">
-                Golden Crop quality review task aaj ka complete! Daily ₹300 time se balance me add ho gaya. Annapurna Seeds ke sath transparency best hai.
-            </p>
-            <div class="post-banner-placeholder">
-                🌾 Batch #4092 Hybrid Inspection Passed
-            </div>
-            <div class="post-actions">
-                <button class="btn-like" onclick="likePost(this, 'post-2')">👍 <span>89 Likes</span></button>
-                <span>💬 6 Comments</span>
-            </div>
-        </div>
+            <p class="post-text">Golden Wheat Crop quality inspection complete! Daily ₹150 tasks bonus wallet me turant reflect ho gaya. Best platform for farmers.</p>
 
-        <!-- Post 3: Bonus Alert -->
-        <div class="post-card" id="post-3">
-            <div class="post-header">
-                <div class="post-avatar-img">🎁</div>
-                <div class="post-user-info">
-                    <h4>Community Team</h4>
-                    <span>Announcement • Yesterday</span>
+            <div class="proof-box" style="background: linear-gradient(135deg, #fefce8, #fef9c3); border-color: #facc15;">
+                <div class="proof-left">
+                    <div class="proof-icon" style="background: #eab308;">🌾</div>
+                    <div class="proof-text">
+                        <b style="color: #713f12;">Batch #4092 Inspection Passed</b>
+                        <span style="color: #854d0e;">High Germination Certified</span>
+                    </div>
                 </div>
+                <div class="proof-amount" style="color: #ca8a04;">+₹150</div>
             </div>
-            <p class="post-text">
-                Naye 3-Level Affiliate program me ab Level 1 par 15% direct reward activate ho chuka hai. Apni team build karein aur daily milestone bonuses unlock karein.
-            </p>
-            <div class="post-actions">
-                <button class="btn-like" onclick="likePost(this, 'post-3')">👍 <span>210 Likes</span></button>
-                <span>💬 34 Comments</span>
+
+            <div class="interaction-row">
+                <button class="interact-btn" onclick="toggleLike(this, 89)">
+                    <span>👍</span> <b class="like-cnt">89</b> Likes
+                </button>
+                <button class="interact-btn" onclick="alert('Comments will open in next update!')">
+                    <span>💬</span> 6 Comments
+                </button>
             </div>
         </div>
 
     </div>
 
-    <!-- Bottom Navigation -->
-    <div class="footer-nav">
-        <a href="index.html" class="nav-link">🏠<span>Home</span></a>
-        <a href="tasks.html" class="nav-link">📋<span>Tasks</span></a>
-        <a href="community.html" class="nav-link active">💬<span>Community</span></a>
-        <a href="team.html" class="nav-link">👥<span>Team</span></a>
-        <a href="profile.html" class="nav-link">👤<span>My</span></a>
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-link">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="tasks.html" class="nav-link">
+            <span class="nav-icon">📈</span>
+            <span>Income</span>
+        </a>
+        <a href="team.html" class="nav-link">
+            <span class="nav-icon">👥</span>
+            <span>Team</span>
+        </a>
+        <a href="team.html" class="nav-link">
+            <span class="nav-icon">🔗</span>
+            <span>Share</span>
+        </a>
+        <a href="profile.html" class="nav-link">
+            <span class="nav-icon">👤</span>
+            <span>My</span>
+        </a>
     </div>
 
 </div>
 
-<script>
-// Supabase Client Setup
-const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
-const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+<!-- Create Post Modal -->
+<div class="modal-overlay" id="postModal">
+    <div class="modal-box">
+        <h3>Share With Community</h3>
+        <textarea id="postInput" class="modal-textarea" placeholder="Apna payout experience ya reviews share karein..."></textarea>
+        <button class="btn-submit-post" onclick="submitPost()">Publish Review</button>
+        <p onclick="closeCreateModal()" style="font-size: 12px; color: #ef4444; font-weight: 700; text-align: center; margin-top: 12px; cursor: pointer;">Cancel</p>
+    </div>
+</div>
 
-// Auth Guard Check
-const savedUserStr = localStorage.getItem('annapurna_user');
-if (!savedUserStr) {
-    window.location.href = 'login.html';
+<script>
+const savedUser = JSON.parse(localStorage.getItem('annapurna_user') || '{}');
+
+function toggleLike(btn, count) {
+    const isLiked = btn.classList.contains('liked');
+    const cntEl = btn.querySelector('.like-cnt');
+    if (isLiked) {
+        btn.classList.remove('liked');
+        cntEl.innerText = count;
+    } else {
+        btn.classList.add('liked');
+        cntEl.innerText = count + 1;
+    }
 }
 
-function likePost(btn, postId) {
-    const likedPosts = JSON.parse(localStorage.getItem('liked_community_posts') || '[]');
-    if (likedPosts.includes(postId)) {
+function openCreateModal() {
+    if (!savedUser.mobile) {
+        alert("Pehle login karein!");
+        window.location.href = "login.html";
+        return;
+    }
+    document.getElementById('postModal').style.display = 'flex';
+}
+
+function closeCreateModal() {
+    document.getElementById('postModal').style.display = 'none';
+}
+
+function submitPost() {
+    const txt = document.getElementById('postInput').value.trim();
+    if (!txt) {
+        alert("Kripya kuch text likhein!");
         return;
     }
 
-    const span = btn.querySelector('span');
-    let count = parseInt(span.innerText);
-    span.innerText = `${count + 1} Likes`;
-    btn.style.color = "#1b4332";
-    btn.disabled = true;
+    const card = document.createElement('div');
+    card.className = "post-card";
+    card.innerHTML = `
+        <div class="author-row">
+            <div class="author-info">
+                <div class="author-avatar">🌱</div>
+                <div class="author-meta">
+                    <h4>User ${savedUser.mobile.slice(-4)} <span class="verified-tick">✓</span></h4>
+                    <span>Just now • Verified Farmer</span>
+                </div>
+            </div>
+            <div class="plan-tag-badge">VIP 1 Member</div>
+        </div>
+        <p class="post-text">${txt}</p>
+        <div class="interaction-row">
+            <button class="interact-btn" onclick="toggleLike(this, 1)">
+                <span>👍</span> <b class="like-cnt">1</b> Like
+            </button>
+            <button class="interact-btn">
+                <span>💬</span> 0 Comments
+            </button>
+        </div>
+    `;
 
-    likedPosts.push(postId);
-    localStorage.setItem('liked_community_posts', JSON.stringify(likedPosts));
+    document.getElementById('postsList').prepend(card);
+    closeCreateModal();
+    document.getElementById('postInput').value = "";
+    alert("Aapki post live publish ho gayi!");
 }
-
-// Restore user's previous likes
-window.addEventListener('DOMContentLoaded', () => {
-    const likedPosts = JSON.parse(localStorage.getItem('liked_community_posts') || '[]');
-    likedPosts.forEach(postId => {
-        const postCard = document.getElementById(postId);
-        if (postCard) {
-            const btn = postCard.querySelector('.btn-like');
-            if (btn) {
-                btn.style.color = "#1b4332";
-                btn.disabled = true;
-            }
-        }
-    });
-});
 </script>
 
 </body>
