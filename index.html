@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Annapurna Seeds - Official Agro Dashboard</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- Supabase JS Client CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -13,12 +15,12 @@
     <!-- Top Canvas & Branding -->
     <div class="top-nature-canvas">
         <div class="top-nav">
-            <div class="circle-btn">☰</div>
+            <div class="circle-btn" onclick="window.location.href='profile.html'">☰</div>
             <div class="brand-center">
                 <div class="brand-logo-title">🌾 Annapurna</div>
                 <div class="brand-cursive">Quality Seeds • Better Harvest</div>
             </div>
-            <div class="circle-btn">🔔</div>
+            <div class="circle-btn" id="logoutBtn" title="Logout">🚪</div>
         </div>
 
         <!-- Real 3D Agro Festival Hero Banner -->
@@ -230,6 +232,48 @@
 
 </div>
 
+<script>
+// Supabase Client Setup
+const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
+const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+// Auth Guard Check
+const savedUserStr = localStorage.getItem('annapurna_user');
+if (!savedUserStr) {
+    window.location.href = 'login.html';
+}
+
+const currentUser = JSON.parse(savedUserStr);
+
+// Realtime User Data Sync (Balance, Status etc.)
+async function syncUserData() {
+    try {
+        const { data, error } = await client
+            .from('users')
+            .select('*')
+            .eq('mobile', currentUser.mobile)
+            .single();
+
+        if (data && !error) {
+            localStorage.setItem('annapurna_user', JSON.stringify(data));
+        }
+    } catch (err) {
+        console.error("User sync error:", err);
+    }
+}
+
+syncUserData();
+
+// Logout Trigger
+document.getElementById('logoutBtn').addEventListener('click', () => {
+    if (confirm("Kya aap logout karna chahte hain?")) {
+        localStorage.removeItem('annapurna_user');
+        window.location.href = 'login.html';
+    }
+});
+</script>
+
 </body>
-                </html>
-                
+                                  </html>
+                                  
