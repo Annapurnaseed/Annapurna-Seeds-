@@ -4,228 +4,468 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Annapurna Seeds - Official Agro Dashboard</title>
-    <link rel="stylesheet" href="css/style.css">
     <!-- Supabase JS Client CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background: #eef7f0;
+            color: #173824;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .mobile-wrapper {
+            width: 100%;
+            max-width: 430px;
+            background: #f7fbf8;
+            min-height: 100vh;
+            padding-bottom: 80px;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+        }
+
+        /* Top Header Bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            background: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            border-bottom: 1px solid #e1eee4;
+        }
+        .brand-title {
+            font-size: 19px;
+            font-weight: 900;
+            color: #1b4332;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .user-chip {
+            background: #e8f5ec;
+            color: #2d6a4f;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Poster Hero Banner */
+        .hero-poster-box {
+            margin: 14px 16px;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 12px 25px rgba(27, 67, 50, 0.18);
+            border: 2px solid #ffffff;
+            position: relative;
+            height: 240px;
+        }
+        .hero-poster-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 20%;
+        }
+
+        /* 3D Round Action Buttons Grid */
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            padding: 10px 14px 18px;
+            background: #ffffff;
+            margin: 0 16px 16px;
+            border-radius: 22px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+            border: 1px solid #e8f3ea;
+        }
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #245738;
+            font-size: 11px;
+            font-weight: 700;
+            gap: 6px;
+        }
+        .circle-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.08);
+            transition: transform 0.15s;
+        }
+        .action-btn:active .circle-icon {
+            transform: scale(0.92);
+        }
+        .bg-recharge { background: linear-gradient(135deg, #10b981, #059669); color: #fff; }
+        .bg-withdraw { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; }
+        .bg-tasks { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; }
+        .bg-service { background: linear-gradient(135deg, #ec4899, #be185d); color: #fff; }
+        .bg-channel { background: linear-gradient(135deg, #06b6d4, #0891b2); color: #fff; }
+
+        /* Section Title */
+        .section-header {
+            padding: 0 20px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .section-header h3 {
+            font-size: 16px;
+            font-weight: 800;
+            color: #123e24;
+        }
+        .section-header span {
+            font-size: 11px;
+            color: #27ae60;
+            font-weight: 700;
+        }
+
+        /* 3D Product Investment Cards */
+        .plan-card {
+            background: #ffffff;
+            margin: 0 16px 18px;
+            border-radius: 26px;
+            padding: 18px;
+            box-shadow: 0 8px 22px rgba(18, 62, 36, 0.06);
+            border: 1.5px solid #e1eee4;
+            position: relative;
+        }
+        .plan-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .plan-badge {
+            background: #eef8f1;
+            color: #1b683b;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 5px 10px;
+            border-radius: 12px;
+            border: 1px solid #c8e7d2;
+        }
+        .plan-payout-day {
+            background: #fff4e5;
+            color: #b45309;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 10px;
+        }
+
+        .plan-body {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .plan-img-wrap {
+            width: 90px;
+            height: 90px;
+            border-radius: 18px;
+            background: #f1f8f3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: 1px solid #daeddf;
+            padding: 4px;
+        }
+        .plan-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .plan-highlights {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 12px;
+            color: #3b634b;
+            font-weight: 600;
+        }
+
+        /* Grid Metrics */
+        .metrics-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            background: #f6faf7;
+            padding: 10px 8px;
+            border-radius: 16px;
+            margin-bottom: 14px;
+            border: 1px solid #e6f1e9;
+            text-align: center;
+        }
+        .metric-item span {
+            display: block;
+            font-size: 10px;
+            color: #658c73;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .metric-item b {
+            font-size: 13px;
+            color: #123e24;
+            font-weight: 800;
+        }
+
+        /* Buy Button */
+        .btn-buy {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background: linear-gradient(180deg, #2ecc71 0%, #208e4e 100%);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 14px;
+            box-shadow: 0 6px 16px rgba(32, 142, 78, 0.3);
+            transition: transform 0.1s;
+        }
+        .btn-buy:active {
+            transform: scale(0.98);
+        }
+
+        /* Bottom Floating Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 430px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid #e1eee4;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.03);
+            z-index: 100;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #658c73;
+            font-size: 11px;
+            font-weight: 700;
+            gap: 3px;
+        }
+        .nav-item.active {
+            color: #1b683b;
+        }
+        .nav-item span:first-child {
+            font-size: 19px;
+        }
+    </style>
 </head>
 <body>
 
 <div class="mobile-wrapper">
 
-    <!-- Top Canvas & Branding -->
-    <div class="top-nature-canvas">
-        <div class="top-nav">
-            <div class="circle-btn" onclick="window.location.href='profile.html'">☰</div>
-            <div class="brand-center">
-                <div class="brand-logo-title">🌾 Annapurna</div>
-                <div class="brand-cursive">Quality Seeds • Better Harvest</div>
-            </div>
-            <div class="circle-btn" id="logoutBtn" title="Logout">🚪</div>
-        </div>
-
-        <!-- Real 3D Agro Festival Hero Banner -->
-        <div class="hero-banner-container">
-            <img src="hero-banner.png" alt="Annapurna Agri Festival">
-        </div>
-
-        <!-- 5 White Capsule 3D Action Buttons -->
-        <div class="action-grid">
-            <a href="recharge.html" class="action-item">
-                <div class="action-capsule">
-                    <div class="action-inner-icon bg-recharge">💳</div>
-                </div>
-                <span class="action-title">Recharge</span>
-            </a>
-            <a href="profile.html" class="action-item">
-                <div class="action-capsule">
-                    <div class="action-inner-icon bg-withdraw">🏦</div>
-                </div>
-                <span class="action-title">Withdraw</span>
-            </a>
-            <a href="tasks.html" class="action-item">
-                <div class="action-capsule">
-                    <div class="action-inner-icon bg-mission">📋</div>
-                </div>
-                <span class="action-title">Mission</span>
-            </a>
-            <a href="https://t.me/your_official_channel" target="_blank" class="action-item">
-                <div class="action-capsule">
-                    <div class="action-inner-icon bg-service">🎧</div>
-                </div>
-                <span class="action-title">Service</span>
-            </a>
-            <a href="https://t.me/your_official_channel" target="_blank" class="action-item">
-                <div class="action-capsule">
-                    <div class="action-inner-icon bg-channel">✈️</div>
-                </div>
-                <span class="action-title">Channel</span>
-            </a>
+    <!-- Top Navigation Header -->
+    <div class="top-bar">
+        <div class="brand-title">🌾 Annapurna Seeds</div>
+        <div class="user-chip" id="userBalChip">
+            <span>💰</span> <b id="headerBal">₹0.00</b>
         </div>
     </div>
 
-    <!-- PLAN A: ₹520 (Wheat & Mustard Seeds) -->
-    <div class="product-card">
-        <div class="product-top">
-            <div class="plan-title-head">
-                <h3>Plan A - Wheat Hybrid</h3>
-                <p>Start Small • Earn Daily</p>
-            </div>
-            <span class="plan-pill">Withdrawal: Mon</span>
-        </div>
+    <!-- Official Agro Poster Banner -->
+    <div class="hero-poster-box">
+        <img src="bg-agro.png" alt="Annapurna Seeds Agro Campaign">
+    </div>
 
-        <div class="product-visual-box">
-            <div class="seed-specs">
-                <div>✔ Daily 5 Review Tasks</div>
-                <div>✔ ₹50 Fixed Daily Income</div>
+    <!-- 5 3D Round Action Capsules -->
+    <div class="action-grid">
+        <a href="recharge.html" class="action-btn">
+            <div class="circle-icon bg-recharge">💳</div>
+            <span>Recharge</span>
+        </a>
+        <a href="profile.html" class="action-btn">
+            <div class="circle-icon bg-withdraw">🏦</div>
+            <span>Withdraw</span>
+        </a>
+        <a href="tasks.html" class="action-btn">
+            <div class="circle-icon bg-tasks">📋</div>
+            <span>Mission</span>
+        </a>
+        <a href="https://t.me/your_official_channel" target="_blank" class="action-btn">
+            <div class="circle-icon bg-service">🎧</div>
+            <span>Service</span>
+        </a>
+        <a href="https://t.me/your_official_channel" target="_blank" class="action-btn">
+            <div class="circle-icon bg-channel">✈️</div>
+            <span>Channel</span>
+        </a>
+    </div>
+
+    <!-- Plans Section Header -->
+    <div class="section-header">
+        <h3>High-Yield Agro Plans</h3>
+        <span>Certified F1 Hybrid</span>
+    </div>
+
+    <!-- PLAN A: Wheat Hybrid ₹520 -->
+    <div class="plan-card">
+        <div class="plan-top">
+            <span class="plan-badge">Plan A • Wheat Hybrid</span>
+            <span class="plan-payout-day">Payout: Mon</span>
+        </div>
+        <div class="plan-body">
+            <div class="plan-img-wrap">
+                <img src="plan-a.png" alt="Wheat Seeds Pouch">
+            </div>
+            <div class="plan-highlights">
+                <div>✔ Daily 5 Quality Reviews</div>
                 <div>✔ Disease Resistant F1</div>
+                <div>✔ ₹50 Fixed Daily Income</div>
                 <div>✔ High Germination Rate</div>
             </div>
-            
-            <div class="official-seed-frame">
-                <img src="plan-a.png" alt="Wheat Seeds Official Pouch">
-            </div>
         </div>
-
-        <div class="metric-row">
-            <div class="metric-pill">
+        <div class="metrics-bar">
+            <div class="metric-item">
                 <span>Price</span>
                 <b>₹520</b>
             </div>
-            <div class="metric-pill">
-                <span>Daily Pay</span>
+            <div class="metric-item">
+                <span>Daily</span>
                 <b>₹50</b>
             </div>
-            <div class="metric-pill">
-                <span>Validity</span>
+            <div class="metric-item">
+                <span>Days</span>
                 <b>60 D</b>
             </div>
-            <div class="metric-pill">
-                <span>Total Yield</span>
+            <div class="metric-item">
+                <span>Yield</span>
                 <b>₹3,000</b>
             </div>
         </div>
-
-        <div class="floating-gift" title="Bonus Reward">🎁</div>
-
-        <a href="recharge.html?plan=520" class="btn-buy-now">
-            🛒 Buy Now
-        </a>
+        <a href="recharge.html?plan=520" class="btn-buy">🛒 Invest & Activate ₹520</a>
     </div>
 
-    <!-- PLAN B: ₹1500 (Soybean & Mustard Seeds) -->
-    <div class="product-card">
-        <div class="product-top">
-            <div class="plan-title-head">
-                <h3>Plan B - Soybean Prime</h3>
-                <p>Higher Yields • Prosperous Farmers</p>
-            </div>
-            <span class="plan-pill">Withdrawal: Tue</span>
+    <!-- PLAN B: Soybean Prime ₹1500 -->
+    <div class="plan-card">
+        <div class="plan-top">
+            <span class="plan-badge">Plan B • Soybean Prime</span>
+            <span class="plan-payout-day">Payout: Tue</span>
         </div>
-
-        <div class="product-visual-box">
-            <div class="seed-specs">
-                <div>✔ Daily 10 Review Tasks</div>
-                <div>✔ ₹150 Fixed Daily Income</div>
+        <div class="plan-body">
+            <div class="plan-img-wrap">
+                <img src="plan-b.png" alt="Soybean Seeds Pouch">
+            </div>
+            <div class="plan-highlights">
+                <div>✔ Daily 10 Quality Reviews</div>
                 <div>✔ Priority Bank Payouts</div>
-                <div>✔ More Protection & Profit</div>
-            </div>
-            
-            <div class="official-seed-frame">
-                <img src="plan-b.png" alt="Soybean Seeds Official Pouch">
+                <div>✔ ₹150 Fixed Daily Income</div>
+                <div>✔ Higher Yields & Profit</div>
             </div>
         </div>
-
-        <div class="metric-row">
-            <div class="metric-pill">
+        <div class="metrics-bar">
+            <div class="metric-item">
                 <span>Price</span>
                 <b>₹1,500</b>
             </div>
-            <div class="metric-pill">
-                <span>Daily Pay</span>
+            <div class="metric-item">
+                <span>Daily</span>
                 <b>₹150</b>
             </div>
-            <div class="metric-pill">
-                <span>Validity</span>
+            <div class="metric-item">
+                <span>Days</span>
                 <b>90 D</b>
             </div>
-            <div class="metric-pill">
-                <span>Total Yield</span>
+            <div class="metric-item">
+                <span>Yield</span>
                 <b>₹13,500</b>
             </div>
         </div>
-
-        <a href="recharge.html?plan=1500" class="btn-buy-now">
-            🛒 Buy Now
-        </a>
+        <a href="recharge.html?plan=1500" class="btn-buy">🛒 Invest & Activate ₹1,500</a>
     </div>
 
-    <!-- PLAN C: ₹2500 (Sunflower & Golden Crop VIP) -->
-    <div class="product-card">
-        <div class="product-top">
-            <div class="plan-title-head">
-                <h3>Plan C - Sunflower Gold</h3>
-                <p>Commercial VIP Agro Scale</p>
-            </div>
-            <span class="plan-pill">Withdrawal: Tue</span>
+    <!-- PLAN C: Sunflower Gold ₹2500 -->
+    <div class="plan-card">
+        <div class="plan-top">
+            <span class="plan-badge">Plan C • Sunflower Gold</span>
+            <span class="plan-payout-day">Payout: Tue</span>
         </div>
-
-        <div class="product-visual-box">
-            <div class="seed-specs">
-                <div>✔ Daily 15 Review Tasks</div>
+        <div class="plan-body">
+            <div class="plan-img-wrap">
+                <img src="plan-c.png" alt="Sunflower Seeds Pouch">
+            </div>
+            <div class="plan-highlights">
+                <div>✔ Daily 15 Quality Reviews</div>
+                <div>✔ VIP Commercial Support</div>
                 <div>✔ ₹300 Fixed Daily Income</div>
-                <div>✔ VIP Investor Support</div>
                 <div>✔ Maximum Seed Recovery</div>
             </div>
-            
-            <div class="official-seed-frame">
-                <img src="plan-c.png" alt="Sunflower Seeds Official Pouch">
-            </div>
         </div>
-
-        <div class="metric-row">
-            <div class="metric-pill">
+        <div class="metrics-bar">
+            <div class="metric-item">
                 <span>Price</span>
                 <b>₹2,500</b>
             </div>
-            <div class="metric-pill">
-                <span>Daily Pay</span>
+            <div class="metric-item">
+                <span>Daily</span>
                 <b>₹300</b>
             </div>
-            <div class="metric-pill">
-                <span>Validity</span>
+            <div class="metric-item">
+                <span>Days</span>
                 <b>120 D</b>
             </div>
-            <div class="metric-pill">
-                <span>Total Yield</span>
+            <div class="metric-item">
+                <span>Yield</span>
                 <b>₹36,000</b>
             </div>
         </div>
-
-        <a href="recharge.html?plan=2500" class="btn-buy-now">
-            🛒 Buy Now
-        </a>
+        <a href="recharge.html?plan=2500" class="btn-buy">🛒 Invest & Activate ₹2,500</a>
     </div>
 
     <!-- Bottom App Navigation Bar -->
     <div class="bottom-nav">
-        <a href="index.html" class="nav-tab active">
-            <div class="nav-icon-circle">🏠</div>
+        <a href="index.html" class="nav-item active">
+            <span>🏠</span>
             <span>Home</span>
         </a>
-        <a href="tasks.html" class="nav-tab">
-            <div class="nav-icon-circle">📈</div>
-            <span>Income</span>
+        <a href="tasks.html" class="nav-item">
+            <span>📋</span>
+            <span>Tasks</span>
         </a>
-        <a href="team.html" class="nav-tab">
-            <div class="nav-icon-circle">👥</div>
+        <a href="team.html" class="nav-item">
+            <span>👥</span>
             <span>Team</span>
         </a>
-        <a href="community.html" class="nav-tab">
-            <div class="nav-icon-circle">💬</div>
+        <a href="community.html" class="nav-item">
+            <span>💬</span>
             <span>Community</span>
         </a>
-        <a href="profile.html" class="nav-tab">
-            <div class="nav-icon-circle">👤</div>
+        <a href="profile.html" class="nav-item">
+            <span>👤</span>
             <span>My</span>
         </a>
     </div>
@@ -244,36 +484,27 @@ if (!savedUserStr) {
     window.location.href = 'login.html';
 }
 
-const currentUser = JSON.parse(savedUserStr);
+const currentUser = JSON.parse(savedUserStr || '{}');
 
-// Realtime User Data Sync (Balance, Status etc.)
-async function syncUserData() {
+// Live Balance Fetch
+async function syncHeaderBalance() {
     try {
         const { data, error } = await client
             .from('users')
-            .select('*')
+            .select('balance')
             .eq('mobile', currentUser.mobile)
             .single();
 
         if (data && !error) {
-            localStorage.setItem('annapurna_user', JSON.stringify(data));
+            document.getElementById('headerBal').innerText = "₹" + Number(data.balance || 0).toFixed(2);
         }
-    } catch (err) {
-        console.error("User sync error:", err);
+    } catch (e) {
+        console.error(e);
     }
 }
 
-syncUserData();
-
-// Logout Trigger
-document.getElementById('logoutBtn').addEventListener('click', () => {
-    if (confirm("Kya aap logout karna chahte hain?")) {
-        localStorage.removeItem('annapurna_user');
-        window.location.href = 'login.html';
-    }
-});
+syncHeaderBalance();
 </script>
 
 </body>
-                                  </html>
-                                  
+</html>
