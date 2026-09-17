@@ -14,26 +14,38 @@
         }
 
         body {
-            /* Aapki khet aur kisan wali image natural frame ki tarah fit hogi */
-            background: linear-gradient(rgba(240, 248, 242, 0.4), rgba(240, 248, 242, 0.5)), url('bg-nature.png') center top/cover no-repeat fixed;
-            background-color: #1b4332;
+            background-color: #0d2818;
             min-height: 100vh;
             display: flex;
             justify-content: center;
+            position: relative;
+        }
+
+        /* 100% Guaranteed Visible Background Layer */
+        .bg-fixed-img {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 440px;
+            height: 100vh;
+            object-fit: cover;
+            object-position: center top;
+            z-index: 0;
+            opacity: 0.85;
         }
 
         .mobile-wrapper {
             width: 100%;
             max-width: 420px;
-            /* Sides me leaves dikhane ke liye frosted glass look */
-            background: rgba(244, 250, 245, 0.88);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
+            position: relative;
+            z-index: 2;
             min-height: 100vh;
             padding-bottom: 95px;
-            box-shadow: 0 0 35px rgba(0, 0, 0, 0.25);
-            border-left: 2px solid rgba(255,255,255,0.7);
-            border-right: 2px solid rgba(255,255,255,0.7);
+            background: linear-gradient(180deg, rgba(235, 247, 238, 0.55) 0%, rgba(220, 243, 226, 0.75) 100%);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
         }
 
         /* Top Brand Head */
@@ -46,23 +58,24 @@
             font-weight: 900;
             color: #0d3820;
             letter-spacing: -0.5px;
-            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+            text-shadow: 0 1px 4px rgba(255,255,255,0.9);
         }
         .brand-logo-row span {
             font-size: 11px;
-            color: #1b683b;
+            color: #124d27;
             font-style: italic;
-            font-weight: 700;
+            font-weight: 800;
         }
 
-        /* Profile Top Card (Kaveri Screenshot Exact) */
+        /* Profile Top Card */
         .profile-hero-card {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
             margin: 6px 14px 14px;
             border-radius: 28px;
             padding: 18px;
-            box-shadow: 0 10px 24px rgba(18, 62, 36, 0.08);
-            border: 1.5px solid #ffffff;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
         }
         .user-info-row {
             display: flex;
@@ -89,7 +102,7 @@
         }
         .user-id-row {
             font-size: 12px;
-            color: #557c64;
+            color: #3b6e4e;
             font-weight: 700;
             margin: 3px 0 6px;
             display: flex;
@@ -116,7 +129,7 @@
             font-weight: 700;
             margin-top: 12px;
             padding-top: 10px;
-            border-top: 1px dashed #dcece0;
+            border-top: 1px dashed #cde5d3;
         }
 
         /* 3 Sunken Clay Metrics */
@@ -127,12 +140,13 @@
             margin: 0 14px 14px;
         }
         .metric-clay-box {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
             border-radius: 22px;
             padding: 14px 6px;
             text-align: center;
-            border: 1.5px solid #ffffff;
-            box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+            border: 1.5px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
         }
         .clay-icon {
             width: 42px;
@@ -144,7 +158,7 @@
             justify-content: center;
             font-size: 20px;
             color: #fff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.14);
         }
         .icon-green { background: linear-gradient(135deg, #2ecc71, #1e824c); }
         .icon-orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
@@ -157,23 +171,23 @@
         }
         .metric-clay-box span {
             font-size: 11px;
-            color: #557c64;
+            color: #4a775d;
             font-weight: 700;
             margin-top: 2px;
             display: block;
         }
 
-        /* Banner Strip */
+        /* Middle Motivation Banner */
         .mid-banner {
             margin: 0 14px 14px;
-            background: linear-gradient(135deg, rgba(216,243,220,0.9), rgba(183,228,199,0.9));
+            background: linear-gradient(135deg, rgba(216,243,220,0.92), rgba(183,228,199,0.92));
             border-radius: 20px;
             padding: 12px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1.5px solid #ffffff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1.5px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
         }
         .mid-banner h4 {
             font-size: 13px;
@@ -183,10 +197,10 @@
         .mid-banner p {
             font-size: 10px;
             color: #245738;
-            font-weight: 600;
+            font-weight: 700;
         }
 
-        /* 3D List Action Items */
+        /* 3D Action Rows */
         .list-group {
             margin: 0 14px;
             display: flex;
@@ -194,15 +208,16 @@
             gap: 10px;
         }
         .list-item-btn {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
             border-radius: 22px;
             padding: 10px 16px 10px 12px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             text-decoration: none;
-            border: 1.5px solid #ffffff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.06);
             cursor: pointer;
             transition: transform 0.1s;
         }
@@ -223,7 +238,7 @@
             justify-content: center;
             font-size: 19px;
             color: #fff;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
         }
         .item-meta h4 {
             font-size: 13px;
@@ -232,7 +247,7 @@
         }
         .item-meta p {
             font-size: 10px;
-            color: #648a72;
+            color: #557c64;
             font-weight: 600;
         }
         .arrow-bubble {
@@ -248,7 +263,7 @@
             font-weight: 900;
         }
 
-        /* Kaveri Floating Bottom Bar */
+        /* Bottom Floating Bar */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -261,7 +276,7 @@
             align-items: center;
             padding: 8px 0;
             border-top: 1px solid #e2eee5;
-            box-shadow: 0 -4px 16px rgba(0,0,0,0.04);
+            box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
             z-index: 100;
         }
         .nav-link {
@@ -290,6 +305,9 @@
     </style>
 </head>
 <body>
+
+<!-- Direct Background Image -->
+<img src="bg-nature.png" class="bg-fixed-img" alt="Farm Nature Background" onerror="this.src='bg-field.png'">
 
 <div class="mobile-wrapper">
 
@@ -527,4 +545,4 @@ syncProfile();
 
 </body>
     </html>
-                        
+    
