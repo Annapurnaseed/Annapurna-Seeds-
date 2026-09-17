@@ -3,78 +3,365 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Team - Annapurna Seeds</title>
-    <link rel="stylesheet" href="css/style.css">
-    <!-- Supabase JS Client CDN -->
+    <title>Refer & Earn - Annapurna Seeds</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        .share-card {
-            background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
-            color: #ffffff;
-            margin: 15px;
-            padding: 20px;
-            border-radius: 24px;
-            box-shadow: 0 8px 20px rgba(27, 67, 50, 0.2);
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
-        .code-box {
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px dashed rgba(255, 255, 255, 0.35);
-            padding: 12px;
-            border-radius: 14px;
-            margin: 14px 0;
+
+        body {
+            /* Aapki nayi upload ki hui image yahan background me fit hogi */
+            background: linear-gradient(rgba(10, 35, 20, 0.45), rgba(10, 35, 20, 0.7)), url('bg-field.png') center top/cover no-repeat fixed;
+            background-color: #1b4332;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .mobile-wrapper {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(244, 250, 245, 0.92);
+            backdrop-filter: blur(14px);
+            min-height: 100vh;
+            padding-bottom: 95px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Top Header */
+        .top-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 14px 18px;
         }
-        .code-box span { font-size: 13px; opacity: 0.9; }
-        .code-box b { font-size: 18px; letter-spacing: 1px; color: #a3e635; }
-
-        .btn-copy {
+        .back-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
             background: #ffffff;
-            color: #1b4332;
-            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 800;
+            color: #1e5e3a;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .rule-pill {
+            background: #ffffff;
+            color: #1e824c;
             padding: 6px 14px;
             border-radius: 20px;
             font-size: 12px;
-            font-weight: 700;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        /* Hero Banner */
+        .refer-hero-banner {
+            margin: 4px 14px 14px;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+            border: 1.5px solid #e1eee4;
+        }
+        .hero-left h3 {
+            font-size: 19px;
+            font-weight: 900;
+            color: #123e24;
+        }
+        .hero-left p {
+            font-size: 11px;
+            color: #527961;
+            margin: 4px 0 10px;
+        }
+        .steps-mini {
+            display: flex;
+            gap: 6px;
+        }
+        .step-tag {
+            background: #f0f7f2;
+            border: 1px solid #dcece0;
+            color: #2d6a4f;
+            font-size: 9px;
+            font-weight: 800;
+            padding: 4px 6px;
+            border-radius: 8px;
+        }
+        .plant-circle {
+            width: 66px;
+            height: 66px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a3e635, #22c55e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 0 6px 14px rgba(34,197,94,0.3);
+            flex-shrink: 0;
+        }
+
+        /* Link & Referral Code Box */
+        .share-clay-card {
+            background: #ffffff;
+            margin: 0 14px 14px;
+            border-radius: 26px;
+            padding: 18px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+            border: 1.5px solid #e1eee4;
+        }
+        .field-head {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .round-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #2ecc71, #1e824c);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        .field-head h4 {
+            font-size: 13px;
+            font-weight: 900;
+            color: #123e24;
+        }
+        .field-head span {
+            font-size: 10px;
+            color: #648a72;
+        }
+
+        .sunken-copy-row {
+            background: #f0f7f2;
+            border-radius: 18px;
+            padding: 8px 10px 8px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+            border: 1px solid #dcece0;
+            margin-bottom: 14px;
+        }
+        .sunken-copy-row input {
+            border: none;
+            background: transparent;
+            font-size: 13px;
+            font-weight: 800;
+            color: #143e24;
+            outline: none;
+            width: 70%;
+            text-overflow: ellipsis;
+        }
+
+        .btn-green-copy {
+            background: linear-gradient(180deg, #2ecc71 0%, #1e824c 100%);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(30,130,76,0.3);
+        }
+
+        /* Social Share Icons */
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .social-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
             cursor: pointer;
         }
+        .soc-icon-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #fff;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+            transition: transform 0.15s;
+        }
+        .soc-icon-box:active {
+            transform: scale(0.92);
+        }
+        .soc-wa { background: linear-gradient(135deg, #25d366, #128c7e); }
+        .soc-tg { background: linear-gradient(135deg, #0088cc, #005580); }
+        .soc-ig { background: linear-gradient(135deg, #e1306c, #833ab4); }
+        .soc-fb { background: linear-gradient(135deg, #1877f2, #0d47a1); }
+        .social-btn span {
+            font-size: 10px;
+            font-weight: 700;
+            color: #2d6a4f;
+        }
 
-        .team-summary-grid {
+        /* Stats Cards */
+        .stats-clay-card {
+            background: #ffffff;
+            margin: 0 14px 14px;
+            border-radius: 26px;
+            padding: 18px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+            border: 1.5px solid #e1eee4;
+        }
+        .stats-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .stats-head h4 {
+            font-size: 13px;
+            font-weight: 900;
+            color: #123e24;
+        }
+
+        .metric-quad-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 15px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
         }
-        .stat-card {
-            background: #ffffff;
-            border: 1px solid #ddecde;
-            padding: 14px;
+        .metric-sunken-cell {
+            background: #f0f7f2;
             border-radius: 16px;
+            padding: 10px 6px;
             text-align: center;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #dcece0;
         }
-        .stat-card span { font-size: 11px; color: #557262; display: block; }
-        .stat-card b { font-size: 18px; color: #1b4332; margin-top: 2px; display: block; }
+        .metric-sunken-cell span {
+            font-size: 10px;
+            color: #648a72;
+            font-weight: 700;
+            display: block;
+        }
+        .metric-sunken-cell b {
+            font-size: 14px;
+            color: #123e24;
+            font-weight: 900;
+            margin-top: 3px;
+            display: block;
+        }
 
-        .tier-row {
+        /* 3-Tier Commission Levels Accordion */
+        .tier-card {
             background: #ffffff;
-            border: 1px solid #ddecde;
-            border-radius: 16px;
-            margin: 10px 15px;
-            padding: 14px;
+            margin: 0 14px 14px;
+            border-radius: 22px;
+            padding: 14px 16px;
+            border: 1px solid #e1eee4;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .tier-info h4 { font-size: 14px; color: #1b4332; }
-        .tier-info p { font-size: 11px; color: #557262; margin-top: 2px; }
-        .tier-badge {
-            background: #e8f5e9;
-            color: #2d6a4f;
-            font-size: 12px;
-            font-weight: 700;
-            padding: 6px 12px;
+        .tier-meta h4 {
+            font-size: 13px;
+            font-weight: 800;
+            color: #123e24;
+        }
+        .tier-meta p {
+            font-size: 10px;
+            color: #648a72;
+            margin-top: 2px;
+        }
+        .tier-pct {
+            background: linear-gradient(135deg, #2ecc71, #1e824c);
+            color: #fff;
+            padding: 5px 12px;
             border-radius: 12px;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        /* Shiny WhatsApp Full Pill */
+        .btn-wa-full {
+            margin: 0 14px 14px;
+            width: calc(100% - 28px);
+            background: linear-gradient(180deg, #2ecc71 0%, #1e824c 100%);
+            border: none;
+            border-radius: 28px;
+            padding: 14px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 8px 22px rgba(30,130,76,0.38);
+        }
+
+        /* Bottom Floating Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 420px;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            border-top: 1px solid #e2eee5;
+            box-shadow: 0 -4px 16px rgba(0,0,0,0.04);
+            z-index: 100;
+        }
+        .nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #6c8a77;
+            font-size: 10px;
+            font-weight: 700;
+            gap: 3px;
+        }
+        .nav-link.active-pill {
+            background: linear-gradient(180deg, #2ecc71 0%, #1e824c 100%);
+            color: #fff;
+            padding: 6px 18px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(30,130,76,0.3);
+        }
+        .nav-link.active-pill span {
+            color: #fff !important;
+        }
+        .nav-icon {
+            font-size: 18px;
         }
     </style>
 </head>
@@ -82,184 +369,214 @@
 
 <div class="mobile-wrapper">
 
-    <!-- Brand Header -->
-    <div class="brand-header">
-        <div class="brand-nav">
-            <div class="brand-title">🌱 Referral Center</div>
-            <div class="brand-badge">Up to 22% Return</div>
-        </div>
-        <p style="font-size: 12px; margin-top: 6px; opacity: 0.85;">Build your farming community & earn multi-tier rewards</p>
+    <!-- Top Navigation -->
+    <div class="top-header">
+        <a href="index.html" class="back-circle">❮</a>
+        <div class="rule-pill">❓ How it works</div>
     </div>
 
-    <!-- Referral Invite Box -->
-    <div class="share-card">
-        <h3 style="font-size: 16px;">Invite Friends & Earn</h3>
-        <p style="font-size: 12px; opacity: 0.85; margin-top: 4px;">Get instant commission every time your downline recharges.</p>
-
-        <div class="code-box">
-            <div>
-                <span>Referral Code:</span>
-                <b id="refCode">...</b>
+    <!-- Hero Card -->
+    <div class="refer-hero-banner">
+        <div class="hero-left">
+            <h3>Refer & Earn</h3>
+            <p>Invite friends to Annapurna Seeds & grow together</p>
+            <div class="steps-mini">
+                <div class="step-tag">1. Invite</div>
+                <div class="step-tag">2. They Join</div>
+                <div class="step-tag">3. Earn Cash</div>
             </div>
-            <button class="btn-copy" onclick="copyReferral()">Copy Code</button>
         </div>
-
-        <button class="btn-solid" style="background: #25d366; color: #fff; box-shadow: none;" onclick="shareOnWhatsApp()">
-            📲 Share Link on WhatsApp
-        </button>
+        <div class="plant-circle">🌱</div>
     </div>
 
-    <!-- Total Team Stats -->
-    <div class="team-summary-grid">
-        <div class="stat-card">
-            <span>Total Team Members</span>
-            <b id="totalMembers">0 Users</b>
+    <!-- Share Link & Code Card -->
+    <div class="share-clay-card">
+        <!-- Referral Link -->
+        <div class="field-head">
+            <div class="round-icon">🔗</div>
+            <div>
+                <h4>Your Referral Link</h4>
+                <span>Share this link with your friends</span>
+            </div>
         </div>
-        <div class="stat-card">
-            <span>Total Referral Earning</span>
-            <b id="totalCommission">₹0.00</b>
+        <div class="sunken-copy-row">
+            <input type="text" id="refLinkInput" readonly value="Loading...">
+            <button class="btn-green-copy" onclick="copyLink()">📋 Copy</button>
+        </div>
+
+        <!-- Referral Code -->
+        <div class="field-head">
+            <div class="round-icon">🔢</div>
+            <div>
+                <h4>Your Referral Code</h4>
+                <span>Share this code to get started</span>
+            </div>
+        </div>
+        <div class="sunken-copy-row">
+            <input type="text" id="refCodeInput" readonly value="Loading..." style="letter-spacing: 2px; font-size: 15px;">
+            <button class="btn-green-copy" onclick="copyCode()">📋 Copy</button>
+        </div>
+
+        <!-- Social Share Grid -->
+        <div style="margin-top: 14px; margin-bottom: 8px; font-size: 12px; font-weight: 800; color: #123e24;">Share via</div>
+        <div class="social-grid">
+            <div class="social-btn" onclick="shareWhatsApp()">
+                <div class="soc-icon-box soc-wa">💬</div>
+                <span>WhatsApp</span>
+            </div>
+            <div class="social-btn" onclick="shareTelegram()">
+                <div class="soc-icon-box soc-tg">✈️</div>
+                <span>Telegram</span>
+            </div>
+            <div class="social-btn" onclick="copyLink()">
+                <div class="soc-icon-box soc-ig">📸</div>
+                <span>Instagram</span>
+            </div>
+            <div class="social-btn" onclick="shareWhatsApp()">
+                <div class="soc-icon-box soc-fb">📘</div>
+                <span>Facebook</span>
+            </div>
         </div>
     </div>
 
-    <!-- 3-Level Commission Breakdown -->
-    <div style="margin: 20px 15px 8px; font-weight: 700; font-size: 15px; color: #1b4332;">
-        Commission Levels
+    <!-- Referral Stats -->
+    <div class="stats-clay-card">
+        <div class="stats-head">
+            <h4>📊 Your Referral Stats</h4>
+            <span style="font-size: 11px; color: #1e824c; font-weight: 800;">Realtime Sync</span>
+        </div>
+        <div class="metric-quad-grid">
+            <div class="metric-sunken-cell">
+                <span>Total Invites</span>
+                <b id="totalInvites">0</b>
+            </div>
+            <div class="metric-sunken-cell">
+                <span>Active Users</span>
+                <b id="activeUsers">0</b>
+            </div>
+            <div class="metric-sunken-cell">
+                <span>Total Earned</span>
+                <b id="totalEarned" style="color: #27ae60;">₹0.00</b>
+            </div>
+        </div>
     </div>
 
-    <!-- Level 1 (15%) -->
-    <div class="tier-row">
-        <div class="tier-info">
+    <!-- 3 Tier Levels -->
+    <div class="tier-card">
+        <div class="tier-meta">
             <h4>Level 1 (Direct Team)</h4>
             <p>Direct Invite Recharge Commission</p>
-            <span id="lvl1Stat" style="font-size: 12px; color: #2d6a4f; font-weight: 600;">0 Members</span>
         </div>
-        <div class="tier-badge">15%</div>
+        <span class="tier-pct">15%</span>
     </div>
 
-    <!-- Level 2 (5%) -->
-    <div class="tier-row">
-        <div class="tier-info">
+    <div class="tier-card">
+        <div class="tier-meta">
             <h4>Level 2 (Secondary Team)</h4>
             <p>Downline-Invited Members</p>
-            <span id="lvl2Stat" style="font-size: 12px; color: #2d6a4f; font-weight: 600;">0 Members</span>
         </div>
-        <div class="tier-badge">5%</div>
+        <span class="tier-pct" style="background: linear-gradient(135deg, #10b981, #047857);">5%</span>
     </div>
 
-    <!-- Level 3 (2%) -->
-    <div class="tier-row">
-        <div class="tier-info">
+    <div class="tier-card">
+        <div class="tier-meta">
             <h4>Level 3 (Extended Team)</h4>
             <p>3rd Generation Network</p>
-            <span id="lvl3Stat" style="font-size: 12px; color: #2d6a4f; font-weight: 600;">0 Members</span>
         </div>
-        <div class="tier-badge">2%</div>
+        <span class="tier-pct" style="background: linear-gradient(135deg, #059669, #064e3b);">2%</span>
     </div>
 
+    <!-- Bottom WhatsApp Action Button -->
+    <button class="btn-wa-full" onclick="shareWhatsApp()">
+        <span>🏆</span> Share on WhatsApp
+    </button>
+
     <!-- Bottom Navigation -->
-    <div class="footer-nav">
-        <a href="index.html" class="nav-link">🏠<span>Home</span></a>
-        <a href="tasks.html" class="nav-link">📋<span>Tasks</span></a>
-        <a href="community.html" class="nav-link">💬<span>Community</span></a>
-        <a href="team.html" class="nav-link active">👥<span>Team</span></a>
-        <a href="profile.html" class="nav-link">👤<span>My</span></a>
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-link">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="tasks.html" class="nav-link">
+            <span class="nav-icon">📈</span>
+            <span>Income</span>
+        </a>
+        <a href="team.html" class="nav-link active-pill">
+            <span class="nav-icon">👥</span>
+            <span>Team</span>
+        </a>
+        <a href="team.html" class="nav-link">
+            <span class="nav-icon">🔗</span>
+            <span>Share</span>
+        </a>
+        <a href="profile.html" class="nav-link">
+            <span class="nav-icon">👤</span>
+            <span>My</span>
+        </a>
     </div>
 
 </div>
 
 <script>
-// Supabase Client Setup
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-// Auth Guard Check
-const savedUserStr = localStorage.getItem('annapurna_user');
-if (!savedUserStr) {
-    window.location.href = 'login.html';
-}
-let currentUser = JSON.parse(savedUserStr || '{}');
+const savedUser = JSON.parse(localStorage.getItem('annapurna_user') || '{}');
+if (!savedUser.mobile) { window.location.href = 'login.html'; }
 
-let userInviteCode = currentUser.invite_code || "ANP9901";
+let inviteCode = savedUser.invite_code || "ANP1812";
+let registerUrl = "";
 
-async function loadTeamData() {
+async function initShare() {
     try {
-        // 1. Fetch fresh user info to get code and commission
-        const { data: user, error: uErr } = await client
-            .from('users')
-            .select('*')
-            .eq('mobile', currentUser.mobile)
-            .single();
-
-        if (user && !uErr) {
-            currentUser = user;
-            localStorage.setItem('annapurna_user', JSON.stringify(user));
-            userInviteCode = user.invite_code || "ANP9901";
-            document.getElementById('refCode').innerText = userInviteCode;
-            document.getElementById('totalCommission').innerText = "₹" + Number(user.commission || 0).toFixed(2);
+        const { data } = await client.from('users').select('*').eq('mobile', savedUser.mobile).single();
+        if (data) {
+            inviteCode = data.invite_code || "ANP1812";
+            document.getElementById('totalEarned').innerText = "₹" + Number(data.commission || 0).toFixed(2);
         }
 
-        // 2. Fetch Level 1 downline members
-        const { data: lvl1Users, error: l1Err } = await client
-            .from('users')
-            .select('mobile, invite_code')
-            .eq('referred_by', userInviteCode);
+        const baseUrl = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+        registerUrl = `${baseUrl}/register.html?ref=${inviteCode}`;
 
-        const lvl1Count = lvl1Users ? lvl1Users.length : 0;
-        document.getElementById('lvl1Stat').innerText = `${lvl1Count} Members`;
+        document.getElementById('refLinkInput').value = registerUrl;
+        document.getElementById('refCodeInput').value = inviteCode;
 
-        let lvl2Count = 0;
-        let lvl3Count = 0;
+        const { data: team } = await client.from('users').select('mobile, active_plan').eq('referred_by', inviteCode);
+        const count = team ? team.length : 0;
+        document.getElementById('totalInvites').innerText = count;
 
-        // Level 2 members count
-        if (lvl1Users && lvl1Users.length > 0) {
-            const lvl1Codes = lvl1Users.map(u => u.invite_code).filter(Boolean);
-            if (lvl1Codes.length > 0) {
-                const { data: lvl2Users } = await client
-                    .from('users')
-                    .select('mobile, invite_code')
-                    .in('referred_by', lvl1Codes);
+        const activeCount = team ? team.filter(u => u.active_plan && u.active_plan > 0).length : 0;
+        document.getElementById('activeUsers').innerText = activeCount;
 
-                lvl2Count = lvl2Users ? lvl2Users.length : 0;
-
-                // Level 3 members count
-                if (lvl2Users && lvl2Users.length > 0) {
-                    const lvl2Codes = lvl2Users.map(u => u.invite_code).filter(Boolean);
-                    if (lvl2Codes.length > 0) {
-                        const { data: lvl3Users } = await client
-                            .from('users')
-                            .select('mobile')
-                            .in('referred_by', lvl2Codes);
-
-                        lvl3Count = lvl3Users ? lvl3Users.length : 0;
-                    }
-                }
-            }
-        }
-
-        document.getElementById('lvl2Stat').innerText = `${lvl2Count} Members`;
-        document.getElementById('lvl3Stat').innerText = `${lvl3Count} Members`;
-        document.getElementById('totalMembers').innerText = `${lvl1Count + lvl2Count + lvl3Count} Users`;
-
-    } catch (err) {
-        console.error("Team load error:", err);
+    } catch (e) {
+        console.error(e);
     }
 }
 
-function copyReferral() {
-    navigator.clipboard.writeText(userInviteCode);
-    alert("Referral Code copied: " + userInviteCode);
+function copyLink() {
+    navigator.clipboard.writeText(registerUrl);
+    alert("Referral Link Copied!");
 }
 
-function shareOnWhatsApp() {
-    const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
-    const shareUrl = `${baseUrl}/login.html?ref=${userInviteCode}`;
-    const msg = `🌱 Join Annapurna Seeds!\nRegister using my invite code: ${userInviteCode}\nLink: ${shareUrl}`;
+function copyCode() {
+    navigator.clipboard.writeText(inviteCode);
+    alert("Referral Code Copied: " + inviteCode);
+}
+
+function shareWhatsApp() {
+    const msg = `🌱 Join Annapurna Seeds!\nEarn fixed daily agro returns.\nRegister here: ${registerUrl}\nInvite Code: ${inviteCode}`;
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
-loadTeamData();
+function shareTelegram() {
+    const msg = `🌱 Join Annapurna Seeds! Register here: ${registerUrl}`;
+    window.open(`https://t.me/share/url?url=${encodeURIComponent(registerUrl)}&text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+initShare();
 </script>
 
 </body>
-</html>
+    </html>
+    
