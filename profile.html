@@ -11,6 +11,7 @@
             margin: 0;
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -21,7 +22,6 @@
             position: relative;
         }
 
-        /* 100% Guaranteed Visible Background Layer */
         .bg-fixed-img {
             position: fixed;
             top: 0;
@@ -46,9 +46,10 @@
             background: linear-gradient(180deg, rgba(235, 247, 238, 0.55) 0%, rgba(220, 243, 226, 0.75) 100%);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
+            border-left: 2px solid rgba(255,255,255,0.6);
+            border-right: 2px solid rgba(255,255,255,0.6);
         }
 
-        /* Top Brand Head */
         .brand-logo-row {
             text-align: center;
             padding: 16px 10px 10px;
@@ -67,7 +68,6 @@
             font-weight: 800;
         }
 
-        /* Profile Top Card */
         .profile-hero-card {
             background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(12px);
@@ -132,7 +132,6 @@
             border-top: 1px dashed #cde5d3;
         }
 
-        /* 3 Sunken Clay Metrics */
         .metrics-tri-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -177,7 +176,6 @@
             display: block;
         }
 
-        /* Middle Motivation Banner */
         .mid-banner {
             margin: 0 14px 14px;
             background: linear-gradient(135deg, rgba(216,243,220,0.92), rgba(183,228,199,0.92));
@@ -200,7 +198,6 @@
             font-weight: 700;
         }
 
-        /* 3D Action Rows */
         .list-group {
             margin: 0 14px;
             display: flex;
@@ -263,7 +260,6 @@
             font-weight: 900;
         }
 
-        /* Bottom Floating Bar */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -306,26 +302,23 @@
 </head>
 <body>
 
-<!-- Direct Background Image -->
 <img src="bg-nature.png" class="bg-fixed-img" alt="Farm Nature Background" onerror="this.src='bg-field.png'">
 
 <div class="mobile-wrapper">
 
-    <!-- Brand Header -->
     <div class="brand-logo-row">
         <h2>🌾 Annapurna Seeds</h2>
         <span>Grow Together, Naturally</span>
     </div>
 
-    <!-- User Profile Hero Card -->
     <div class="profile-hero-card">
         <div class="user-info-row">
             <div class="user-avatar-ring">🌱</div>
             <div class="user-meta">
-                <h3 id="displayPhone">8937985224</h3>
+                <h3 id="displayPhone">Loading...</h3>
                 <div class="user-id-row">
-                    <span>ID: <b id="displayId">ANP1812</b></span>
-                    <span onclick="copyId()" style="cursor: pointer;">📋</span>
+                    <span>ID: <b id="displayId">...</b></span>
+                    <span onclick="copyId()" style="cursor: pointer;" title="Copy ID">📋</span>
                 </div>
                 <div class="vip-badge">👑 <span id="vipLevel">VIP 1</span></div>
             </div>
@@ -333,7 +326,6 @@
         <div class="slogan-bar">"Growing Together for a Greener Tomorrow" 🍃</div>
     </div>
 
-    <!-- 3 Metrics (Balance, Recharge, TT Income) -->
     <div class="metrics-tri-grid">
         <div class="metric-clay-box">
             <div class="clay-icon icon-green">👛</div>
@@ -352,7 +344,6 @@
         </div>
     </div>
 
-    <!-- Middle Motivation Banner -->
     <div class="mid-banner">
         <div>
             <h4>Small Seeds, Big Possibilities</h4>
@@ -361,8 +352,18 @@
         <div style="font-size: 24px;">🌾</div>
     </div>
 
-    <!-- 3D Action Rows -->
     <div class="list-group">
+        <a href="admin.html" id="adminRowBtn" class="list-item-btn" style="display: none; border: 2px solid #2ecc71; background: #eefdf3;">
+            <div class="list-left">
+                <div class="item-icon-box" style="background: linear-gradient(135deg, #1b4332, #2d6a4f);">🔒</div>
+                <div class="item-meta">
+                    <h4 style="color: #1b4332;">Admin Console</h4>
+                    <p style="color: #2d6a4f;">Manage UTRs, Approvals & Payouts</p>
+                </div>
+            </div>
+            <div class="arrow-bubble">➔</div>
+        </a>
+
         <a href="recharge.html" class="list-item-btn">
             <div class="list-left">
                 <div class="item-icon-box icon-green">💳</div>
@@ -396,6 +397,17 @@
             <div class="arrow-bubble">➔</div>
         </div>
 
+        <a href="about.html" class="list-item-btn">
+            <div class="list-left">
+                <div class="item-icon-box" style="background: linear-gradient(135deg, #10b981, #059669);">📜</div>
+                <div class="item-meta">
+                    <h4>About & Terms</h4>
+                    <p>Company profile, rules & disclaimer</p>
+                </div>
+            </div>
+            <div class="arrow-bubble">➔</div>
+        </a>
+
         <div class="list-item-btn" id="logoutAction">
             <div class="list-left">
                 <div class="item-icon-box" style="background: linear-gradient(135deg, #ef4444, #b91c1c);">🚪</div>
@@ -408,7 +420,6 @@
         </div>
     </div>
 
-    <!-- Kaveri Floating Bottom Bar -->
     <div class="bottom-nav">
         <a href="index.html" class="nav-link">
             <span class="nav-icon">🏠</span>
@@ -432,9 +443,8 @@
         </a>
     </div>
 
-</div>
-
-<script>
+    </div>
+                        <script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -443,6 +453,11 @@ const savedUser = JSON.parse(localStorage.getItem('annapurna_user') || '{}');
 if (!savedUser.mobile) { window.location.href = 'login.html'; }
 
 let currentUser = savedUser;
+
+if (savedUser.mobile === '7983678835') {
+    const adminBtn = document.getElementById('adminRowBtn');
+    if (adminBtn) adminBtn.style.display = 'flex';
+}
 
 async function syncProfile() {
     try {
@@ -456,6 +471,15 @@ async function syncProfile() {
             document.getElementById('userPlanVal').innerText = "₹" + Number(data.active_plan || 0).toFixed(0);
             document.getElementById('totalCommissionVal').innerText = "₹" + Number(data.commission || 0).toFixed(2);
 
+            const plan = Number(data.active_plan || 0);
+            if (plan >= 2500) {
+                document.getElementById('vipLevel').innerText = "VIP 3";
+            } else if (plan >= 1500) {
+                document.getElementById('vipLevel').innerText = "VIP 2";
+            } else {
+                document.getElementById('vipLevel').innerText = "VIP 1";
+            }
+
             if (data.bank_account) {
                 document.getElementById('bankStatusText').innerText = `Locked: ${data.bank_account.slice(-4)} (${data.bank_holder})`;
             }
@@ -465,12 +489,12 @@ async function syncProfile() {
 
 function copyId() {
     navigator.clipboard.writeText(currentUser.invite_code || '');
-    alert("User ID copied!");
+    alert("User ID Copied: " + (currentUser.invite_code || ''));
 }
 
 async function openBankModal() {
     if (currentUser.bank_account) {
-        alert(`Aapka bank account locked hai:\nHolder: ${currentUser.bank_holder}\nA/C: ${currentUser.bank_account}\nIFSC: ${currentUser.bank_ifsc}`);
+        alert(`Aapka bank account pehle se locked hai:\nHolder: ${currentUser.bank_holder}\nA/C: ${currentUser.bank_account}\nIFSC: ${currentUser.bank_ifsc}\n\n(Badalne ke liye customer care/admin se contact karein)`);
         return;
     }
     const name = prompt("Account Holder Name:");
@@ -496,7 +520,7 @@ async function openBankModal() {
 
 async function applyWithdrawal() {
     if (!currentUser.bank_account) {
-        alert("Pehle Bank Details bind karein!");
+        alert("Pehle 'Bank Details' par click karke bank account bind karein!");
         return;
     }
 
@@ -504,12 +528,17 @@ async function applyWithdrawal() {
     if (!slab) return;
     const amt = Number(slab);
 
-    if (Number(currentUser.balance || 0) < amt) {
-        alert("Insufficient balance!");
+    if (![330, 550, 950, 1320].includes(amt)) {
+        alert("Sirf approved slabs hi choose kar sakte hain: ₹330, ₹550, ₹950, ₹1320");
         return;
     }
 
-    const pass = prompt("Enter your login password:");
+    if (Number(currentUser.balance || 0) < amt) {
+        alert("Insufficient balance! Aapke wallet me itne paise nahi hain.");
+        return;
+    }
+
+    const pass = prompt("Enter your login password to confirm:");
     if (pass !== currentUser.password) {
         alert("Incorrect password!");
         return;
@@ -528,7 +557,7 @@ async function applyWithdrawal() {
         alert("Withdrawal fail: " + error.message);
     } else {
         await client.from('users').update({ balance: Number(currentUser.balance) - amt }).eq('mobile', currentUser.mobile);
-        alert(`Withdrawal request of ₹${amt} submitted!`);
+        alert(`Withdrawal request of ₹${amt} submitted successfully! Admin verification ke baad bank me credit hoga.`);
         syncProfile();
     }
 }
@@ -544,5 +573,4 @@ syncProfile();
 </script>
 
 </body>
-    </html>
-    
+</html>
