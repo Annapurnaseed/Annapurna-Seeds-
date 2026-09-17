@@ -3,306 +3,261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Tasks - Annapurna Seeds</title>
-    <link rel="stylesheet" href="css/style.css">
-    <!-- Supabase JS Client CDN -->
+    <title>Tasks & Rewards - Annapurna Seeds</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        .task-counter-card {
-            background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
-            color: #ffffff;
-            margin: 15px;
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 6px 18px rgba(27, 67, 50, 0.2);
-        }
-        .counter-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 15px;
-        }
-        .counter-box {
-            background: rgba(255, 255, 255, 0.12);
-            padding: 12px;
-            border-radius: 12px;
-            text-align: center;
-        }
-        .counter-box span { font-size: 11px; opacity: 0.8; display: block; }
-        .counter-box b { font-size: 20px; color: #d8f3dc; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background: #eef6f0 url('bg-agro.png') center top/contain no-repeat fixed; min-height: 100vh; display: flex; justify-content: center; }
+        .mobile-wrapper { width: 100%; max-width: 420px; background: rgba(244, 250, 245, 0.94); backdrop-filter: blur(12px); min-height: 100vh; padding-bottom: 95px; }
 
-        .task-action-box {
-            background: #ffffff;
-            margin: 15px;
-            padding: 20px;
-            border-radius: 20px;
-            border: 1px solid #ddecde;
-            text-align: center;
-        }
-        .task-progress {
-            width: 100%;
-            height: 8px;
-            background: #eef7f0;
-            border-radius: 10px;
-            margin: 15px 0;
-            overflow: hidden;
-        }
-        .task-progress-bar {
-            width: 0%;
-            height: 100%;
-            background: #2d6a4f;
-            transition: width 0.3s;
-        }
-        .holiday-banner {
-            display: none;
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
-            padding: 16px;
-            margin: 15px;
-            border-radius: 16px;
-            text-align: center;
-            font-size: 14px;
-            font-weight: 600;
-        }
-        button:disabled {
-            background: #a3b18a;
-            cursor: not-allowed;
-        }
+        /* Top Header */
+        .top-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; }
+        .back-circle { width: 36px; height: 36px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: #1e5e3a; text-decoration: none; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+        .wallet-pill { background: linear-gradient(135deg, #2ecc71, #1e824c); color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 800; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(30,130,76,0.25); }
+
+        /* Brand Head */
+        .brand-logo-row { text-align: center; margin-bottom: 12px; }
+        .brand-logo-row h2 { font-size: 20px; font-weight: 900; color: #0d3820; }
+        .brand-logo-row span { font-size: 11px; color: #2e7d32; font-style: italic; }
+
+        /* Kaveri Double Capsule Tabs */
+        .tab-switcher { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 14px 14px; background: #ffffff; padding: 6px; border-radius: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #e1eee4; }
+        .tab-btn { border: none; background: transparent; border-radius: 18px; padding: 10px 8px; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s; }
+        .tab-btn.active { background: linear-gradient(180deg, #2ecc71 0%, #1e824c 100%); color: #fff; box-shadow: 0 4px 12px rgba(30,130,76,0.3); }
+        .tab-icon { width: 32px; height: 32px; border-radius: 10px; background: rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+        .tab-btn:not(.active) .tab-icon { background: #eef6f0; color: #1e824c; }
+        .tab-info { text-align: left; }
+        .tab-info h4 { font-size: 13px; font-weight: 900; line-height: 1.2; }
+        .tab-info p { font-size: 9px; opacity: 0.85; }
+
+        /* Target Notice Strip */
+        .notice-strip { margin: 0 14px 12px; background: linear-gradient(135deg, #1e824c, #145a32); color: #fff; border-radius: 18px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 14px rgba(20,90,50,0.2); }
+        .notice-strip h4 { font-size: 13px; font-weight: 800; }
+        .notice-strip p { font-size: 10px; opacity: 0.9; }
+        .badge-tag { background: #a3e635; color: #0d3820; font-size: 10px; font-weight: 900; padding: 4px 8px; border-radius: 10px; }
+
+        /* Milestone Table Card (Kaveri Screenshot Exact) */
+        .mission-card { background: #ffffff; margin: 0 14px; border-radius: 24px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1.5px solid #e1eee4; }
+        .table-head { background: linear-gradient(180deg, #27ae60 0%, #1e824c 100%); color: #fff; display: grid; grid-template-columns: 1.2fr 1fr 1fr; padding: 12px 14px; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.3px; }
+        .table-row { display: grid; grid-template-columns: 1.2fr 1fr 1fr; padding: 14px; align-items: center; border-bottom: 1px solid #f0f6f2; font-size: 13px; font-weight: 800; color: #123e24; }
+        .table-row:nth-child(even) { background: #fbfdfc; }
+        .col-reward { color: #27ae60; font-weight: 900; }
+        
+        .btn-status-pill { border: none; background: #eef6f0; color: #648a72; font-size: 11px; font-weight: 800; padding: 6px 14px; border-radius: 14px; cursor: not-allowed; text-align: center; }
+        .btn-status-pill.claimable { background: linear-gradient(180deg, #2ecc71, #1e824c); color: #fff; cursor: pointer; box-shadow: 0 3px 8px rgba(30,130,76,0.3); }
+
+        /* Daily Tasks Box */
+        .daily-task-box { display: none; background: #ffffff; margin: 0 14px; border-radius: 24px; padding: 20px 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1.5px solid #e1eee4; text-align: center; }
+        .daily-progress-wrap { background: #f0f7f2; border-radius: 12px; height: 10px; overflow: hidden; margin: 14px 0; border: 1px solid #dcece0; }
+        .daily-progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #2ecc71, #1e824c); transition: width 0.3s; }
+        .btn-daily-submit { width: 100%; background: linear-gradient(180deg, #2ecc71 0%, #1e824c 100%); border: none; border-radius: 22px; padding: 13px; color: #fff; font-size: 14px; font-weight: 900; cursor: pointer; box-shadow: 0 6px 16px rgba(30,130,76,0.35); }
+
+        /* Bottom Floating Bar */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); display: flex; justify-content: space-around; align-items: center; padding: 8px 0; border-top: 1px solid #e2eee5; box-shadow: 0 -4px 16px rgba(0,0,0,0.04); z-index: 100; }
+        .nav-link { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #6c8a77; font-size: 10px; font-weight: 700; gap: 3px; }
+        .nav-link.active-pill { background: linear-gradient(180deg, #2ecc71 0%, #1e824c 100%); color: #fff; padding: 6px 18px; border-radius: 16px; box-shadow: 0 4px 12px rgba(30,130,76,0.3); }
+        .nav-link.active-pill span { color: #fff !important; }
+        .nav-icon { font-size: 18px; }
     </style>
 </head>
 <body>
 
 <div class="mobile-wrapper">
 
-    <!-- Header -->
-    <div class="brand-header">
-        <div class="brand-nav">
-            <div class="brand-title">🌱 Task Room</div>
-            <div class="brand-badge" id="planBadge">Loading Plan...</div>
+    <!-- Top Header -->
+    <div class="top-header">
+        <a href="index.html" class="back-circle">❮</a>
+        <div class="wallet-pill">
+            <span>👛 Wallet:</span>
+            <b id="userWalletTop">₹0.00</b>
         </div>
-        <p style="font-size: 12px; margin-top: 6px; opacity: 0.85;">Daily Crop Quality Review Tasks</p>
     </div>
 
-    <!-- Sunday Holiday Alert -->
-    <div id="holidayNotice" class="holiday-banner">
-        ⚠️ <b>Today is Sunday (Weekly Holiday)!</b><br>
-        Task room maintenance par hai. Naye tasks kal Monday ko shuru honge.
+    <div class="brand-logo-row">
+        <h2>🌾 Annapurna Seeds</h2>
+        <span>Tasks & Rewards Hub</span>
     </div>
 
-    <!-- Live Counter -->
-    <div class="task-counter-card" id="counterCard">
-        <div style="font-size: 13px; opacity: 0.9;">Today's Task Status:</div>
-        <div class="counter-grid">
-            <div class="counter-box">
-                <span>Completed Tasks</span>
-                <b id="completedText">0 / 0</b>
+    <!-- 2 Kaveri Style Mode Switchers -->
+    <div class="tab-switcher">
+        <button class="tab-btn active" id="permTabBtn" onclick="switchTaskTab('perm')">
+            <div class="tab-icon">🎯</div>
+            <div class="tab-info">
+                <h4>Permanent Task</h4>
+                <p>Team recharge targets</p>
             </div>
-            <div class="counter-box">
-                <span>Earned Today</span>
-                <b id="earnedToday">₹0</b>
+        </button>
+        <button class="tab-btn" id="dailyTabBtn" onclick="switchTaskTab('daily')">
+            <div class="tab-icon">📋</div>
+            <div class="tab-info">
+                <h4>Daily Task</h4>
+                <p>Complete daily reviews</p>
+            </div>
+        </button>
+    </div>
+
+    <!-- Permanent Tab Content -->
+    <div id="permSection">
+        <div class="notice-strip">
+            <div>
+                <h4>Team Recharge Targets</h4>
+                <p>One-time tasks — lifetime rewards</p>
+            </div>
+            <span class="badge-tag">LIFETIME</span>
+        </div>
+
+        <div class="mission-card">
+            <div class="table-head">
+                <div>Target</div>
+                <div>Reward</div>
+                <div style="text-align: right;">Status</div>
+            </div>
+
+            <!-- Milestone Rows -->
+            <div class="table-row">
+                <div>₹10,000+</div>
+                <div class="col-reward">₹250</div>
+                <div style="text-align: right;"><button class="btn-status-pill">Pending</button></div>
+            </div>
+            <div class="table-row">
+                <div>₹30,000+</div>
+                <div class="col-reward">₹500</div>
+                <div style="text-align: right;"><button class="btn-status-pill">Pending</button></div>
+            </div>
+            <div class="table-row">
+                <div>₹50,000+</div>
+                <div class="col-reward">₹1,000</div>
+                <div style="text-align: right;"><button class="btn-status-pill">Pending</button></div>
+            </div>
+            <div class="table-row">
+                <div>₹80,000+</div>
+                <div class="col-reward">₹1,500</div>
+                <div style="text-align: right;"><button class="btn-status-pill">Pending</button></div>
+            </div>
+            <div class="table-row">
+                <div>₹100,000+</div>
+                <div class="col-reward">₹3,000</div>
+                <div style="text-align: right;"><button class="btn-status-pill">Pending</button></div>
+            </div>
+            <div class="table-row">
+                <div>₹200,000+</div>
+                <div class="col-reward">₹5,000</div>
+                <div style="text-align: right;"><button class="btn-status-pill">Pending</button></div>
             </div>
         </div>
     </div>
 
-    <!-- Task Execution Zone -->
-    <div class="task-action-box" id="taskBox">
-        <h3 style="font-size: 16px; color: #1b4332; margin-bottom: 6px;">Agro Quality Verification</h3>
-        <p style="font-size: 12px; color: #557262;" id="taskDesc">Click submit to verify organic seed batch.</p>
-        
-        <div class="task-progress">
-            <div class="task-progress-bar" id="progressBar"></div>
+    <!-- Daily Tab Content -->
+    <div id="dailySection" class="daily-task-box">
+        <h3 style="font-size: 16px; font-weight: 900; color: #123e24; margin-bottom: 4px;">Seed Batch Inspection</h3>
+        <p style="font-size: 12px; color: #648a72;">Complete daily reviews to unlock earnings.</p>
+
+        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 800; color: #123e24; margin-top: 16px;">
+            <span>Completed Today</span>
+            <b id="completedCount">0 / 5</b>
+        </div>
+        <div class="daily-progress-wrap">
+            <div class="daily-progress-bar" id="dailyBar"></div>
         </div>
 
-        <button id="taskBtn" class="btn-solid" onclick="executeTask()">Submit Task</button>
-    </div>
-
-    <!-- Instructions -->
-    <div class="glass-card">
-        <div class="card-title">Task Rules</div>
-        <ul style="font-size: 12px; color: #557262; padding-left: 18px; line-height: 1.6; margin-top: 8px;">
-            <li>Roz ke tasks raat 12:00 baje se pehle poore karne honge.</li>
-            <li>Bina task submit kiye daily income add nahi hogi (No carry forward).</li>
-            <li>Sunday ko holiday rehta hai. Monday se regular tasks active rahenge.</li>
-        </ul>
+        <button class="btn-daily-submit" id="dailyBtn" onclick="runDailyReview()">Verify Seed Batch (Earn ₹10)</button>
     </div>
 
     <!-- Bottom Navigation -->
-    <div class="footer-nav">
-        <a href="index.html" class="nav-link">🏠<span>Home</span></a>
-        <a href="tasks.html" class="nav-link active">📋<span>Tasks</span></a>
-        <a href="community.html" class="nav-link">💬<span>Community</span></a>
-        <a href="team.html" class="nav-link">👥<span>Team</span></a>
-        <a href="profile.html" class="nav-link">👤<span>My</span></a>
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-link">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="tasks.html" class="nav-link active-pill">
+            <span class="nav-icon">📈</span>
+            <span>Income</span>
+        </a>
+        <a href="team.html" class="nav-link">
+            <span class="nav-icon">👥</span>
+            <span>Team</span>
+        </a>
+        <a href="team.html" class="nav-link">
+            <span class="nav-icon">🔗</span>
+            <span>Share</span>
+        </a>
+        <a href="profile.html" class="nav-link">
+            <span class="nav-icon">👤</span>
+            <span>My</span>
+        </a>
     </div>
 
 </div>
 
 <script>
-// Supabase Client Setup
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-// Auth Guard Check
-const savedUserStr = localStorage.getItem('annapurna_user');
-if (!savedUserStr) {
-    window.location.href = 'login.html';
+const savedUser = JSON.parse(localStorage.getItem('annapurna_user') || '{}');
+if (!savedUser.mobile) { window.location.href = 'login.html'; }
+
+let userBalance = 0;
+let completedReviews = 0;
+const maxReviews = 5;
+
+async function initTasks() {
+    const { data } = await client.from('users').select('balance').eq('mobile', savedUser.mobile).single();
+    if (data) {
+        userBalance = Number(data.balance || 0);
+        document.getElementById('userWalletTop').innerText = "₹" + userBalance.toFixed(2);
+    }
 }
-let currentUser = JSON.parse(savedUserStr || '{}');
+initTasks();
 
-// Sunday Holiday Check
-const today = new Date().getDay(); // 0 is Sunday
-const isSunday = (today === 0);
+function switchTaskTab(tab) {
+    const permBtn = document.getElementById('permTabBtn');
+    const dailyBtn = document.getElementById('dailyTabBtn');
+    const permSec = document.getElementById('permSection');
+    const dailySec = document.getElementById('dailySection');
 
-if (isSunday) {
-    document.getElementById('holidayNotice').style.display = 'block';
-    document.getElementById('taskBox').style.display = 'none';
-    document.getElementById('counterCard').style.opacity = '0.6';
-}
-
-// Plan Configuration
-let totalTasks = 5;
-let rewardPerTask = 10;
-let completedTasks = 0;
-let liveBalance = 0;
-
-function setupPlanDetails(plan) {
-    if (plan === 1500) {
-        totalTasks = 10;
-        rewardPerTask = 15;
-        document.getElementById('planBadge').innerText = "Active: Plan ₹1,500";
-    } else if (plan === 2500) {
-        totalTasks = 15;
-        rewardPerTask = 20;
-        document.getElementById('planBadge').innerText = "Active: Plan ₹2,500";
+    if (tab === 'perm') {
+        permBtn.classList.add('active');
+        dailyBtn.classList.remove('active');
+        permSec.style.display = 'block';
+        dailySec.style.display = 'none';
     } else {
-        totalTasks = 5;
-        rewardPerTask = 10;
-        document.getElementById('planBadge').innerText = "Active: Plan ₹520";
-    }
-    document.getElementById('taskDesc').innerText = `Click submit to verify batch. Earn ₹${rewardPerTask} per task.`;
-    document.getElementById('taskBtn').innerText = `Submit Task & Earn ₹${rewardPerTask}`;
-}
-
-async function initTaskRoom() {
-    try {
-        // Fetch fresh user data
-        const { data: user, error: uErr } = await client
-            .from('users')
-            .select('*')
-            .eq('mobile', currentUser.mobile)
-            .single();
-
-        if (user && !uErr) {
-            currentUser = user;
-            localStorage.setItem('annapurna_user', JSON.stringify(user));
-            liveBalance = Number(user.balance || 0);
-            const plan = Number(user.active_plan || 520);
-            setupPlanDetails(plan);
-        }
-
-        // Fetch today's completed tasks
-        const todayDate = new Date().toISOString().slice(0, 10);
-        const { data: taskLog, error: tErr } = await client
-            .from('daily_tasks')
-            .select('*')
-            .eq('mobile', currentUser.mobile)
-            .eq('task_date', todayDate)
-            .maybeSingle();
-
-        if (taskLog) {
-            completedTasks = taskLog.completed_count || 0;
-        }
-
-        updateUI();
-
-    } catch (err) {
-        console.error("Task room init error:", err);
+        dailyBtn.classList.add('active');
+        permBtn.classList.remove('active');
+        permSec.style.display = 'none';
+        dailySec.style.display = 'block';
     }
 }
 
-function updateUI() {
-    document.getElementById('completedText').innerText = `${completedTasks} / ${totalTasks}`;
-    document.getElementById('earnedToday').innerText = `₹${completedTasks * rewardPerTask}`;
-
-    const btn = document.getElementById('taskBtn');
-    if (completedTasks >= totalTasks) {
-        btn.disabled = true;
-        btn.innerText = "All Tasks Completed for Today ✅";
-    } else if (!isSunday) {
-        btn.disabled = false;
-        btn.innerText = `Submit Task & Earn ₹${rewardPerTask}`;
-    }
-}
-
-async function executeTask() {
-    if (completedTasks >= totalTasks) {
-        alert("Aapke aaj ke saare tasks complete ho chuke hain!");
+function runDailyReview() {
+    if (completedReviews >= maxReviews) {
+        alert("Aaj ke saare reviews complete ho chuke hain!");
         return;
     }
-
-    const btn = document.getElementById('taskBtn');
+    const btn = document.getElementById('dailyBtn');
     btn.disabled = true;
-    btn.innerText = "Verifying Batch (5s)...";
+    btn.innerText = "Verifying Batch...";
 
-    // 5-second loading progress simulation
-    let width = 0;
-    const progress = document.getElementById('progressBar');
-    const interval = setInterval(async () => {
-        if (width >= 100) {
-            clearInterval(interval);
-            progress.style.width = '0%';
+    setTimeout(async () => {
+        completedReviews++;
+        document.getElementById('completedCount').innerText = `${completedReviews} / ${maxReviews}`;
+        document.getElementById('dailyBar').style.width = `${(completedReviews / maxReviews) * 100}%`;
 
-            try {
-                const todayDate = new Date().toISOString().slice(0, 10);
-                const nextCount = completedTasks + 1;
+        // Credit 10 to balance in Supabase
+        const newBal = userBalance + 10;
+        await client.from('users').update({ balance: newBal }).eq('mobile', savedUser.mobile);
+        userBalance = newBal;
+        document.getElementById('userWalletTop').innerText = "₹" + newBal.toFixed(2);
 
-                // 1. Log or update task count in daily_tasks
-                const { error: logErr } = await client
-                    .from('daily_tasks')
-                    .upsert(
-                        {
-                            mobile: currentUser.mobile,
-                            task_date: todayDate,
-                            completed_count: nextCount
-                        },
-                        { onConflict: 'mobile,task_date' }
-                    );
-
-                if (logErr) throw logErr;
-
-                // 2. Credit reward to user balance
-                const newBalance = liveBalance + rewardPerTask;
-                const { error: balErr } = await client
-                    .from('users')
-                    .update({ balance: newBalance })
-                    .eq('mobile', currentUser.mobile);
-
-                if (balErr) throw balErr;
-
-                liveBalance = newBalance;
-                completedTasks = nextCount;
-                currentUser.balance = newBalance;
-                localStorage.setItem('annapurna_user', JSON.stringify(currentUser));
-
-                alert(`Task verified! ₹${rewardPerTask} aapke wallet mein jama ho gaye.`);
-                updateUI();
-
-            } catch (err) {
-                console.error("Task submission error:", err);
-                alert("Task submit hone me dikkat aayi: " + err.message);
-                btn.disabled = false;
-                btn.innerText = `Submit Task & Earn ₹${rewardPerTask}`;
-            }
-        } else {
-            width += 20;
-            progress.style.width = width + '%';
+        alert("Seed quality verified! ₹10 wallet me add ho gaye.");
+        btn.disabled = false;
+        btn.innerText = "Verify Seed Batch (Earn ₹10)";
+        if (completedReviews >= maxReviews) {
+            btn.disabled = true;
+            btn.innerText = "Daily Tasks Completed ✅";
         }
-    }, 1000);
+    }, 2000);
 }
-
-initTaskRoom();
 </script>
 
 </body>
