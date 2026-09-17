@@ -4,319 +4,190 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile - Annapurna Seeds</title>
-    <!-- Supabase JS Client CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background: #eef6f0 url('bg-agro.png') center top/contain no-repeat fixed; min-height: 100vh; display: flex; justify-content: center; }
+        .mobile-wrapper { width: 100%; max-width: 420px; background: rgba(244, 250, 245, 0.94); backdrop-filter: blur(12px); min-height: 100vh; padding-bottom: 95px; }
 
-        body {
-            background: #eef7f0;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-        }
+        /* Top Bar */
+        .top-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; }
+        .back-circle { width: 36px; height: 36px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: #1e5e3a; text-decoration: none; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+        .gear-circle { width: 36px; height: 36px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #1e5e3a; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
 
-        .mobile-wrapper {
-            width: 100%;
-            max-width: 420px;
-            background: #f7fbf8;
-            min-height: 100vh;
-            padding-bottom: 90px;
-            box-shadow: 0 0 25px rgba(0,0,0,0.06);
-        }
+        /* Brand Logo Top */
+        .brand-logo-row { text-align: center; margin-bottom: 12px; }
+        .brand-logo-row h2 { font-size: 20px; font-weight: 900; color: #0d3820; }
+        .brand-logo-row span { font-size: 11px; color: #2e7d32; font-style: italic; }
 
-        /* Top User Card */
-        .profile-card {
-            background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
-            color: #ffffff;
-            margin: 16px;
-            padding: 22px 18px;
-            border-radius: 26px;
-            box-shadow: 0 10px 24px rgba(27, 67, 50, 0.22);
-        }
-        .user-row {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-bottom: 16px;
-        }
-        .avatar-circle {
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            background: #d8f3dc;
-            color: #1b4332;
-            font-size: 20px;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid #ffffff;
-        }
-        .user-details h3 {
-            font-size: 17px;
-            font-weight: 800;
-        }
-        .user-details p {
-            font-size: 12px;
-            color: #a3e635;
-            font-weight: 600;
-            margin-top: 2px;
-        }
+        /* Profile Top Card (Kaveri Screenshot) */
+        .profile-hero-card { background: #ffffff; margin: 0 14px 14px; border-radius: 28px; padding: 18px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1.5px solid #e1eee4; }
+        .user-info-row { display: flex; align-items: center; gap: 14px; }
+        .user-avatar-ring { width: 64px; height: 64px; border-radius: 50%; background: #d8f3dc; display: flex; align-items: center; justify-content: center; font-size: 24px; border: 3px solid #2ecc71; box-shadow: 0 4px 12px rgba(46,204,113,0.25); flex-shrink: 0; }
+        .user-meta h3 { font-size: 18px; font-weight: 900; color: #123e24; }
+        .user-id-row { font-size: 12px; color: #648a72; font-weight: 700; margin: 3px 0 6px; display: flex; align-items: center; gap: 6px; }
+        .vip-badge { background: #eef8f1; color: #1e824c; border: 1px solid #cce8d4; font-size: 11px; font-weight: 900; padding: 3px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px; }
 
-        .balance-metrics {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.12);
-            padding: 12px 14px;
-            border-radius: 16px;
-        }
-        .metric-cell span {
-            font-size: 11px;
-            opacity: 0.85;
-            display: block;
-        }
-        .metric-cell b {
-            font-size: 20px;
-            color: #d8f3dc;
-            font-weight: 800;
-            margin-top: 2px;
-            display: block;
-        }
+        .slogan-bar { text-align: center; font-size: 11px; color: #2d6a4f; font-style: italic; font-weight: 600; margin-top: 12px; padding-top: 10px; border-top: 1px dashed #e1eee4; }
 
-        /* 3D Glass Sections */
-        .card-box {
-            background: #ffffff;
-            margin: 0 16px 16px;
-            border-radius: 22px;
-            padding: 18px;
-            border: 1.5px solid #e1eee4;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-        }
-        .card-header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-        }
-        .card-header-row h3 {
-            font-size: 15px;
-            font-weight: 800;
-            color: #123e24;
-        }
-        .status-pill {
-            font-size: 11px;
-            font-weight: 800;
-            padding: 4px 10px;
-            border-radius: 12px;
-        }
-        .status-unlocked { background: #fff3cd; color: #856404; }
-        .status-locked { background: #d8f3dc; color: #1b4332; }
-        .card-subtext {
-            font-size: 11px;
-            color: #557262;
-            margin-bottom: 12px;
-            line-height: 1.4;
-        }
+        /* 3 Sunken Metrics (Balance, Recharge, TT Income) */
+        .metrics-tri-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0 14px 14px; }
+        .metric-clay-box { background: #ffffff; border-radius: 22px; padding: 14px 8px; text-align: center; border: 1.5px solid #e1eee4; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .clay-icon { width: 38px; height: 38px; border-radius: 14px; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .icon-green { background: linear-gradient(135deg, #2ecc71, #1e824c); }
+        .icon-orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .icon-purple { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+        .metric-clay-box b { font-size: 15px; color: #123e24; font-weight: 900; display: block; }
+        .metric-clay-box span { font-size: 11px; color: #648a72; font-weight: 600; margin-top: 2px; display: block; }
 
-        /* Capsule Input */
-        .input-pill {
-            width: 100%;
-            background: #f1f6f2;
-            border: 1px solid #dcece0;
-            border-radius: 16px;
-            padding: 12px 14px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #143e24;
-            outline: none;
-            margin-bottom: 10px;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
-            transition: all 0.2s;
-        }
-        .input-pill:focus {
-            background: #ffffff;
-            border-color: #27ae60;
-            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.15);
-        }
-        .input-pill.locked-input {
-            background: #e9ecef !important;
-            color: #6c757d !important;
-            cursor: not-allowed;
-            border-color: #ced4da !important;
-        }
+        /* Banner Middle */
+        .mid-banner { margin: 0 14px 14px; background: linear-gradient(135deg, #d8f3dc, #b7e4c7); border-radius: 20px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #c2e5ce; }
+        .mid-banner h4 { font-size: 13px; color: #0d3820; font-weight: 800; }
+        .mid-banner p { font-size: 10px; color: #245738; }
 
-        /* Solid Green Buttons */
-        .btn-green-action {
-            width: 100%;
-            background: linear-gradient(180deg, #2ecc71 0%, #1e824c 100%);
-            border: none;
-            border-radius: 20px;
-            padding: 12px;
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: 0 6px 16px rgba(30, 130, 76, 0.35);
-            margin-top: 4px;
-            transition: transform 0.1s;
-        }
-        .btn-green-action:active {
-            transform: scale(0.98);
-        }
-        .btn-green-action:disabled {
-            background: #a3b18a !important;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
+        /* List Action Items */
+        .list-group { margin: 0 14px; display: flex; flex-direction: column; gap: 10px; }
+        .list-item-btn { background: #ffffff; border-radius: 20px; padding: 10px 16px 10px 12px; display: flex; align-items: center; justify-content: space-between; text-decoration: none; border: 1.5px solid #e1eee4; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        .list-left { display: flex; align-items: center; gap: 12px; }
+        .item-icon-box { width: 40px; height: 40px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff; }
+        .item-meta h4 { font-size: 13px; font-weight: 800; color: #123e24; }
+        .item-meta p { font-size: 10px; color: #648a72; font-weight: 600; }
+        .arrow-bubble { width: 24px; height: 24px; border-radius: 50%; background: #f0f7f2; color: #2d6a4f; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; }
 
-        /* Slab Grid */
-        .slab-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 14px;
-        }
-        .slab-chip {
-            padding: 12px;
-            text-align: center;
-            border: 1.5px solid #ddecde;
-            background: #f8fcf9;
-            border-radius: 14px;
-            font-weight: 800;
-            font-size: 15px;
-            color: #2d6a4f;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-        .slab-chip.active {
-            background: #2d6a4f;
-            color: #ffffff;
-            border-color: #2d6a4f;
-            box-shadow: 0 4px 10px rgba(45, 106, 79, 0.25);
-        }
-
-        /* Bottom Fixed Navigation Bar */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            max-width: 420px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            border-top: 1px solid #e1eee4;
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.04);
-            z-index: 100;
-        }
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: #658c73;
-            font-size: 11px;
-            font-weight: 700;
-            gap: 3px;
-        }
-        .nav-item.active {
-            color: #1b683b;
-        }
-        .nav-item span:first-child {
-            font-size: 18px;
-        }
+        /* Bottom Floating Bar */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); display: flex; justify-content: space-around; align-items: center; padding: 8px 0; border-top: 1px solid #e2eee5; box-shadow: 0 -4px 16px rgba(0,0,0,0.04); z-index: 100; }
+        .nav-link { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #6c8a77; font-size: 10px; font-weight: 700; gap: 3px; }
+        .nav-link.active-pill { background: linear-gradient(180deg, #2ecc71 0%, #1e824c 100%); color: #fff; padding: 6px 18px; border-radius: 16px; box-shadow: 0 4px 12px rgba(30,130,76,0.3); }
+        .nav-link.active-pill span { color: #fff !important; }
+        .nav-icon { font-size: 18px; }
     </style>
 </head>
 <body>
 
 <div class="mobile-wrapper">
 
-    <!-- Profile Header Card -->
-    <div class="profile-card">
-        <div class="user-row">
-            <div class="avatar-circle">AS</div>
-            <div class="user-details">
-                <h3 id="displayPhone">+91 0000000000</h3>
-                <p>Plan: <b id="userPlan">Sprout Plan (₹520)</b></p>
+    <!-- Top Navigation -->
+    <div class="top-header">
+        <a href="index.html" class="back-circle">✕</a>
+        <div class="gear-circle" id="logoutBtn" title="Logout">🚪</div>
+    </div>
+
+    <div class="brand-logo-row">
+        <h2>🌾 Annapurna Seeds</h2>
+        <span>Grow Together, Naturally</span>
+    </div>
+
+    <!-- User Header Card -->
+    <div class="profile-hero-card">
+        <div class="user-info-row">
+            <div class="user-avatar-ring">🌱</div>
+            <div class="user-meta">
+                <h3 id="displayPhone">9876543210</h3>
+                <div class="user-id-row">
+                    <span>ID: <b id="displayId">ANP0000</b></span>
+                    <span onclick="copyId()" style="cursor: pointer;">📋</span>
+                </div>
+                <div class="vip-badge">👑 <span id="vipLevel">VIP 1</span></div>
             </div>
         </div>
-        <div class="balance-metrics">
-            <div class="metric-cell">
-                <span>Available Balance</span>
-                <b id="walletBalance">₹0.00</b>
-            </div>
-            <div class="metric-cell">
-                <span>Total Commission</span>
-                <b id="totalCommission">₹0.00</b>
-            </div>
+        <div class="slogan-bar">"Growing Together for a Greener Tomorrow" 🍃</div>
+    </div>
+
+    <!-- 3 Metrics (Balance, Recharge, TT Income) -->
+    <div class="metrics-tri-grid">
+        <div class="metric-clay-box">
+            <div class="clay-icon icon-green">👛</div>
+            <b id="walletBal">₹0.00</b>
+            <span>Balance</span>
+        </div>
+        <div class="metric-clay-box">
+            <div class="clay-icon icon-orange">💳</div>
+            <b id="userPlanVal">₹0.00</b>
+            <span>Active Plan</span>
+        </div>
+        <div class="metric-clay-box">
+            <div class="clay-icon icon-purple">📈</div>
+            <b id="totalCommissionVal">₹0.00</b>
+            <span>TT Income</span>
         </div>
     </div>
 
-    <!-- Section 1: Bank Account Details Binding -->
-    <div class="card-box">
-        <div class="card-header-row">
-            <h3>Bank Account Details</h3>
-            <span id="bankLockStatus" class="status-pill status-unlocked">Unlocked 🔓</span>
+    <!-- Middle Motivation Banner -->
+    <div class="mid-banner">
+        <div>
+            <h4>Small Seeds, Big Possibilities</h4>
+            <p>Your Growth, Our Priority</p>
         </div>
-        <p class="card-subtext">Kripya dhyan se bharein. Ek baar save hone ke baad details lock ho jayengi.</p>
-
-        <form id="bankForm" onsubmit="saveBankDetails(event)">
-            <input type="text" id="holderName" class="input-pill" placeholder="Account Holder Name" required>
-            <input type="text" id="accountNo" class="input-pill" placeholder="Bank Account Number" required pattern="[0-9]{9,18}">
-            <input type="text" id="ifscCode" class="input-pill" placeholder="IFSC Code (e.g. SBIN0001234)" required maxlength="11">
-            <button type="submit" id="saveBankBtn" class="btn-green-action">Bind & Lock Bank Account</button>
-        </form>
+        <div style="font-size: 24px;">🌾</div>
     </div>
 
-    <!-- Section 2: Fixed Slab Withdrawal System -->
-    <div class="card-box">
-        <div class="card-header-row">
-            <h3>Apply Withdrawal</h3>
-            <span style="font-size: 11px; color: #2d6a4f; font-weight: 800;">Max 1 Daily</span>
-        </div>
-        <p class="card-subtext">Choose fixed withdrawal slab:</p>
-        
-        <div class="slab-container">
-            <div class="slab-chip active" onclick="selectSlab(330, this)">₹330</div>
-            <div class="slab-chip" onclick="selectSlab(550, this)">₹550</div>
-            <div class="slab-chip" onclick="selectSlab(950, this)">₹950</div>
-            <div class="slab-chip" onclick="selectSlab(1320, this)">₹1,320</div>
+    <!-- Action Rows -->
+    <div class="list-group">
+        <a href="recharge.html" class="list-item-btn">
+            <div class="list-left">
+                <div class="item-icon-box icon-green">💳</div>
+                <div class="item-meta">
+                    <h4>Recharge Wallet</h4>
+                    <p>Add funds via UPI / QR code</p>
+                </div>
+            </div>
+            <div class="arrow-bubble">➔</div>
+        </a>
+
+        <div class="list-item-btn" onclick="openBankModal()">
+            <div class="list-left">
+                <div class="item-icon-box" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">🏦</div>
+                <div class="item-meta">
+                    <h4>Bank Details</h4>
+                    <p id="bankStatusText">Manage bank account for withdrawals</p>
+                </div>
+            </div>
+            <div class="arrow-bubble">➔</div>
         </div>
 
-        <form onsubmit="handleWithdrawal(event)">
-            <input type="password" id="withdrawPass" class="input-pill" placeholder="Enter Account Password" required>
-            <button type="submit" id="withdrawBtn" class="btn-green-action">Withdrawal Request Submit</button>
-        </form>
+        <div class="list-item-btn" onclick="applyWithdrawal()">
+            <div class="list-left">
+                <div class="item-icon-box icon-orange">💰</div>
+                <div class="item-meta">
+                    <h4>Apply Withdrawal</h4>
+                    <p>Fixed slabs: ₹330 / ₹550 / ₹950</p>
+                </div>
+            </div>
+            <div class="arrow-bubble">➔</div>
+        </div>
+
+        <div class="list-item-btn" id="logoutAction" style="cursor: pointer;">
+            <div class="list-left">
+                <div class="item-icon-box" style="background: linear-gradient(135deg, #ef4444, #b91c1c);">🚪</div>
+                <div class="item-meta">
+                    <h4>Log Out</h4>
+                    <p>Sign out from your account</p>
+                </div>
+            </div>
+            <div class="arrow-bubble">➔</div>
+        </div>
     </div>
 
-    <!-- Bottom App Navigation Bar -->
+    <!-- Bottom Navigation -->
     <div class="bottom-nav">
-        <a href="index.html" class="nav-item">
-            <span>🏠</span>
+        <a href="index.html" class="nav-link">
+            <span class="nav-icon">🏠</span>
             <span>Home</span>
         </a>
-        <a href="tasks.html" class="nav-item">
-            <span>📋</span>
-            <span>Tasks</span>
+        <a href="tasks.html" class="nav-link">
+            <span class="nav-icon">📈</span>
+            <span>Income</span>
         </a>
-        <a href="team.html" class="nav-item">
-            <span>👥</span>
+        <a href="team.html" class="nav-link">
+            <span class="nav-icon">👥</span>
             <span>Team</span>
         </a>
-        <a href="community.html" class="nav-item">
-            <span>💬</span>
-            <span>Community</span>
+        <a href="team.html" class="nav-link">
+            <span class="nav-icon">🔗</span>
+            <span>Share</span>
         </a>
-        <a href="profile.html" class="nav-item active">
-            <span>👤</span>
+        <a href="profile.html" class="nav-link active-pill">
+            <span class="nav-icon">👤</span>
             <span>My</span>
         </a>
     </div>
@@ -324,205 +195,117 @@
 </div>
 
 <script>
-// Supabase Client Setup
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-// Auth Guard
-const savedUserStr = localStorage.getItem('annapurna_user');
-if (!savedUserStr) {
-    window.location.href = 'login.html';
-}
-let currentUser = JSON.parse(savedUserStr || '{}');
+const savedUser = JSON.parse(localStorage.getItem('annapurna_user') || '{}');
+if (!savedUser.mobile) { window.location.href = 'login.html'; }
 
-let selectedWithdrawSlab = 330;
-let isBankLocked = false;
-let userLiveBalance = 0;
-let userLivePlan = "520";
+let currentUser = savedUser;
 
-function selectSlab(amount, element) {
-    selectedWithdrawSlab = amount;
-    document.querySelectorAll('.slab-chip').forEach(c => c.classList.remove('active'));
-    element.classList.add('active');
-}
-
-function applyBankLock(holder, acc, ifsc) {
-    isBankLocked = true;
-    const hInput = document.getElementById('holderName');
-    const aInput = document.getElementById('accountNo');
-    const iInput = document.getElementById('ifscCode');
-
-    hInput.value = holder || '';
-    aInput.value = acc || '';
-    iInput.value = ifsc || '';
-
-    hInput.readOnly = true;
-    aInput.readOnly = true;
-    iInput.readOnly = true;
-
-    hInput.classList.add('locked-input');
-    aInput.classList.add('locked-input');
-    iInput.classList.add('locked-input');
-
-    const statusBadge = document.getElementById('bankLockStatus');
-    statusBadge.innerText = "Locked 🔒";
-    statusBadge.className = "status-pill status-locked";
-    document.getElementById('saveBankBtn').style.display = "none";
-}
-
-async function loadUserData() {
+async function syncProfile() {
     try {
-        const { data, error } = await client
-            .from('users')
-            .select('*')
-            .eq('mobile', currentUser.mobile)
-            .single();
+        const { data } = await client.from('users').select('*').eq('mobile', savedUser.mobile).single();
+        if (data) {
+            currentUser = data;
+            localStorage.setItem('annapurna_user', JSON.stringify(data));
+            document.getElementById('displayPhone').innerText = data.mobile;
+            document.getElementById('displayId').innerText = data.invite_code || 'ANP0000';
+            document.getElementById('walletBal').innerText = "₹" + Number(data.balance || 0).toFixed(2);
+            document.getElementById('userPlanVal').innerText = "₹" + Number(data.active_plan || 0).toFixed(0);
+            document.getElementById('totalCommissionVal').innerText = "₹" + Number(data.commission || 0).toFixed(2);
 
-        if (error || !data) return;
-
-        currentUser = data;
-        localStorage.setItem('annapurna_user', JSON.stringify(data));
-
-        document.getElementById('displayPhone').innerText = "+91 " + data.mobile;
-        userLiveBalance = Number(data.balance || 0);
-        document.getElementById('walletBalance').innerText = "₹" + userLiveBalance.toFixed(2);
-        document.getElementById('totalCommission').innerText = "₹" + Number(data.commission || 0).toFixed(2);
-
-        userLivePlan = data.active_plan ? String(data.active_plan) : "520";
-        document.getElementById('userPlan').innerText = data.active_plan ? `Plan ₹${data.active_plan}` : "Sprout Plan (₹520)";
-
-        if (data.bank_account && data.bank_holder) {
-            applyBankLock(data.bank_holder, data.bank_account, data.bank_ifsc);
+            if (data.bank_account) {
+                document.getElementById('bankStatusText').innerText = `Locked: ${data.bank_account.slice(-4)} (${data.bank_holder})`;
+            }
         }
-    } catch (err) {
-        console.error("Profile load error:", err);
+    } catch(e) { console.error(e); }
+}
+
+function copyId() {
+    navigator.clipboard.writeText(currentUser.invite_code || '');
+    alert("User ID copied!");
+}
+
+async function openBankModal() {
+    if (currentUser.bank_account) {
+        alert(`Aapka bank account locked hai:\nHolder: ${currentUser.bank_holder}\nA/C: ${currentUser.bank_account}\nIFSC: ${currentUser.bank_ifsc}`);
+        return;
+    }
+    const name = prompt("Account Holder Name:");
+    if (!name) return;
+    const acc = prompt("Bank Account Number:");
+    if (!acc) return;
+    const ifsc = prompt("IFSC Code:");
+    if (!ifsc) return;
+
+    const { error } = await client.from('users').update({
+        bank_holder: name,
+        bank_account: acc,
+        bank_ifsc: ifsc.toUpperCase()
+    }).eq('mobile', currentUser.mobile);
+
+    if (error) {
+        alert("Bank bind fail: " + error.message);
+    } else {
+        alert("Bank account successfully bind and locked!");
+        syncProfile();
     }
 }
 
-loadUserData();
-
-async function saveBankDetails(e) {
-    e.preventDefault();
-    const holder = document.getElementById('holderName').value.trim();
-    const acc = document.getElementById('accountNo').value.trim();
-    const ifsc = document.getElementById('ifscCode').value.trim().toUpperCase();
-
-    if (!confirm("Kya aap inhi details ko lock karna chahte hain? Ek baar lock hone ke baad badlav nahi hoga.")) {
+async function applyWithdrawal() {
+    if (!currentUser.bank_account) {
+        alert("Pehle Bank Details bind karein!");
         return;
     }
 
-    const btn = document.getElementById('saveBankBtn');
-    btn.disabled = true;
-    btn.innerText = "Locking...";
+    const slab = prompt("Withdrawal slab chunein:\nType: 330 ya 550 ya 950 ya 1320", "330");
+    if (!slab) return;
+    const amt = Number(slab);
 
-    try {
-        const { error } = await client
-            .from('users')
-            .update({
-                bank_holder: holder,
-                bank_account: acc,
-                bank_ifsc: ifsc
-            })
-            .eq('mobile', currentUser.mobile);
-
-        if (error) throw error;
-
-        applyBankLock(holder, acc, ifsc);
-        alert("Bank account successfully locked to this ID!");
-    } catch (err) {
-        alert("Bank details lock nahi ho saki: " + err.message);
-        btn.disabled = false;
-        btn.innerText = "Bind & Lock Bank Account";
-    }
-}
-
-async function handleWithdrawal(e) {
-    e.preventDefault();
-    const pass = document.getElementById('withdrawPass').value;
-    const btn = document.getElementById('withdrawBtn');
-
-    if (!isBankLocked) {
-        alert("Pehle apna Bank Account bind & lock karein!");
+    if (Number(currentUser.balance || 0) < amt) {
+        alert("Insufficient balance!");
         return;
     }
 
+    const pass = prompt("Enter your login password:");
     if (pass !== currentUser.password) {
-        alert("Galat account password darj kiya hai!");
+        alert("Incorrect password!");
         return;
     }
 
-    const currentDay = new Date().getDay();
-    if (userLivePlan === "520" && currentDay !== 1) {
-        alert("₹520 Plan ke liye withdrawal sirf Monday ko allowed hai!");
-        return;
-    }
-    if ((userLivePlan === "1500" || userLivePlan === "2500") && currentDay !== 2) {
-        alert("Aapke plan ke liye withdrawal sirf Tuesday ko allowed hai!");
-        return;
-    }
+    const { error } = await client.from('withdrawals').insert([{
+        mobile: currentUser.mobile,
+        amount: amt,
+        bank_holder: currentUser.bank_holder,
+        bank_account: currentUser.bank_account,
+        bank_ifsc: currentUser.bank_ifsc,
+        status: 'pending'
+    }]);
 
-    if (userLiveBalance < selectedWithdrawSlab) {
-        alert("Insufficient balance! Aapka balance ₹" + userLiveBalance.toFixed(2) + " hai.");
-        return;
-    }
-
-    btn.disabled = true;
-    btn.innerText = "Processing...";
-
-    try {
-        const todayStart = new Date();
-        todayStart.setHours(0, 0, 0, 0);
-
-        const { data: recentWd } = await client
-            .from('withdrawals')
-            .select('id')
-            .eq('mobile', currentUser.mobile)
-            .gte('created_at', todayStart.toISOString());
-
-        if (recentWd && recentWd.length > 0) {
-            alert("Aap aaj ka 1 withdrawal request pehle hi submit kar chuke hain!");
-            btn.disabled = false;
-            btn.innerText = "Withdrawal Request Submit";
-            return;
-        }
-
-        const { error: insertErr } = await client
-            .from('withdrawals')
-            .insert([
-                {
-                    user_id: currentUser.id || null,
-                    mobile: currentUser.mobile,
-                    amount: selectedWithdrawSlab,
-                    bank_holder: currentUser.bank_holder || document.getElementById('holderName').value,
-                    bank_account: currentUser.bank_account || document.getElementById('accountNo').value,
-                    bank_ifsc: currentUser.bank_ifsc || document.getElementById('ifscCode').value,
-                    status: 'pending'
-                }
-            ]);
-
-        if (insertErr) throw insertErr;
-
-        const updatedBalance = userLiveBalance - selectedWithdrawSlab;
-        await client
-            .from('users')
-            .update({ balance: updatedBalance })
-            .eq('mobile', currentUser.mobile);
-
-        userLiveBalance = updatedBalance;
-        document.getElementById('walletBalance').innerText = "₹" + updatedBalance.toFixed(2);
-        document.getElementById('withdrawPass').value = '';
-
-        alert(`Withdrawal request of ₹${selectedWithdrawSlab} submitted successfully! Slabs are processed during office hours.`);
-    } catch (err) {
-        alert("Withdrawal fail ho gaya: " + err.message);
-    } finally {
-        btn.disabled = false;
-        btn.innerText = "Withdrawal Request Submit";
+    if (error) {
+        alert("Withdrawal fail: " + error.message);
+    } else {
+        await client.from('users').update({ balance: Number(currentUser.balance) - amt }).eq('mobile', currentUser.mobile);
+        alert(`Withdrawal request of ₹${amt} submitted!`);
+        syncProfile();
     }
 }
+
+document.getElementById('logoutBtn').onclick = logout;
+document.getElementById('logoutAction').onclick = logout;
+
+function logout() {
+    if (confirm("Kya aap sign out karna chahte hain?")) {
+        localStorage.removeItem('annapurna_user');
+        window.location.href = 'login.html';
+    }
+}
+
+syncProfile();
 </script>
 
 </body>
-            </html>
-                
+    </html>
+    
