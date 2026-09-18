@@ -96,7 +96,9 @@
     <div id="tgTaskCard" class="tg-bonus-card">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
             <div style="display: flex; gap: 10px; align-items: center;">
-                <div style="width: 42px; height: 42px; border-radius: 14px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 22px;">✈️</div>
+                <div style="width: 42px; height: 42px; border-radius: 14px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 22px;">
+                    ✈️
+                </div>
                 <div>
                     <span style="background: #fef08a; color: #854d0e; font-size: 9px; font-weight: 900; padding: 2px 8px; border-radius: 8px; text-transform: uppercase;">New User Task</span>
                     <h3 style="font-size: 15px; font-weight: 900; margin-top: 3px;">Join Official Telegram</h3>
@@ -104,36 +106,89 @@
             </div>
             <span style="background: #22c55e; color: #ffffff; font-size: 13px; font-weight: 900; padding: 4px 10px; border-radius: 12px;">+₹20</span>
         </div>
-        <p style="font-size: 11px; opacity: 0.95; line-height: 1.4; margin-bottom: 12px;">Channel join karein aur payein <b>instant ₹20 seedha apne wallet mein!</b></p>
+        
+        <p style="font-size: 11px; opacity: 0.95; line-height: 1.4; margin-bottom: 12px;">
+            Channel join karein aur payein <b>instant ₹20 seedha apne wallet mein!</b>
+        </p>
+
         <div style="display: flex; gap: 8px;">
-            <a href="https://t.me/your_official_channel" target="_blank" onclick="markTgVisited()" style="flex: 1; background: #ffffff; color: #0369a1; text-decoration: none; text-align: center; padding: 11px; border-radius: 14px; font-size: 12px; font-weight: 800; display: block;">📢 Step 1: Join Channel</a>
-            <button id="btnClaimTg" onclick="claimTelegramReward()" style="flex: 1; background: #22c55e; color: #ffffff; border: none; padding: 11px; border-radius: 14px; font-size: 12px; font-weight: 900; cursor: pointer;">🎁 Step 2: Claim ₹20</button>
+            <a href="https://t.me/your_official_channel" target="_blank" onclick="markTgVisited()" 
+               style="flex: 1; background: #ffffff; color: #0369a1; text-decoration: none; text-align: center; padding: 11px; border-radius: 14px; font-size: 12px; font-weight: 800; display: block;">
+                📢 Step 1: Join Channel
+            </a>
+            <button id="btnClaimTg" onclick="claimTelegramReward()" 
+                    style="flex: 1; background: #22c55e; color: #ffffff; border: none; padding: 11px; border-radius: 14px; font-size: 12px; font-weight: 900; cursor: pointer;">
+                🎁 Step 2: Claim ₹20
+            </button>
         </div>
     </div>
 
-    <!-- Mode Switchers -->
+    <!-- 2 Kaveri Style Mode Switchers -->
     <div class="tab-switcher">
         <button class="tab-btn active" id="permTabBtn" onclick="switchTaskTab('perm')">
             <div class="tab-icon">🎯</div>
-            <div class="tab-info"><h4>Permanent Task</h4><p>Team recharge targets</p></div>
+            <div class="tab-info">
+                <h4>Permanent Task</h4>
+                <p>Team recharge targets</p>
+            </div>
         </button>
         <button class="tab-btn" id="dailyTabBtn" onclick="switchTaskTab('daily')">
             <div class="tab-icon">📋</div>
-            <div class="tab-info"><h4>Daily Task</h4><p>Complete daily reviews</p></div>
+            <div class="tab-info">
+                <h4>Daily Task</h4>
+                <p>Complete daily reviews</p>
+            </div>
         </button>
     </div>
 
     <!-- Permanent Tab Content -->
     <div id="permSection">
         <div class="notice-strip">
-            <div><h4>Team Recharge Targets</h4><p>One-time tasks — lifetime rewards</p></div>
+            <div>
+                <h4>Team Recharge Targets</h4>
+                <p>One-time tasks — lifetime rewards</p>
+            </div>
             <span class="badge-tag">LIFETIME</span>
         </div>
+
         <div class="mission-card">
-            <div class="table-head"><div>Target</div><div>Reward</div><div style="text-align: right;">Status</div></div>
-            <div class="table-row"><div>₹10,000+</div><div class="col-reward">₹250</div><div style="text-align: right;"><button class="btn-status-pill">Pending</button></div></div>
-            <div class="table-row"><div>₹30,000+</div><div class="col-reward">₹500</div><div style="text-align: right;"><button class="btn-status-pill">Pending</button></div></div>
-            <div class="table-row"><div>₹50,000+</div><div class="col-reward">₹1,000</div><div style="text-align: right;"><button class="btn-status-pill">Pending</button></div></div>
+            <div class="table-head">
+                <div>Target</div>
+                <div>Reward</div>
+                <div style="text-align: right;">Status</div>
+            </div>
+
+            <!-- Milestone Rows -->
+            <div class="table-row">
+                <div>₹10,000+</div>
+                <div class="col-reward">₹250</div>
+                <div style="text-align: right;"><button class="btn-status-pill">Pending</button></div>
+            </div>
+            <div class="table-row">
+                <div>₹30,000+</div>
+                <div class="col-reward">₹500</div>
+                <div style="text-align: right;"><button class="btn-status-pill">Pending</button></div>
+            </div>
+            <div class="table-row">
+                <div>₹50,000+</div>
+                <div class="col-reward">₹1,000</div>
+                <div style="text-align: right;"><button class="btn-status-pill">Pending</button></div>
+            </div>
+            <div class="table-row">
+                <div>₹80,000+</div>
+                <div class="col-reward">₹1,500</div>
+                <div style="text-align: right;"><button class="btn-status-pill">Pending</button></div>
+            </div>
+            <div class="table-row">
+                <div>₹100,000+</div>
+                <div class="col-reward">₹3,000</div>
+                <div style="text-align: right;"><button class="btn-status-pill">Pending</button></div>
+            </div>
+            <div class="table-row">
+                <div>₹200,000+</div>
+                <div class="col-reward">₹5,000</div>
+                <div style="text-align: right;"><button class="btn-status-pill">Pending</button></div>
+            </div>
         </div>
     </div>
         <!-- Daily Tab Content (Multiple Active Plans Separate Tasks) -->
@@ -145,15 +200,30 @@
 
     <!-- Bottom Navigation -->
     <div class="bottom-nav">
-        <a href="index.html" class="nav-link"><span class="nav-icon">🏠</span><span>Home</span></a>
-        <a href="tasks.html" class="nav-link active-pill"><span class="nav-icon">📈</span><span>Income</span></a>
-        <a href="team.html" class="nav-link"><span class="nav-icon">👥</span><span>Team</span></a>
-        <a href="team.html" class="nav-link"><span class="nav-icon">🔗</span><span>Share</span></a>
-        <a href="profile.html" class="nav-link"><span class="nav-icon">👤</span><span>My</span></a>
+        <a href="index.html" class="nav-link">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="tasks.html" class="nav-link active-pill">
+            <span class="nav-icon">📈</span>
+            <span>Income</span>
+        </a>
+        <a href="team.html" class="nav-link">
+            <span class="nav-icon">👥</span>
+            <span>Team</span>
+        </a>
+        <a href="team.html" class="nav-link">
+            <span class="nav-icon">🔗</span>
+            <span>Share</span>
+        </a>
+        <a href="profile.html" class="nav-link">
+            <span class="nav-icon">👤</span>
+            <span>My</span>
+        </a>
     </div>
 
     </div>
-<script>
+    <script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -170,10 +240,14 @@ async function initTasks() {
         if (data) {
             userBalance = Number(data.balance || 0);
             document.getElementById('userWalletTop').innerText = "₹" + userBalance.toFixed(2);
-            if (data.telegram_claimed) { renderTgClaimedUI(); }
+            if (data.telegram_claimed) {
+                renderTgClaimedUI();
+            }
         }
         loadUserActivePortfoliosTasks();
-    } catch(e) { console.error("Init Error:", e); }
+    } catch(e) {
+        console.error("Init Error:", e);
+    }
 }
 initTasks();
 
@@ -193,7 +267,6 @@ async function loadUserActivePortfoliosTasks() {
     }
 
     for (let plan of plans) {
-        // 12 AM Reset Logic for each individual plan
         let completedToday = plan.completed_today || 0;
         if (plan.last_task_date !== todayStr) {
             completedToday = 0;
@@ -293,7 +366,6 @@ function switchTaskTab(tab) {
     }
 }
 </script>
+
 </body>
 </html>
-
-    
