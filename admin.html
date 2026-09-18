@@ -376,13 +376,62 @@ async function loadRecharges() {
 
 async function approveRecharge(id, mobile, amount) {
     if (!confirm(`Confirm ₹${amount} for ${mobile}?`)) return;
-    await client.from('recharges').update({ status: 'approved' }).eq('id', id);
-    await client.from('users').update({ active_plan: amount }).eq('mobile', mobile);
-    alert("Recharge Approved!");
-    loadRecharges();
-    loadFinancialStats();
-}
 
+    try {
+        // 1. Mark recharge as approved in recharges table
+        await client.from('recharges').update({ status: 'approved' }).eq('id', id);
+
+        // 2. Fetch current user balance
+        const { data: userData } = await client.from('users').select('balance').eq('mobile', mobile).single();
+        const currentBal = Number(userData?.balance || 0);
+        const newBalance = currentBal + Number(amount);
+
+        // 3. Update user balance in users table
+        await client.from('users').update({ 
+            balance: newBalance,
+            active_plan: Number(amount)
+        }).eq('mobile', mobile);
+
+        // 4. Determine plan name, daily income & reviews dynamically based on recharge amount
+        let planName = "Agro Growth Plan";
+        let dailyInc = Number(amount) * 0.10;
+        let revCount = 5;
+
+        const amtNum = Number(amount);
+        if (amtNum <= 600) {
+            planName = "Wheat F1 Hybrid Seed";
+            dailyInc = 50;
+            revCount = 5;
+        } else if (amtNum > 600 && amtNum <= 2500) {
+            planName = "Soybean Prime Seed";
+            dailyInc = 210;
+            revCount = 10;
+        } else if (amtNum > 2500) {
+            planName = "Gold Organic Premium";
+            dailyInc = 550;
+            revCount = 15;
+        }
+
+        // 5. Insert into user_plans table with 750 Days validity
+        await client.from('user_plans').insert({
+            mobile: mobile,
+            plan_name: planName,
+            plan_price: amtNum,
+            daily_income: dailyInc,
+            total_reviews: revCount,
+            validity_days: 750,
+            completed_today: 0
+        });
+
+        alert("✅ Recharge successfully approved, balance added to wallet, and 750-day plan activated!");
+        loadRecharges();
+        loadFinancialStats();
+
+    } catch (err) {
+        alert("Approval Error: " + err.message);
+    }
+}
+                    
 async function rejectRecharge(id) {
     if (!confirm("Reject this UTR?")) return;
     await client.from('recharges').update({ status: 'rejected' }).eq('id', id);
