@@ -74,7 +74,7 @@
             border-radius: 24px;
             padding: 16px;
             color: #ffffff;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             box-shadow: 0 8px 20px rgba(13, 56, 32, 0.25);
             border: 1px solid rgba(255, 255, 255, 0.2);
             position: relative;
@@ -100,6 +100,57 @@
             font-size: 11px;
             opacity: 0.9;
             line-height: 1.4;
+        }
+
+        /* Live Meeting Card Styling */
+        .meeting-box {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 22px rgba(18, 62, 36, 0.08);
+            border: 1.5px solid #86efac;
+        }
+        .meeting-top-strip {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .live-pill {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+            font-size: 10px;
+            font-weight: 900;
+            padding: 4px 8px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .meeting-img-wrap {
+            width: 100%;
+            height: 215px;
+            border-radius: 18px;
+            overflow: hidden;
+            background: #f1f5f9;
+            margin-bottom: 10px;
+            border: 1px solid #e2e8f0;
+        }
+        .meeting-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .meeting-meta-grid {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8fafc;
+            padding: 10px 14px;
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
         }
 
         /* Post Card With Slide-In Animation */
@@ -363,6 +414,29 @@
         <p>Invite your agricultural partners and earn 15% on Level 1 direct recharges instantly in your wallet! Regular payouts processed daily.</p>
     </div>
 
+    <!-- Live Regional Meeting Card (Auto-Cycles Daily 3-Times) -->
+    <div class="meeting-box">
+        <div class="meeting-top-strip">
+            <span class="live-pill">🔴 LIVE SEMINAR TODAY</span>
+            <span id="meetTimeTag" style="font-size: 11px; font-weight: 800; color: #15803d;">Loading...</span>
+        </div>
+
+        <div class="meeting-img-wrap">
+            <img id="meetImg" src="" alt="Regional Seminar Today">
+        </div>
+
+        <div class="meeting-meta-grid">
+            <div>
+                <span style="font-size: 10px; font-weight: 800; color: #64748b; display: block;">TEAM LEADER</span>
+                <b id="meetLeader" style="font-size: 13px; color: #113820;">Loading...</b>
+            </div>
+            <div style="text-align: right;">
+                <span style="font-size: 10px; font-weight: 800; color: #64748b; display: block;">LOCATION</span>
+                <b id="meetCity" style="font-size: 13px; color: #16a34a;">Loading...</b>
+            </div>
+        </div>
+    </div>
+
     <!-- Live Posts Container -->
     <div id="postsList">
 
@@ -488,13 +562,70 @@
         <p onclick="closeCreateModal()" style="font-size: 12px; color: #ef4444; font-weight: 700; text-align: center; margin-top: 12px; cursor: pointer;">Cancel</p>
     </div>
     </div>
-                    <script>
+    <script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 const savedUser = JSON.parse(localStorage.getItem('annapurna_user') || '{}');
 
+// -------------------------------------------------------------
+// Daily Dynamic Meeting Algorithm (3 Times Daily Auto-Rotate)
+// -------------------------------------------------------------
+const meetingPhotoPool = [
+    "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1559223607-a43c990c692c?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?auto=format&fit=crop&w=800&q=80"
+];
+
+const leadersList = [
+    "Krishan Murari Saini", "Dharmendra Verma", "Rajeshwar Rao", 
+    "Bhupendra Singh", "Vikram Rathore", "Suresh Chandra Patel", 
+    "Manoj Tyagi", "Devendra Chauhan"
+];
+
+const citiesList = [
+    "Jaipur, Rajasthan", "Meerut, UP", "Indore, MP", 
+    "Bijnor, UP", "Kota, Rajasthan", "Bhopal, MP", 
+    "Bareilly, UP", "Udaipur, Rajasthan"
+];
+
+function updateDailyDynamicMeeting() {
+    const now = new Date();
+    const day = now.getDate();
+    const hour = now.getHours();
+
+    let slotNumber = 0;
+    let slotTag = "Morning Meet • 11:30 AM";
+
+    if (hour >= 9 && hour < 14) {
+        slotNumber = 0;
+        slotTag = "Morning Session • 11:30 AM";
+    } else if (hour >= 14 && hour < 18) {
+        slotNumber = 1;
+        slotTag = "Afternoon Seminar • 03:30 PM";
+    } else {
+        slotNumber = 2;
+        slotTag = "Grand Evening Meet • 07:15 PM";
+    }
+
+    const uniqueIndex = (day * 3 + slotNumber) % meetingPhotoPool.length;
+
+    document.getElementById('meetLeader').innerText = leadersList[uniqueIndex % leadersList.length];
+    document.getElementById('meetCity').innerText = citiesList[uniqueIndex % citiesList.length];
+    document.getElementById('meetImg').src = meetingPhotoPool[uniqueIndex];
+    document.getElementById('meetTimeTag').innerText = slotTag;
+}
+updateDailyDynamicMeeting();
+
+// -------------------------------------------------------------
+// Interaction and Creation Handlers
+// -------------------------------------------------------------
 function toggleLike(btn, count) {
     const isLiked = btn.classList.contains('liked');
     const cntEl = btn.querySelector('.like-cnt');
@@ -520,7 +651,6 @@ function closeCreateModal() {
     document.getElementById('postModal').style.display = 'none';
 }
 
-// User Post Submission With Proof Badge
 function submitPost() {
     const txt = document.getElementById('postInput').value.trim();
     const proofLabel = document.getElementById('userProofType').value;
@@ -580,7 +710,7 @@ function submitPost() {
 }
 
 // -------------------------------------------------------------
-// Auto-Bot Messages Pool (Indian Agricultural Cities & Names)
+// Auto-Bot Messages Pool
 // -------------------------------------------------------------
 const autoMessages = [
     {
@@ -632,7 +762,6 @@ const autoMessages = [
 
 let botIndex = 0;
 
-// Dynamic Time Formatter
 function formatTimeElapsed(seconds) {
     if (seconds < 45) return "Just now";
     const mins = Math.floor(seconds / 60);
@@ -641,7 +770,6 @@ function formatTimeElapsed(seconds) {
     return `${hours}h ago`;
 }
 
-// Live Dynamic Clock Loop (Har 15 second me page ke sabhi cards ka time aage badhayega)
 setInterval(() => {
     document.querySelectorAll('.post-card').forEach(card => {
         let sec = parseInt(card.getAttribute('data-timestamp') || '0', 10);
@@ -668,7 +796,7 @@ function injectBotMessage(customData = null) {
 
     const card = document.createElement('div');
     card.className = "post-card";
-    card.setAttribute('data-timestamp', '0'); // Freshly generated post = 0s
+    card.setAttribute('data-timestamp', '0');
     card.setAttribute('data-city', post.city);
 
     card.innerHTML = `
@@ -720,12 +848,10 @@ async function checkAdminAndSync() {
     try {
         const { data } = await client.from('community_controls').select('*').eq('id', 1).single();
 
-        // 1. Agar Admin ne Bot OFF kar diya hai
         if (data && data.is_active === false) {
             return;
         }
 
-        // 2. Custom Message from Admin Console
         if (data && data.custom_msg) {
             injectBotMessage({
                 name: data.custom_name || 'Verified Farmer',
@@ -740,14 +866,12 @@ async function checkAdminAndSync() {
             return;
         }
 
-        // 3. Normal Auto-Bot Post
         injectBotMessage();
     } catch(err) {
         injectBotMessage();
     }
 }
 
-// Har 14 second me check & inject hoga
 setInterval(checkAdminAndSync, 14000);
 </script>
 
