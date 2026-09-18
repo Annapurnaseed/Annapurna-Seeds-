@@ -34,7 +34,6 @@
             box-shadow: 0 0 35px rgba(0, 0, 0, 0.08);
         }
 
-        /* Top Header Navigation */
         .top-nav {
             display: flex;
             justify-content: space-between;
@@ -72,7 +71,6 @@
         .wallet-pill .meta span { font-size: 10px; opacity: 0.9; }
         .wallet-pill .meta b { font-size: 14px; font-weight: 800; }
 
-        /* Clay 3D Cards */
         .clay-card {
             background: #ffffff;
             border-radius: 26px;
@@ -105,7 +103,6 @@
         .header-text h3 { font-size: 16px; font-weight: 900; color: #113820; }
         .header-text p { font-size: 11px; color: #648a72; font-weight: 600; margin-top: 2px; }
 
-        /* Sunken Input Box */
         .sunken-input-box {
             background: #f1f8f3;
             border-radius: 18px;
@@ -127,7 +124,6 @@
             width: 100%;
         }
 
-        /* Fixed Slabs */
         .slabs-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -153,7 +149,6 @@
             box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3);
         }
 
-        /* Bank Form Fields */
         .field-label {
             font-size: 11px;
             font-weight: 800;
@@ -177,7 +172,6 @@
             border-color: #ea580c;
         }
 
-        /* Rules Info Strip */
         .rules-strip {
             background: #fff7ed;
             border: 1.5px solid #ffedd5;
@@ -192,7 +186,6 @@
             line-height: 1.5;
         }
 
-        /* Submit Button */
         .btn-withdraw-submit {
             width: 100%;
             background: linear-gradient(180deg, #f97316 0%, #ea580c 100%);
@@ -209,7 +202,6 @@
             transform: scale(0.98);
         }
 
-        /* Bottom Floating Bar */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -297,6 +289,10 @@
 
         <span class="field-label">IFSC Code</span>
         <input type="text" id="bankIfsc" class="form-input" placeholder="e.g. SBIN0001234" style="text-transform: uppercase;">
+
+        <!-- Security Password Field -->
+        <span class="field-label" style="color: #b45309; margin-top: 14px;">🔒 Withdrawal Password (Security PIN)</span>
+        <input type="password" id="enterWithPass" maxlength="6" class="form-input" placeholder="Enter your 4-6 digit security PIN" style="border-color: #fed7aa; background: #fffbeb; color: #9a3412;">
     </div>
 
     <!-- Payout Notice -->
@@ -317,8 +313,8 @@
         <a href="profile.html" class="nav-link"><span class="nav-icon">👤</span><span>My</span></a>
     </div>
 
-</div>
-<script>
+    </div>
+    <script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -330,16 +326,18 @@ if (!savedUser.mobile) {
 
 let availableBalance = 0;
 let currentWithdrawAmount = 330;
+let userSecurityPassword = '';
 
-// 1. Sync User Balance & Auto-fill Saved Bank Details
+// 1. Sync User Balance, Bank Details & Security Password
 async function initWithdrawPage() {
     try {
         const { data: user } = await client.from('users').select('*').eq('mobile', savedUser.mobile).single();
         if (user) {
             availableBalance = Number(user.balance || 0);
             document.getElementById('userBalanceVal').innerText = "₹" + availableBalance.toFixed(2);
+            userSecurityPassword = user.withdraw_password || '';
 
-            // Pre-fill agar user ne profile me pehle se bank save kar rakha ho
+            // Pre-fill agar user ne profile mein bank details save ki hain
             if (user.bank_holder) document.getElementById('bankHolder').value = user.bank_holder;
             if (user.bank_name) document.getElementById('bankName').value = user.bank_name;
             if (user.bank_account) document.getElementById('bankAccount').value = user.bank_account;
@@ -364,13 +362,14 @@ document.getElementById('withdrawAmt').addEventListener('input', (e) => {
     document.getElementById('btnSubmitWithdraw').innerText = `Confirm Withdrawal ₹${currentWithdrawAmount}`;
 });
 
-// 2. Submit Payout Request to Supabase
+// 2. Submit Payout Request with Password Authentication
 async function requestPayout() {
     const amt = Number(document.getElementById('withdrawAmt').value);
     const holder = document.getElementById('bankHolder').value.trim();
     const bank = document.getElementById('bankName').value.trim();
     const acc = document.getElementById('bankAccount').value.trim();
     const ifsc = document.getElementById('bankIfsc').value.trim().toUpperCase();
+    const enteredPass = document.getElementById('enterWithPass').value.trim();
 
     if (!amt || amt < 330) {
         alert("Minimum withdrawal amount ₹330 hai!");
@@ -384,6 +383,24 @@ async function requestPayout() {
 
     if (!holder || !acc || !ifsc) {
         alert("Kripya apna Holder Name, Account Number aur IFSC Code sahi bharein!");
+        return;
+    }
+
+    // Check if security PIN is set in Profile
+    if (!userSecurityPassword) {
+        alert("Aapne abhi tak Withdrawal Password set nahi kiya hai! Pehle Profile -> Bank Details me jaakar apna security password save karein.");
+        window.location.href = "profile.html";
+        return;
+    }
+
+    // Verify Entered Password
+    if (!enteredPass) {
+        alert("Kripya apna Withdrawal Password (PIN) dalein!");
+        return;
+    }
+
+    if (enteredPass !== userSecurityPassword) {
+        alert("❌ Galat Withdrawal Password! Kripya sahi PIN enter karein.");
         return;
     }
 
@@ -415,7 +432,7 @@ async function requestPayout() {
             bank_name: bank
         }).eq('mobile', savedUser.mobile);
 
-        alert(`₹${amt} ka withdrawal request submit ho gaya! Admin verify karke aapke bank account me transfer kar dega.`);
+        alert(`₹${amt} ka withdrawal request submit ho gaya! Admin verification ke baad bank me credit hoga.`);
         window.location.href = "profile.html";
 
     } catch(err) {
