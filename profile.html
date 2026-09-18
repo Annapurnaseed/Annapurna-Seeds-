@@ -176,18 +176,15 @@
             display: block;
         }
 
-        /* Active Plan Card */
-        .active-plan-display-card {
-            background: rgba(255, 255, 255, 0.95);
+        /* Multiple Active Portfolios Container */
+        .portfolios-card {
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(10px);
             margin: 0 14px 14px;
-            border-radius: 20px;
-            padding: 14px 16px;
-            border: 1.5px solid #86efac;
-            box-shadow: 0 6px 18px rgba(22, 101, 52, 0.08);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            border-radius: 22px;
+            padding: 14px;
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.06);
         }
 
         .mid-banner {
@@ -265,88 +262,6 @@
             font-size: 12px;
             font-weight: 900;
         }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            max-width: 420px;
-            background: rgba(255,255,255,0.96);
-            backdrop-filter: blur(12px);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 8px 0;
-            border-top: 1px solid #e2eee5;
-            box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
-            z-index: 100;
-        }
-        .nav-link {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: #6c8a77;
-            font-size: 10px;
-            font-weight: 700;
-            gap: 3px;
-        }
-        .nav-link.active-pill {
-            background: linear-gradient(180deg, #2ecc71 0%, #1e824c 100%);
-            color: #fff;
-            padding: 6px 18px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(30,130,76,0.3);
-        }
-        .nav-link.active-pill span {
-            color: #fff !important;
-        }
-        .nav-icon {
-            font-size: 18px;
-        }
-
-        /* Full Bank Binding Modal */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(8px);
-            z-index: 999;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-        }
-        .modal-box {
-            background: #ffffff;
-            border-radius: 26px;
-            padding: 22px 18px;
-            width: 100%;
-            max-width: 380px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-        .form-label {
-            font-size: 11px;
-            font-weight: 800;
-            color: #475569;
-            display: block;
-            margin-bottom: 4px;
-        }
-        .form-control {
-            width: 100%;
-            padding: 10px 12px;
-            border-radius: 12px;
-            border: 1.5px solid #dcece0;
-            background: #f1f8f3;
-            font-size: 13px;
-            font-weight: 700;
-            color: #113820;
-            outline: none;
-            margin-bottom: 10px;
-        }
-        .form-control:focus {
-            border-color: #2ecc71;
-        }
     </style>
 </head>
 <body>
@@ -383,7 +298,7 @@
         <div class="metric-clay-box">
             <div class="clay-icon icon-orange">💳</div>
             <b id="userPlanVal">₹0</b>
-            <span>Active Plan</span>
+            <span>Active Investment</span>
         </div>
         <div class="metric-clay-box">
             <div class="clay-icon icon-purple">📈</div>
@@ -392,19 +307,13 @@
         </div>
     </div>
 
-    <!-- Active Agro Investment Plan Display Card -->
-    <div class="active-plan-display-card">
-        <div>
-            <span style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block;">Active Agro Package</span>
-            <h4 id="userActivePlanTitle" style="font-size: 15px; font-weight: 900; color: #14532d; margin-top: 2px;">No Active Plan</h4>
-            <p id="userPlanDateText" style="font-size: 10px; color: #475569; margin-top: 2px;">Purchase a plan to start daily task earnings.</p>
-        </div>
-        <div style="width: 38px; height: 38px; border-radius: 12px; background: #dcfce7; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 18px;">
-            🌱
+    <div class="portfolios-card">
+        <h3 style="font-size: 14px; font-weight: 900; color: #0d3820; margin-bottom: 10px;">🌾 My Active Agro Portfolios (750 Days)</h3>
+        <div id="myActivePortfoliosList">
+            <p style="font-size: 11px; color: #64748b;">Loading active portfolios...</p>
         </div>
     </div>
-
-    <div class="mid-banner">
+        <div class="mid-banner">
         <div>
             <h4>Small Seeds, Big Possibilities</h4>
             <p>Your Growth, Our Priority</p>
@@ -435,7 +344,6 @@
             <div class="arrow-bubble">➔</div>
         </a>
 
-        <!-- Opens Full Bank Form Modal -->
         <div class="list-item-btn" onclick="openBankModal()">
             <div class="list-left">
                 <div class="item-icon-box" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">🏦</div>
@@ -447,7 +355,6 @@
             <div class="arrow-bubble">➔</div>
         </div>
 
-        <!-- Direct Link to withdraw.html -->
         <a href="withdraw.html" class="list-item-btn">
             <div class="list-left">
                 <div class="item-icon-box icon-orange">💰</div>
@@ -506,10 +413,8 @@
     </div>
 
 </div>
-
-<!-- Full Bank & Withdrawal Password Modal -->
-<div class="modal-overlay" id="bankModal">
-    <div class="modal-box">
+<div class="modal-overlay" id="bankModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 999; align-items: center; justify-content: center; padding: 16px;">
+    <div class="modal-box" style="background: #ffffff; border-radius: 26px; padding: 22px 18px; width: 100%; max-width: 380px; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
             <div style="width: 42px; height: 42px; border-radius: 14px; background: linear-gradient(135deg, #16a34a, #15803d); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px;">🏦</div>
             <div>
@@ -518,28 +423,28 @@
             </div>
         </div>
 
-        <label class="form-label">Account Holder Full Name</label>
-        <input type="text" id="popHolder" class="form-control" placeholder="e.g. Rameshwar Patel">
+        <label class="form-label" style="font-size: 11px; font-weight: 800; color: #475569; display: block; margin-bottom: 4px;">Account Holder Full Name</label>
+        <input type="text" id="popHolder" class="form-control" placeholder="e.g. Rameshwar Patel" style="width: 100%; padding: 10px 12px; border-radius: 12px; border: 1.5px solid #dcece0; background: #f1f8f3; font-size: 13px; font-weight: 700; color: #113820; outline: none; margin-bottom: 10px;">
 
-        <label class="form-label">Bank Name</label>
-        <input type="text" id="popBankName" class="form-control" placeholder="e.g. State Bank of India">
+        <label class="form-label" style="font-size: 11px; font-weight: 800; color: #475569; display: block; margin-bottom: 4px;">Bank Name</label>
+        <input type="text" id="popBankName" class="form-control" placeholder="e.g. State Bank of India" style="width: 100%; padding: 10px 12px; border-radius: 12px; border: 1.5px solid #dcece0; background: #f1f8f3; font-size: 13px; font-weight: 700; color: #113820; outline: none; margin-bottom: 10px;">
 
-        <label class="form-label">Account Number</label>
-        <input type="text" id="popAccount" class="form-control" placeholder="Enter bank account number">
+        <label class="form-label" style="font-size: 11px; font-weight: 800; color: #475569; display: block; margin-bottom: 4px;">Account Number</label>
+        <input type="text" id="popAccount" class="form-control" placeholder="Enter bank account number" style="width: 100%; padding: 10px 12px; border-radius: 12px; border: 1.5px solid #dcece0; background: #f1f8f3; font-size: 13px; font-weight: 700; color: #113820; outline: none; margin-bottom: 10px;">
 
-        <label class="form-label">IFSC Code</label>
-        <input type="text" id="popIfsc" class="form-control" placeholder="e.g. SBIN0001234" style="text-transform: uppercase;">
+        <label class="form-label" style="font-size: 11px; font-weight: 800; color: #475569; display: block; margin-bottom: 4px;">IFSC Code</label>
+        <input type="text" id="popIfsc" class="form-control" placeholder="e.g. SBIN0001234" style="width: 100%; padding: 10px 12px; border-radius: 12px; border: 1.5px solid #dcece0; background: #f1f8f3; font-size: 13px; font-weight: 700; color: #113820; text-transform: uppercase; outline: none; margin-bottom: 10px;">
 
-        <label class="form-label" style="color: #b45309;">🔒 Withdrawal Password (Security PIN)</label>
-        <input type="password" id="popWithPass" maxlength="6" class="form-control" placeholder="Enter 4-6 Digit Security PIN" style="border-color: #fed7aa; background: #fffbeb; color: #9a3412;">
+        <label class="form-label" style="font-size: 11px; font-weight: 800; color: #b45309; display: block; margin-bottom: 4px;">🔒 Withdrawal Password (Security PIN)</label>
+        <input type="password" id="popWithPass" maxlength="6" class="form-control" placeholder="Enter 4-6 Digit Security PIN" style="width: 100%; padding: 10px 12px; border-radius: 12px; border: 1.5px solid #fed7aa; background: #fffbeb; font-size: 13px; font-weight: 700; color: #9a3412; outline: none; margin-bottom: 10px;">
 
         <button onclick="saveFullBankDetails()" style="width: 100%; background: linear-gradient(180deg, #22c55e 0%, #15803d 100%); color: #ffffff; border: none; border-radius: 20px; padding: 14px; font-size: 14px; font-weight: 900; cursor: pointer; box-shadow: 0 6px 16px rgba(21, 128, 61, 0.35);">
             💾 Save & Lock Details
         </button>
         <p onclick="closeBankModal()" style="font-size: 12px; color: #ef4444; font-weight: 700; text-align: center; margin-top: 12px; cursor: pointer;">Cancel</p>
     </div>
-                </div>
-                                        <script>
+</div>
+<script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -563,31 +468,10 @@ async function syncProfile() {
             document.getElementById('displayPhone').innerText = data.mobile;
             document.getElementById('displayId').innerText = data.invite_code || 'ANP1812';
             document.getElementById('walletBal').innerText = "₹" + Number(data.balance || 0).toFixed(2);
-            document.getElementById('userPlanVal').innerText = "₹" + Number(data.active_plan || 0).toFixed(0);
             document.getElementById('totalCommissionVal').innerText = "₹" + Number(data.commission || 0).toFixed(2);
 
-            const plan = Number(data.active_plan || 0);
-            if (plan >= 2500) {
-                document.getElementById('vipLevel').innerText = "VIP 3";
-            } else if (plan >= 1500) {
-                document.getElementById('vipLevel').innerText = "VIP 2";
-            } else {
-                document.getElementById('vipLevel').innerText = "VIP 1";
-            }
-
-            // Render Active Plan Details in Profile Card
-            if (plan > 0) {
-                document.getElementById('userActivePlanTitle').innerText = `₹${plan} Agro Plan Active`;
-                if (data.plan_purchase_date) {
-                    const pDate = new Date(data.plan_purchase_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-                    document.getElementById('userPlanDateText').innerText = `Purchased on: ${pDate} • Earning Active`;
-                } else {
-                    document.getElementById('userPlanDateText').innerText = `Package Verified & Running`;
-                }
-            } else {
-                document.getElementById('userActivePlanTitle').innerText = `No Active Plan`;
-                document.getElementById('userPlanDateText').innerText = `Recharge & buy a plan to start earning.`;
-            }
+            // Fetch all active portfolios from user_plans table
+            loadUserActivePortfolios(savedUser.mobile);
 
             if (data.bank_account) {
                 document.getElementById('bankStatusText').innerText = `Locked: ${data.bank_account.slice(-4)} (${data.bank_holder || ''})`;
@@ -596,19 +480,58 @@ async function syncProfile() {
     } catch(e) { console.error(e); }
 }
 
+async function loadUserActivePortfolios(mobile) {
+    const { data: plans } = await client.from('user_plans').select('*').eq('mobile', mobile);
+    const container = document.getElementById('myActivePortfoliosList');
+    container.innerHTML = "";
+
+    if (!plans || plans.length === 0) {
+        document.getElementById('userPlanVal').innerText = "₹0";
+        document.getElementById('vipLevel').innerText = "VIP 1";
+        container.innerHTML = `<p style="font-size: 11px; color: #64748b;">No active plans found. Purchase a plan to start earning.</p>`;
+        return;
+    }
+
+    let totalInvestment = 0;
+    plans.forEach(p => {
+        totalInvestment += Number(p.plan_price || 0);
+
+        const item = document.createElement('div');
+        item.style.cssText = "background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 14px; padding: 10px; margin-bottom: 8px;";
+        item.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <b style="font-size: 12px; color: #14532d;">🌱 ${p.plan_name} (₹${p.plan_price})</b>
+                <span style="font-size: 9px; background: #22c55e; color: #fff; padding: 2px 6px; border-radius: 6px; font-weight: 800;">750 Days Valid</span>
+            </div>
+            <div style="font-size: 10px; color: #334155; display: flex; justify-content: space-between;">
+                <span>Daily Return: <b>₹${p.daily_income}/day</b></span>
+                <span>Reviews: <b>${p.total_reviews} / day</b></span>
+            </div>
+        `;
+        container.appendChild(item);
+    });
+
+    document.getElementById('userPlanVal').innerText = "₹" + totalInvestment.toFixed(0);
+    if (totalInvestment >= 3000) {
+        document.getElementById('vipLevel').innerText = "VIP 3";
+    } else if (totalInvestment >= 1500) {
+        document.getElementById('vipLevel').innerText = "VIP 2";
+    } else {
+        document.getElementById('vipLevel').innerText = "VIP 1";
+    }
+}
+
 function copyId() {
     navigator.clipboard.writeText(currentUser.invite_code || '');
     alert("User ID Copied: " + (currentUser.invite_code || ''));
 }
 
-// Full Bank Form Modal Open
 function openBankModal() {
     document.getElementById('popHolder').value = currentUser.bank_holder || '';
     document.getElementById('popBankName').value = currentUser.bank_name || '';
     document.getElementById('popAccount').value = currentUser.bank_account || '';
     document.getElementById('popIfsc').value = currentUser.bank_ifsc || '';
     document.getElementById('popWithPass').value = currentUser.withdraw_password || '';
-
     document.getElementById('bankModal').style.display = 'flex';
 }
 
@@ -616,7 +539,6 @@ function closeBankModal() {
     document.getElementById('bankModal').style.display = 'none';
 }
 
-// Save Bank Form & Security PIN
 async function saveFullBankDetails() {
     const holder = document.getElementById('popHolder').value.trim();
     const bankName = document.getElementById('popBankName').value.trim();
