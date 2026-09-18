@@ -187,16 +187,8 @@
             border: 1.5px solid rgba(255, 255, 255, 0.9);
             box-shadow: 0 4px 14px rgba(0,0,0,0.06);
         }
-        .mid-banner h4 {
-            font-size: 13px;
-            color: #0d3820;
-            font-weight: 800;
-        }
-        .mid-banner p {
-            font-size: 10px;
-            color: #245738;
-            font-weight: 700;
-        }
+        .mid-banner h4 { font-size: 13px; color: #0d3820; font-weight: 800; }
+        .mid-banner p { font-size: 10px; color: #245738; font-weight: 700; }
 
         .list-group {
             margin: 0 14px;
@@ -298,6 +290,49 @@
         .nav-icon {
             font-size: 18px;
         }
+
+        /* Full Bank Binding Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .modal-box {
+            background: #ffffff;
+            border-radius: 26px;
+            padding: 22px 18px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .form-label {
+            font-size: 11px;
+            font-weight: 800;
+            color: #475569;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1.5px solid #dcece0;
+            background: #f1f8f3;
+            font-size: 13px;
+            font-weight: 700;
+            color: #113820;
+            outline: none;
+            margin-bottom: 10px;
+        }
+        .form-control:focus {
+            border-color: #2ecc71;
+        }
     </style>
 </head>
 <body>
@@ -375,6 +410,7 @@
             <div class="arrow-bubble">➔</div>
         </a>
 
+        <!-- Opens Full Bank Form Modal -->
         <div class="list-item-btn" onclick="openBankModal()">
             <div class="list-left">
                 <div class="item-icon-box" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">🏦</div>
@@ -386,7 +422,8 @@
             <div class="arrow-bubble">➔</div>
         </div>
 
-        <div class="list-item-btn" onclick="applyWithdrawal()">
+        <!-- Direct Link to withdraw.html -->
+        <a href="withdraw.html" class="list-item-btn">
             <div class="list-left">
                 <div class="item-icon-box icon-orange">💰</div>
                 <div class="item-meta">
@@ -395,7 +432,7 @@
                 </div>
             </div>
             <div class="arrow-bubble">➔</div>
-        </div>
+        </a>
 
         <a href="about.html" class="list-item-btn">
             <div class="list-left">
@@ -443,8 +480,41 @@
         </a>
     </div>
 
+</div>
+
+<!-- Full Bank & Withdrawal Password Modal -->
+<div class="modal-overlay" id="bankModal">
+    <div class="modal-box">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+            <div style="width: 42px; height: 42px; border-radius: 14px; background: linear-gradient(135deg, #16a34a, #15803d); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px;">🏦</div>
+            <div>
+                <h3 style="font-size: 16px; font-weight: 900; color: #113820; margin: 0;">Bind Bank Account</h3>
+                <p style="font-size: 11px; color: #648a72; margin-top: 2px;">Set your receiving bank & security password</p>
+            </div>
+        </div>
+
+        <label class="form-label">Account Holder Full Name</label>
+        <input type="text" id="popHolder" class="form-control" placeholder="e.g. Rameshwar Patel">
+
+        <label class="form-label">Bank Name</label>
+        <input type="text" id="popBankName" class="form-control" placeholder="e.g. State Bank of India">
+
+        <label class="form-label">Account Number</label>
+        <input type="text" id="popAccount" class="form-control" placeholder="Enter bank account number">
+
+        <label class="form-label">IFSC Code</label>
+        <input type="text" id="popIfsc" class="form-control" placeholder="e.g. SBIN0001234" style="text-transform: uppercase;">
+
+        <label class="form-label" style="color: #b45309;">🔒 Withdrawal Password (Security PIN)</label>
+        <input type="password" id="popWithPass" maxlength="6" class="form-control" placeholder="Enter 4-6 Digit Security PIN" style="border-color: #fed7aa; background: #fffbeb; color: #9a3412;">
+
+        <button onclick="saveFullBankDetails()" style="width: 100%; background: linear-gradient(180deg, #22c55e 0%, #15803d 100%); color: #ffffff; border: none; border-radius: 20px; padding: 14px; font-size: 14px; font-weight: 900; cursor: pointer; box-shadow: 0 6px 16px rgba(21, 128, 61, 0.35);">
+            💾 Save & Lock Details
+        </button>
+        <p onclick="closeBankModal()" style="font-size: 12px; color: #ef4444; font-weight: 700; text-align: center; margin-top: 12px; cursor: pointer;">Cancel</p>
     </div>
-                        <script>
+    </div>
+                    <script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -481,7 +551,7 @@ async function syncProfile() {
             }
 
             if (data.bank_account) {
-                document.getElementById('bankStatusText').innerText = `Locked: ${data.bank_account.slice(-4)} (${data.bank_holder})`;
+                document.getElementById('bankStatusText').innerText = `Locked: ${data.bank_account.slice(-4)} (${data.bank_holder || ''})`;
             }
         }
     } catch(e) { console.error(e); }
@@ -492,73 +562,55 @@ function copyId() {
     alert("User ID Copied: " + (currentUser.invite_code || ''));
 }
 
-async function openBankModal() {
-    if (currentUser.bank_account) {
-        alert(`Aapka bank account pehle se locked hai:\nHolder: ${currentUser.bank_holder}\nA/C: ${currentUser.bank_account}\nIFSC: ${currentUser.bank_ifsc}\n\n(Badalne ke liye customer care/admin se contact karein)`);
-        return;
-    }
-    const name = prompt("Account Holder Name:");
-    if (!name) return;
-    const acc = prompt("Bank Account Number:");
-    if (!acc) return;
-    const ifsc = prompt("IFSC Code:");
-    if (!ifsc) return;
+// Full Bank Form Modal Open
+function openBankModal() {
+    document.getElementById('popHolder').value = currentUser.bank_holder || '';
+    document.getElementById('popBankName').value = currentUser.bank_name || '';
+    document.getElementById('popAccount').value = currentUser.bank_account || '';
+    document.getElementById('popIfsc').value = currentUser.bank_ifsc || '';
+    document.getElementById('popWithPass').value = currentUser.withdraw_password || '';
 
-    const { error } = await client.from('users').update({
-        bank_holder: name,
-        bank_account: acc,
-        bank_ifsc: ifsc.toUpperCase()
-    }).eq('mobile', currentUser.mobile);
-
-    if (error) {
-        alert("Bank bind fail: " + error.message);
-    } else {
-        alert("Bank account successfully bind and locked!");
-        syncProfile();
-    }
+    document.getElementById('bankModal').style.display = 'flex';
 }
 
-async function applyWithdrawal() {
-    if (!currentUser.bank_account) {
-        alert("Pehle 'Bank Details' par click karke bank account bind karein!");
+function closeBankModal() {
+    document.getElementById('bankModal').style.display = 'none';
+}
+
+// Save Bank Form & Security PIN
+async function saveFullBankDetails() {
+    const holder = document.getElementById('popHolder').value.trim();
+    const bankName = document.getElementById('popBankName').value.trim();
+    const account = document.getElementById('popAccount').value.trim();
+    const ifsc = document.getElementById('popIfsc').value.trim().toUpperCase();
+    const withPass = document.getElementById('popWithPass').value.trim();
+
+    if (!holder || !account || !ifsc) {
+        alert("Kripya Holder Name, Account Number aur IFSC zaroor bharein!");
         return;
     }
 
-    const slab = prompt("Withdrawal slab chunein:\nType: 330 ya 550 ya 950 ya 1320", "330");
-    if (!slab) return;
-    const amt = Number(slab);
-
-    if (![330, 550, 950, 1320].includes(amt)) {
-        alert("Sirf approved slabs hi choose kar sakte hain: ₹330, ₹550, ₹950, ₹1320");
+    if (!withPass || withPass.length < 4) {
+        alert("Kripya kam se kam 4-digit ka Withdrawal Password (PIN) set karein!");
         return;
     }
 
-    if (Number(currentUser.balance || 0) < amt) {
-        alert("Insufficient balance! Aapke wallet me itne paise nahi hain.");
-        return;
-    }
+    try {
+        const { error } = await client.from('users').update({
+            bank_holder: holder,
+            bank_name: bankName,
+            bank_account: account,
+            bank_ifsc: ifsc,
+            withdraw_password: withPass
+        }).eq('mobile', currentUser.mobile);
 
-    const pass = prompt("Enter your login password to confirm:");
-    if (pass !== currentUser.password) {
-        alert("Incorrect password!");
-        return;
-    }
+        if (error) throw error;
 
-    const { error } = await client.from('withdrawals').insert([{
-        mobile: currentUser.mobile,
-        amount: amt,
-        bank_holder: currentUser.bank_holder,
-        bank_account: currentUser.bank_account,
-        bank_ifsc: currentUser.bank_ifsc,
-        status: 'pending'
-    }]);
-
-    if (error) {
-        alert("Withdrawal fail: " + error.message);
-    } else {
-        await client.from('users').update({ balance: Number(currentUser.balance) - amt }).eq('mobile', currentUser.mobile);
-        alert(`Withdrawal request of ₹${amt} submitted successfully! Admin verification ke baad bank me credit hoga.`);
+        alert("✅ Bank Details aur Withdrawal Password successfully save ho gaye!");
+        closeBankModal();
         syncProfile();
+    } catch(err) {
+        alert("Save Failed: " + err.message);
     }
 }
 
