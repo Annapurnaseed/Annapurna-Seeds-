@@ -371,11 +371,11 @@ function switchTaskTab(tab) {
     }
 }
 
-// 4. Secure Daily Review Engine (Strict Plan + Next Day Start + 12 AM Reset)
+// 4. Secure Daily Review Engine (Strict Plan + Database Limit Tracking)
 async function runDailyReview() {
     try {
-        // Step A: Check Active Plan & Purchase Date
-        const { data: userData } = await client.from('users').select('active_plan, plan_purchase_date, balance').eq('mobile', savedUser.mobile).single();
+        // Step A: Check Active Plan & Today's Task Count from Database
+        const { data: userData } = await client.from('users').select('active_plan, plan_purchase_date, balance, last_task_date, today_tasks_count').eq('mobile', savedUser.mobile).single();
         
         if (!userData || !userData.active_plan || Number(userData.active_plan) <= 0) {
             alert("❌ Task complete karne ke liye pehle koi bhi Agro Plan active karna anivarya hai!");
@@ -383,63 +383,67 @@ async function runDailyReview() {
             return;
         }
 
-        // Step B: Rule - Plan purchase karne ke AGLE DIN (Next Day) se hi task start honge
-        if (userData.plan_purchase_date) {
-            const purchaseDate = new Date(userData.plan_purchase_date);
-            const currentDate = new Date();
-            
-            const purchaseDayStr = purchaseDate.toISOString().split('T')[0];
-            const currentDayStr = currentDate.toISOString().split('T')[0];
-
-            if (purchaseDayStr === currentDayStr) {
-                alert("⏳ Niyam ke anusaar, plan purchase karne ke AGLE DIN (Next Day) se task start honge! Aaj aapka plan activate hua hai.");
-                return;
-            }
+        // Step B: 12 AM Reset & Today Count Sync
+        const todayStr = new Date().toISOString().split('T')[0];
+        let dbCount = 0;
+        
+        if (userData.last_task_date === todayStr) {
+            dbCount = userData.today_tasks_count || 0;
+            completedReviews = dbCount;
+        } else {
+            // Naya din shuru ho gaya, count 0 se shuru hoga
+            completedReviews = 0;
+            await client.from('users').update({ today_tasks_count: 0, last_task_date: todayStr }).eq('mobile', savedUser.mobile);
         }
-    } catch(e) {
-        console.error("Validation error:", e);
-    }
 
-    // Step C: Check Daily Limit (5/5)
-    if (completedReviews >= maxReviews) {
-        alert("⚠️ Aaj ke saare 5/5 reviews complete ho chuke hain! Kal raat 12 AM ke baad naye tasks milenge.");
-        return;
-    }
-
-    const btn = document.getElementById('dailyBtn');
-    btn.disabled = true;
-    btn.innerText = "Verifying Seed Batch...";
-
-    setTimeout(async () => {
-        completedReviews++;
         updateProgressUI();
 
-        const todayStr = new Date().toISOString().split('T')[0];
-        const { data: latest } = await client.from('users').select('balance').eq('mobile', savedUser.mobile).single();
-        const currentBal = Number(latest?.balance || userBalance);
-        const newBal = currentBal + 10;
-
-        // Balance update aur last task date save karein taaki 12 AM reset track ho sake
-        await client.from('users').update({ 
-            balance: newBal,
-            last_task_date: todayStr
-        }).eq('mobile', savedUser.mobile);
-
-        userBalance = newBal;
-        document.getElementById('userWalletTop').innerText = "₹" + newBal.toFixed(2);
-
-        alert("🎉 Seed quality verified! ₹10 wallet me add ho gaye.");
-        
+        // Step C: Check Daily Limit (5/5)
         if (completedReviews >= maxReviews) {
-            btn.disabled = true;
-            btn.innerText = "Daily Tasks Completed ✅";
-            btn.style.background = "#94a3b8";
-        } else {
-            btn.disabled = false;
-            btn.innerText = "Verify Seed Batch (Earn ₹10)";
+            alert("⚠️ Aaj ke saare 5/5 reviews complete ho chuke hain! Kal raat 12 AM ke baad naye tasks milenge.");
+            updateProgressUI();
+            return;
         }
-    }, 1200);
-}
+
+        const btn = document.getElementById('dailyBtn');
+        btn.disabled = true;
+        btn.innerText = "Verifying Seed Batch...";
+
+        setTimeout(async () => {
+            completedReviews++;
+            updateProgressUI();
+
+            const currentBal = Number(userData.balance || userBalance);
+            const newBal = currentBal + 10;
+
+            // Database mein balance aur aaj ka task count update karein
+            await client.from('users').update({ 
+                balance: newBal,
+                last_task_date: todayStr,
+                today_tasks_count: completedReviews
+            }).eq('mobile', savedUser.mobile);
+
+            userBalance = newBal;
+            document.getElementById('userWalletTop').innerText = "₹" + newBal.toFixed(2);
+
+            alert("🎉 Seed quality verified! ₹10 wallet me add ho gaye.");
+            
+            if (completedReviews >= maxReviews) {
+                btn.disabled = true;
+                btn.innerText = "Daily Tasks Completed ✅";
+                btn.style.background = "#94a3b8";
+            } else {
+                btn.disabled = false;
+                btn.innerText = "Verify Seed Batch (Earn ₹10)";
+            }
+        }, 1200);
+
+    } catch(e) {
+        console.error("Task error:", e);
+        alert("Kuch error aaya, kripya dobara koshish karein.");
+    }
+                }
+    
 </script>
 
 </body>
