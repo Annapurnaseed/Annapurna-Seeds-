@@ -27,7 +27,7 @@
             max-width: 430px;
             background: #f7fbf8;
             min-height: 100vh;
-            padding-bottom: 80px;
+            padding-bottom: 85px;
             position: relative;
             box-shadow: 0 0 30px rgba(0,0,0,0.08);
         }
@@ -125,88 +125,103 @@
 
         /* Section Title */
         .section-header {
-            padding: 0 20px 10px;
+            padding: 4px 18px 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         .section-header h3 {
-            font-size: 16px;
-            font-weight: 800;
-            color: #123e24;
+            font-size: 18px;
+            font-weight: 900;
+            color: #0f3820;
         }
         .section-header span {
             font-size: 11px;
-            color: #27ae60;
-            font-weight: 700;
+            color: #2e7d32;
+            font-weight: 800;
         }
 
-        /* 3D Product Investment Cards */
+        /* 3D Big Product Investment Cards */
         .plan-card {
             background: #ffffff;
-            margin: 0 16px 18px;
-            border-radius: 26px;
-            padding: 18px;
-            box-shadow: 0 8px 22px rgba(18, 62, 36, 0.06);
-            border: 1.5px solid #e1eee4;
+            margin: 0 16px 20px;
+            border-radius: 28px;
+            padding: 16px;
+            box-shadow: 0 10px 26px rgba(18, 62, 36, 0.08);
+            border: 1.5px solid #dcece0;
             position: relative;
         }
-        .plan-top {
+
+        /* Full Big Image Container */
+        .big-img-container {
+            width: 100%;
+            height: 280px;
+            border-radius: 22px;
+            overflow: hidden;
+            background: #f1f8f3;
+            margin-bottom: 14px;
+            border: 1.5px solid #dcece0;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .big-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            display: block;
+        }
+
+        .plan-top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 12px;
         }
-        .plan-badge {
-            background: #eef8f1;
-            color: #1b683b;
-            font-size: 11px;
-            font-weight: 800;
-            padding: 5px 10px;
-            border-radius: 12px;
-            border: 1px solid #c8e7d2;
+        .plan-title-badge {
+            background: #e8f5ec;
+            color: #14532d;
+            font-size: 13px;
+            font-weight: 900;
+            padding: 6px 12px;
+            border-radius: 14px;
+            border: 1px solid #bbf7d0;
+            letter-spacing: 0.2px;
         }
-        .plan-payout-day {
-            background: #fff4e5;
+        .plan-payout-pill {
+            background: #fef3c7;
             color: #b45309;
             font-size: 11px;
             font-weight: 800;
-            padding: 4px 10px;
+            padding: 5px 10px;
             border-radius: 10px;
         }
 
-        .plan-body {
-            display: flex;
-            gap: 14px;
-            align-items: center;
-            margin-bottom: 14px;
-        }
-        .plan-img-wrap {
-            width: 90px;
-            height: 90px;
+        /* Highlight Review & Yield Box */
+        .plan-desc-box {
+            background: #f0fdf4;
+            border: 1.5px solid #dcfce7;
             border-radius: 18px;
-            background: #f1f8f3;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            border: 1px solid #daeddf;
-            padding: 4px;
-            overflow: hidden;
-        }
-        .plan-img-wrap img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 14px;
-        }
-        .plan-highlights {
+            padding: 12px 14px;
+            margin-bottom: 14px;
             display: flex;
             flex-direction: column;
-            gap: 4px;
-            font-size: 12px;
-            color: #3b634b;
-            font-weight: 600;
+            gap: 6px;
+        }
+        .plan-desc-box .task-text {
+            font-size: 13px;
+            font-weight: 800;
+            color: #14532d;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .plan-desc-box .yield-text {
+            font-size: 16px;
+            font-weight: 900;
+            color: #15803d;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         /* Grid Metrics */
@@ -214,46 +229,65 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 6px;
-            background: #f6faf7;
-            padding: 10px 8px;
-            border-radius: 16px;
+            background: #f8fafc;
+            padding: 12px 6px;
+            border-radius: 18px;
             margin-bottom: 14px;
-            border: 1px solid #e6f1e9;
+            border: 1.5px solid #e2e8f0;
             text-align: center;
         }
         .metric-item span {
             display: block;
             font-size: 10px;
-            color: #658c73;
-            font-weight: 600;
+            color: #64748b;
+            font-weight: 800;
             text-transform: uppercase;
         }
         .metric-item b {
-            font-size: 13px;
-            color: #123e24;
-            font-weight: 800;
+            font-size: 16px;
+            color: #0f172a;
+            font-weight: 900;
+            display: block;
+            margin-top: 2px;
         }
 
-        /* Buy Button */
+        /* Buy & Locked Buttons */
         .btn-buy {
             display: flex;
             align-items: center;
             justify-content: center;
             width: 100%;
-            background: linear-gradient(180deg, #2ecc71 0%, #208e4e 100%);
+            background: linear-gradient(180deg, #2ecc71 0%, #1e824c 100%);
             color: #ffffff;
             text-decoration: none;
-            padding: 12px;
+            padding: 14px;
             border-radius: 20px;
-            font-weight: 800;
-            font-size: 14px;
-            box-shadow: 0 6px 16px rgba(32, 142, 78, 0.3);
+            font-weight: 900;
+            font-size: 15px;
+            letter-spacing: 0.3px;
+            box-shadow: 0 6px 18px rgba(30, 130, 76, 0.35);
             border: none;
             cursor: pointer;
             transition: transform 0.1s;
         }
         .btn-buy:active {
             transform: scale(0.98);
+        }
+
+        .btn-locked {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background: #94a3b8;
+            color: #ffffff;
+            padding: 14px;
+            border-radius: 20px;
+            font-weight: 900;
+            font-size: 14px;
+            border: none;
+            cursor: not-allowed;
+            box-shadow: none;
         }
 
         /* Bottom Floating Bar */
@@ -332,197 +366,147 @@
 
     <!-- Plans Section Header -->
     <div class="section-header">
-        <h3>Certified Task Agro Plans</h3>
-        <span>Complete Daily Reviews for Yield</span>
+        <div>
+            <h3>🌾 Official Certified Agro Plans</h3>
+            <span>Complete Daily Seed Reviews for Income</span>
+        </div>
     </div>
 
     <!-- PLAN 1: Wheat F1 Hybrid ₹520 (UNLOCKED) -->
     <div class="plan-card">
-        <div class="plan-top">
-            <span class="plan-badge">Plan A • Wheat F1 Hybrid</span>
-            <span class="plan-payout-day">Task Yield: Daily</span>
+        <div class="big-img-container">
+            <img src="plan-1.png" alt="Wheat F1 Hybrid Annapurna Seeds">
         </div>
-        <div class="plan-body">
-            <div class="plan-img-wrap">
-                <img src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=300&q=80" alt="Wheat Seeds">
-            </div>
-            <div class="plan-highlights">
-                <div>✔ Daily 5 Seed Reviews Complete Karna Jaruri</div>
-                <div>✔ Review Complete Par: ₹50 Daily Income</div>
-                <div>✔ Disease Resistant Certified F1</div>
-                <div>✔ High Germination Rate (98%)</div>
-            </div>
+        <div class="plan-top-bar">
+            <span class="plan-title-badge">🌱 PLAN A • WHEAT F1 HYBRID</span>
+            <span class="plan-payout-pill">DAILY PAYOUT</span>
+        </div>
+        <div class="plan-desc-box">
+            <div class="task-text">✅ <span>Daily 5 Quality Reviews Mandatory</span></div>
+            <div class="yield-text">💰 <span>Fixed Daily Income: ₹50 / Day</span></div>
         </div>
         <div class="metrics-bar">
-            <div class="metric-item">
-                <span>Price</span>
-                <b>₹520</b>
-            </div>
-            <div class="metric-item">
-                <span>Daily</span>
-                <b style="color:#16a34a;">₹50</b>
-            </div>
-            <div class="metric-item">
-                <span>Days</span>
-                <b>60 D</b>
-            </div>
-            <div class="metric-item">
-                <span>Yield</span>
-                <b>₹3,000</b>
-            </div>
+            <div class="metric-item"><span>Price</span><b>₹520</b></div>
+            <div class="metric-item"><span>Daily</span><b style="color: #16a34a;">₹50</b></div>
+            <div class="metric-item"><span>Validity</span><b>60 D</b></div>
+            <div class="metric-item"><span>Total Yield</span><b style="color: #15803d;">₹3,000</b></div>
         </div>
-        <a href="recharge.html?plan=520" class="btn-buy">🛒 Invest & Activate ₹520</a>
+        <a href="recharge.html?plan=520" class="btn-buy">🛒 Invest & Activate Plan ₹520</a>
     </div>
 
     <!-- PLAN 2: Soybean Prime ₹2120 (UNLOCKED) -->
     <div class="plan-card">
-        <div class="plan-top">
-            <span class="plan-badge">Plan B • Soybean Prime</span>
-            <span class="plan-payout-day">Task Yield: Daily</span>
+        <div class="big-img-container">
+            <img src="plan-2.png" alt="Soybean Prime Annapurna Seeds">
         </div>
-        <div class="plan-body">
-            <div class="plan-img-wrap">
-                <img src="https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?auto=format&fit=crop&w=300&q=80" alt="Soybean Seeds">
-            </div>
-            <div class="plan-highlights">
-                <div>✔ Daily 10 Seed Reviews Complete Karna Jaruri</div>
-                <div>✔ Review Complete Par: ₹210 Daily Income</div>
-                <div>✔ Priority Payout Verification</div>
-                <div>✔ High Protein Certified Variety</div>
-            </div>
+        <div class="plan-top-bar">
+            <span class="plan-title-badge">🌱 PLAN B • SOYBEAN PRIME</span>
+            <span class="plan-payout-pill">DAILY PAYOUT</span>
+        </div>
+        <div class="plan-desc-box">
+            <div class="task-text">✅ <span>Daily 10 Quality Reviews Mandatory</span></div>
+            <div class="yield-text">💰 <span>Fixed Daily Income: ₹210 / Day</span></div>
         </div>
         <div class="metrics-bar">
-            <div class="metric-item">
-                <span>Price</span>
-                <b>₹2,120</b>
-            </div>
-            <div class="metric-item">
-                <span>Daily</span>
-                <b style="color:#16a34a;">₹210</b>
-            </div>
-            <div class="metric-item">
-                <span>Days</span>
-                <b>75 D</b>
-            </div>
-            <div class="metric-item">
-                <span>Yield</span>
-                <b>₹15,750</b>
-            </div>
+            <div class="metric-item"><span>Price</span><b>₹2,120</b></div>
+            <div class="metric-item"><span>Daily</span><b style="color: #16a34a;">₹210</b></div>
+            <div class="metric-item"><span>Validity</span><b>75 D</b></div>
+            <div class="metric-item"><span>Total Yield</span><b style="color: #15803d;">₹15,750</b></div>
         </div>
-        <a href="recharge.html?plan=2120" class="btn-buy">🛒 Invest & Activate ₹2,120</a>
+        <a href="recharge.html?plan=2120" class="btn-buy">🛒 Invest & Activate Plan ₹2,120</a>
     </div>
 
     <!-- PLAN 3: Mustard Elite ₹4920 (🔒 LOCKED) -->
-    <div class="plan-card" style="opacity: 0.88; border: 1.5px dashed #cbd5e1; background: #fafafa;">
-        <div class="plan-top">
-            <span class="plan-badge" style="background:#fee2e2; color:#b91c1c; border-color:#fecaca;">🔒 Locked • Mustard Elite</span>
-            <span class="plan-payout-day" style="background:#f1f5f9; color:#64748b;">VIP 3 Required</span>
+    <div class="plan-card" style="border: 2px dashed #cbd5e1; background: #fafafa; opacity: 0.92;">
+        <div class="big-img-container" style="filter: grayscale(70%);">
+            <img src="plan-3.png" alt="Mustard Elite Annapurna Seeds">
         </div>
-        <div class="plan-body">
-            <div class="plan-img-wrap" style="filter: grayscale(85%);">
-                <img src="https://images.unsplash.com/photo-1508746829417-e6f548d8d6ed?auto=format&fit=crop&w=300&q=80" alt="Mustard Seeds">
-            </div>
-            <div class="plan-highlights" style="color: #64748b;">
-                <div>🔒 Daily 15 Seed Reviews Mandatory</div>
-                <div>🔒 Review Complete Par: ₹510 Daily Return</div>
-                <div>🔒 Instant Fast Settlement</div>
-                <div>🔒 Unlocks After Completing Previous Tasks</div>
-            </div>
+        <div class="plan-top-bar">
+            <span class="plan-title-badge" style="background:#fee2e2; color:#b91c1c; border-color:#fecaca;">🔒 LOCKED • MUSTARD ELITE</span>
+            <span class="plan-payout-pill" style="background:#f1f5f9; color:#64748b;">VIP 3 LEVEL</span>
         </div>
-        <div class="metrics-bar" style="background:#f1f5f9;">
+        <div class="plan-desc-box" style="background:#f8fafc; border-color:#e2e8f0;">
+            <div class="task-text" style="color:#64748b;">🔒 <span>Daily 15 Quality Reviews Mandatory</span></div>
+            <div class="yield-text" style="color:#64748b;">💰 <span>Fixed Daily Income: ₹510 / Day</span></div>
+        </div>
+        <div class="metrics-bar" style="background:#ffffff;">
             <div class="metric-item"><span>Price</span><b style="color:#64748b;">₹4,920</b></div>
             <div class="metric-item"><span>Daily</span><b style="color:#64748b;">₹510</b></div>
-            <div class="metric-item"><span>Days</span><b style="color:#64748b;">90 D</b></div>
-            <div class="metric-item"><span>Yield</span><b style="color:#64748b;">₹45,900</b></div>
+            <div class="metric-item"><span>Validity</span><b style="color:#64748b;">90 D</b></div>
+            <div class="metric-item"><span>Total Yield</span><b style="color:#64748b;">₹45,900</b></div>
         </div>
-        <button class="btn-buy" onclick="alert('🔒 Yeh Plan LOCKED hai!\nPehle ₹520 ya ₹2,120 ka plan activate karein aur daily tasks complete karein.')" 
-                style="background: #94a3b8; box-shadow: none; cursor: not-allowed;">
+        <button class="btn-locked" onclick="alert('🔒 Yeh Plan LOCKED hai!\nPehle ₹520 ya ₹2,120 ka plan activate karein aur daily reviews complete karein.')">
             🔒 Locked (Complete Previous Tasks)
         </button>
-    </div>
-        <!-- PLAN 4: Sunflower Gold ₹9820 (🔒 LOCKED) -->
-    <div class="plan-card" style="opacity: 0.88; border: 1.5px dashed #cbd5e1; background: #fafafa;">
-        <div class="plan-top">
-            <span class="plan-badge" style="background:#fee2e2; color:#b91c1c; border-color:#fecaca;">🔒 Locked • Sunflower Gold</span>
-            <span class="plan-payout-day" style="background:#f1f5f9; color:#64748b;">VIP 4 Required</span>
+                </div>
+                    <!-- PLAN 4: Sunflower Gold ₹9820 (🔒 LOCKED) -->
+    <div class="plan-card" style="border: 2px dashed #cbd5e1; background: #fafafa; opacity: 0.92;">
+        <div class="big-img-container" style="filter: grayscale(70%);">
+            <img src="plan-4.png" alt="Sunflower Gold Annapurna Seeds">
         </div>
-        <div class="plan-body">
-            <div class="plan-img-wrap" style="filter: grayscale(85%);">
-                <img src="https://images.unsplash.com/photo-1597848212624-a19eb35e2651?auto=format&fit=crop&w=300&q=80" alt="Sunflower Seeds">
-            </div>
-            <div class="plan-highlights" style="color: #64748b;">
-                <div>🔒 Daily 20 Seed Reviews Mandatory</div>
-                <div>🔒 Review Complete Par: ₹1,050 Daily Return</div>
-                <div>🔒 Dedicated Agro Account Manager</div>
-                <div>🔒 Commercial Seed License Required</div>
-            </div>
+        <div class="plan-top-bar">
+            <span class="plan-title-badge" style="background:#fee2e2; color:#b91c1c; border-color:#fecaca;">🔒 LOCKED • SUNFLOWER GOLD</span>
+            <span class="plan-payout-pill" style="background:#f1f5f9; color:#64748b;">VIP 4 LEVEL</span>
         </div>
-        <div class="metrics-bar" style="background:#f1f5f9;">
+        <div class="plan-desc-box" style="background:#f8fafc; border-color:#e2e8f0;">
+            <div class="task-text" style="color:#64748b;">🔒 <span>Daily 20 Quality Reviews Mandatory</span></div>
+            <div class="yield-text" style="color:#64748b;">💰 <span>Fixed Daily Income: ₹1,050 / Day</span></div>
+        </div>
+        <div class="metrics-bar" style="background:#ffffff;">
             <div class="metric-item"><span>Price</span><b style="color:#64748b;">₹9,820</b></div>
             <div class="metric-item"><span>Daily</span><b style="color:#64748b;">₹1,050</b></div>
-            <div class="metric-item"><span>Days</span><b style="color:#64748b;">100 D</b></div>
-            <div class="metric-item"><span>Yield</span><b style="color:#64748b;">₹1,05,000</b></div>
+            <div class="metric-item"><span>Validity</span><b style="color:#64748b;">100 D</b></div>
+            <div class="metric-item"><span>Total Yield</span><b style="color:#64748b;">₹1,05,000</b></div>
         </div>
-        <button class="btn-buy" onclick="alert('🔒 Yeh Plan LOCKED hai!\nPehle niche wale plans complete karein.')" 
-                style="background: #94a3b8; box-shadow: none; cursor: not-allowed;">
+        <button class="btn-locked" onclick="alert('🔒 Yeh Plan LOCKED hai!\nPehle niche wale plans activate karein.')">
             🔒 Locked (VIP 4 Required)
         </button>
     </div>
 
     <!-- PLAN 5: Cotton Hybrid King ₹19820 (🔒 LOCKED) -->
-    <div class="plan-card" style="opacity: 0.88; border: 1.5px dashed #cbd5e1; background: #fafafa;">
-        <div class="plan-top">
-            <span class="plan-badge" style="background:#fee2e2; color:#b91c1c; border-color:#fecaca;">🔒 Locked • Cotton Hybrid King</span>
-            <span class="plan-payout-day" style="background:#f1f5f9; color:#64748b;">VIP 5 Required</span>
+    <div class="plan-card" style="border: 2px dashed #cbd5e1; background: #fafafa; opacity: 0.92;">
+        <div class="big-img-container" style="filter: grayscale(70%);">
+            <img src="plan-5.png" alt="Cotton King Annapurna Seeds">
         </div>
-        <div class="plan-body">
-            <div class="plan-img-wrap" style="filter: grayscale(85%);">
-                <img src="https://images.unsplash.com/photo-1584985304337-b452e8964e56?auto=format&fit=crop&w=300&q=80" alt="Cotton Seeds">
-            </div>
-            <div class="plan-highlights" style="color: #64748b;">
-                <div>🔒 Daily 30 Seed Reviews Mandatory</div>
-                <div>🔒 Review Complete Par: ₹2,200 Daily Return</div>
-                <div>🔒 Zero Fee Fast Bank Settlement</div>
-                <div>🔒 VIP District Partner Plan</div>
-            </div>
+        <div class="plan-top-bar">
+            <span class="plan-title-badge" style="background:#fee2e2; color:#b91c1c; border-color:#fecaca;">🔒 LOCKED • COTTON KING</span>
+            <span class="plan-payout-pill" style="background:#f1f5f9; color:#64748b;">VIP 5 LEVEL</span>
         </div>
-        <div class="metrics-bar" style="background:#f1f5f9;">
+        <div class="plan-desc-box" style="background:#f8fafc; border-color:#e2e8f0;">
+            <div class="task-text" style="color:#64748b;">🔒 <span>Daily 30 Quality Reviews Mandatory</span></div>
+            <div class="yield-text" style="color:#64748b;">💰 <span>Fixed Daily Income: ₹2,200 / Day</span></div>
+        </div>
+        <div class="metrics-bar" style="background:#ffffff;">
             <div class="metric-item"><span>Price</span><b style="color:#64748b;">₹19,820</b></div>
             <div class="metric-item"><span>Daily</span><b style="color:#64748b;">₹2,200</b></div>
-            <div class="metric-item"><span>Days</span><b style="color:#64748b;">120 D</b></div>
-            <div class="metric-item"><span>Yield</span><b style="color:#64748b;">₹2,64,000</b></div>
+            <div class="metric-item"><span>Validity</span><b style="color:#64748b;">120 D</b></div>
+            <div class="metric-item"><span>Total Yield</span><b style="color:#64748b;">₹2,64,000</b></div>
         </div>
-        <button class="btn-buy" onclick="alert('🔒 Yeh Plan LOCKED hai!\nIs level par pahunchne ke liye purane tasks complete karein.')" 
-                style="background: #94a3b8; box-shadow: none; cursor: not-allowed;">
+        <button class="btn-locked" onclick="alert('🔒 Yeh Plan LOCKED hai!\nIs level tak pahunchne ke liye purane tasks complete karein.')">
             🔒 Locked (VIP 5 Required)
         </button>
     </div>
 
     <!-- PLAN 6: Paddy Supreme F1 ₹29200 (🔒 LOCKED) -->
-    <div class="plan-card" style="opacity: 0.88; border: 1.5px dashed #cbd5e1; background: #fafafa;">
-        <div class="plan-top">
-            <span class="plan-badge" style="background:#fee2e2; color:#b91c1c; border-color:#fecaca;">🔒 Locked • Paddy Supreme F1</span>
-            <span class="plan-payout-day" style="background:#f1f5f9; color:#64748b;">State Leader Only</span>
+    <div class="plan-card" style="border: 2px dashed #cbd5e1; background: #fafafa; opacity: 0.92;">
+        <div class="big-img-container" style="filter: grayscale(70%);">
+            <img src="plan-6.png" alt="Paddy Supreme F1 Annapurna Seeds">
         </div>
-        <div class="plan-body">
-            <div class="plan-img-wrap" style="filter: grayscale(85%);">
-                <img src="https://images.unsplash.com/photo-1536657464919-892534f60d6e?auto=format&fit=crop&w=300&q=80" alt="Paddy Seeds">
-            </div>
-            <div class="plan-highlights" style="color: #64748b;">
-                <div>🔒 Daily 40 Seed Reviews Mandatory</div>
-                <div>🔒 Review Complete Par: ₹3,400 Daily Return</div>
-                <div>🔒 Highest Yield Agro Corporation Plan</div>
-                <div>🔒 State Manager Verification Required</div>
-            </div>
+        <div class="plan-top-bar">
+            <span class="plan-title-badge" style="background:#fee2e2; color:#b91c1c; border-color:#fecaca;">🔒 LOCKED • PADDY SUPREME F1</span>
+            <span class="plan-payout-pill" style="background:#f1f5f9; color:#64748b;">STATE LEADER</span>
         </div>
-        <div class="metrics-bar" style="background:#f1f5f9;">
+        <div class="plan-desc-box" style="background:#f8fafc; border-color:#e2e8f0;">
+            <div class="task-text" style="color:#64748b;">🔒 <span>Daily 40 Quality Reviews Mandatory</span></div>
+            <div class="yield-text" style="color:#64748b;">💰 <span>Fixed Daily Income: ₹3,400 / Day</span></div>
+        </div>
+        <div class="metrics-bar" style="background:#ffffff;">
             <div class="metric-item"><span>Price</span><b style="color:#64748b;">₹29,200</b></div>
             <div class="metric-item"><span>Daily</span><b style="color:#64748b;">₹3,400</b></div>
-            <div class="metric-item"><span>Days</span><b style="color:#64748b;">150 D</b></div>
-            <div class="metric-item"><span>Yield</span><b style="color:#64748b;">₹5,10,000</b></div>
+            <div class="metric-item"><span>Validity</span><b style="color:#64748b;">150 D</b></div>
+            <div class="metric-item"><span>Total Yield</span><b style="color:#64748b;">₹5,10,000</b></div>
         </div>
-        <button class="btn-buy" onclick="alert('🔒 Yeh Plan LOCKED hai!\nContact state manager to unlock this plan.')" 
-                style="background: #94a3b8; box-shadow: none; cursor: not-allowed;">
+        <button class="btn-locked" onclick="alert('🔒 Yeh Plan LOCKED hai!\nState Corporation Manager se contact karein.')">
             🔒 Locked (State Leader Level)
         </button>
     </div>
@@ -588,4 +572,5 @@ syncHeaderBalance();
 </script>
 
 </body>
-</html>
+                </html>
+    
