@@ -14,7 +14,6 @@
         .admin-top h2 { font-size: 17px; font-weight: 900; }
         .badge-secure { background: #22c55e; color: #052e16; font-size: 10px; font-weight: 900; padding: 4px 8px; border-radius: 10px; }
         
-        /* Mobile Scrollable Horizontal Tab Bar */
         .admin-tabs { 
             display: flex; 
             background: #0f2d1a; 
@@ -196,8 +195,32 @@
         </div>
     </div>
 
-    <!-- 5. Controls Tab (4 Multi-UPI Gateways Integrated) -->
+    <!-- 5. Controls Tab (Multi-UPI + Community Controls) -->
     <div id="settingsTab" class="tab-pane">
+        
+        <!-- Live Community Feed Controls -->
+        <div class="card-panel">
+            <h3 style="margin-bottom: 8px;">📢 Live Community Feed Controls</h3>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: #f1f8f3; padding: 10px; border-radius: 12px;">
+                <span style="font-weight: 800; font-size: 13px; color: #113820;">Auto Fake Proofs Generator</span>
+                <button id="btnToggleBot" class="btn-action btn-green" onclick="toggleCommunityBot()">Status: ON</button>
+            </div>
+
+            <p style="font-size: 11px; font-weight: 800; color: #64748b; margin-bottom: 6px;">Apni Marzi Ka Review Feed Par Bhejein:</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+                <input type="text" id="postName" placeholder="Farmer Name (e.g. Ramesh)" style="padding: 8px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 12px;">
+                <input type="text" id="postCity" placeholder="City (e.g. Meerut)" style="padding: 8px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 12px;">
+            </div>
+            <div style="margin-bottom: 8px;">
+                <input type="text" id="postAmount" placeholder="Amount (e.g. +₹1,320)" style="width: 100%; padding: 8px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 12px; margin-bottom: 8px;">
+                <textarea id="postText" placeholder="Post message yahan likhein..." rows="2" style="width: 100%; padding: 8px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 12px; outline: none;"></textarea>
+            </div>
+
+            <button class="btn-action btn-blue" style="width: 100%; padding: 10px; font-size: 13px;" onclick="pushCustomCommunityPost()">🚀 Push Post Instantly to Feed</button>
+        </div>
+
+        <!-- Multi-Channel UPI -->
         <div class="card-panel">
             <h3 style="margin-bottom: 6px;">💳 Multi-Channel UPI Setup</h3>
             <p style="font-size: 11px; color: #64748b; margin-bottom: 12px;">Ye chaaron UPI IDs direct Recharge page (PAY-A, B, C, D) se connect hain:</p>
@@ -224,8 +247,8 @@
         </div>
     </div>
 
-</div>
-<script>
+                </div>
+                   <script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -245,7 +268,10 @@ document.querySelectorAll('.tab-btn').forEach(button => {
 
         if (targetTab === 'rechargeTab') loadRecharges();
         if (targetTab === 'withdrawTab') loadWithdrawals();
-        if (targetTab === 'settingsTab') loadAllUpiChannels();
+        if (targetTab === 'settingsTab') {
+            loadAllUpiChannels();
+            loadCommunityBotStatus();
+        }
     });
 });
 
@@ -390,7 +416,7 @@ async function editUserBal(mobile) {
     }
 }
 
-// 5. Multi-Channel UPI Engine (Load & Save to Supabase)
+// 5. Multi-Channel UPI Engine
 async function loadAllUpiChannels() {
     try {
         const { data } = await client.from('app_settings').select('upi_a, upi_b, upi_c, upi_d').eq('id', 1).single();
@@ -426,9 +452,64 @@ async function saveAllUpiChannels() {
     }
 }
 
+// 6. Community Feed Controls Engine
+let botActiveStatus = true;
+
+async function loadCommunityBotStatus() {
+    try {
+        const { data } = await client.from('community_controls').select('is_active').eq('id', 1).single();
+        if (data) {
+            botActiveStatus = data.is_active;
+            const btn = document.getElementById('btnToggleBot');
+            btn.innerText = botActiveStatus ? "Status: ON" : "Status: OFF";
+            btn.className = botActiveStatus ? "btn-action btn-green" : "btn-action btn-red";
+        }
+    } catch (e) {}
+}
+
+async function toggleCommunityBot() {
+    botActiveStatus = !botActiveStatus;
+    const { error } = await client.from('community_controls').upsert({ id: 1, is_active: botActiveStatus });
+    if (!error) {
+        const btn = document.getElementById('btnToggleBot');
+        btn.innerText = botActiveStatus ? "Status: ON" : "Status: OFF";
+        btn.className = botActiveStatus ? "btn-action btn-green" : "btn-action btn-red";
+        alert("Community Bot " + (botActiveStatus ? "Chalu ho gaya!" : "Band kar diya gaya!"));
+    }
+}
+
+async function pushCustomCommunityPost() {
+    const name = document.getElementById('postName').value.trim() || 'Verified Farmer';
+    const city = document.getElementById('postCity').value.trim() || 'Bijnor';
+    const amt = document.getElementById('postAmount').value.trim() || '+₹950';
+    const msg = document.getElementById('postText').value.trim();
+
+    if (!msg) {
+        alert("Kripya post ka message likhein!");
+        return;
+    }
+
+    const { error } = await client.from('community_controls').upsert({
+        id: 1,
+        is_active: botActiveStatus,
+        custom_name: name,
+        custom_city: city,
+        custom_amount: amt,
+        custom_msg: msg
+    });
+
+    if (error) {
+        alert("Failed to push post: " + error.message);
+    } else {
+        alert("🚀 Custom review successfully feed par bhej diya gaya!");
+        document.getElementById('postText').value = '';
+    }
+}
+
 // Initial Run
 loadFinancialStats();
 loadAllUpiChannels();
+loadCommunityBotStatus();
 </script>
 
 </body>
