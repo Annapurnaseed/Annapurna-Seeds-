@@ -59,11 +59,10 @@
         .table-row { display: grid; grid-template-columns: 1.2fr 1fr 1fr; padding: 14px; align-items: center; border-bottom: 1px solid #f0f6f2; font-size: 13px; font-weight: 800; color: #123e24; }
         .table-row:nth-child(even) { background: #fbfdfc; }
         .col-reward { color: #27ae60; font-weight: 900; }
-        
         .btn-status-pill { border: none; background: #eef6f0; color: #648a72; font-size: 11px; font-weight: 800; padding: 6px 14px; border-radius: 14px; cursor: not-allowed; text-align: center; }
 
         /* Daily Tasks Box */
-        .daily-task-box { display: none; background: #ffffff; margin: 0 14px; border-radius: 24px; padding: 20px 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1.5px solid #e1eee4; text-align: center; }
+        .daily-task-box { background: #ffffff; margin: 0 14px 14px; border-radius: 24px; padding: 20px 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1.5px solid #e1eee4; }
         .daily-progress-wrap { background: #f0f7f2; border-radius: 12px; height: 10px; overflow: hidden; margin: 14px 0; border: 1px solid #dcece0; }
         .daily-progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #2ecc71, #1e824c); transition: width 0.3s; }
         .btn-daily-submit { width: 100%; background: linear-gradient(180deg, #2ecc71 0%, #1e824c 100%); border: none; border-radius: 22px; padding: 13px; color: #fff; font-size: 14px; font-weight: 900; cursor: pointer; box-shadow: 0 6px 16px rgba(30,130,76,0.35); }
@@ -77,8 +76,7 @@
     </style>
 </head>
 <body>
-
-<div class="mobile-wrapper">
+    <div class="mobile-wrapper">
 
     <!-- Top Header -->
     <div class="top-header">
@@ -91,16 +89,14 @@
 
     <div class="brand-logo-row">
         <h2>🌾 Annapurna Seeds</h2>
-        <span>Tasks & Rewards Hub</span>
+        <span>Tasks & Rewards Hub (750 Days Valid)</span>
     </div>
 
     <!-- One-Time Telegram ₹20 Bonus Task Card -->
     <div id="tgTaskCard" class="tg-bonus-card">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
             <div style="display: flex; gap: 10px; align-items: center;">
-                <div style="width: 42px; height: 42px; border-radius: 14px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 22px;">
-                    ✈️
-                </div>
+                <div style="width: 42px; height: 42px; border-radius: 14px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 22px;">✈️</div>
                 <div>
                     <span style="background: #fef08a; color: #854d0e; font-size: 9px; font-weight: 900; padding: 2px 8px; border-radius: 8px; text-transform: uppercase;">New User Task</span>
                     <h3 style="font-size: 15px; font-weight: 900; margin-top: 3px;">Join Official Telegram</h3>
@@ -108,133 +104,55 @@
             </div>
             <span style="background: #22c55e; color: #ffffff; font-size: 13px; font-weight: 900; padding: 4px 10px; border-radius: 12px;">+₹20</span>
         </div>
-        
-        <p style="font-size: 11px; opacity: 0.95; line-height: 1.4; margin-bottom: 12px;">
-            Channel join karein aur payein <b>instant ₹20 seedha apne wallet mein!</b>
-        </p>
-
+        <p style="font-size: 11px; opacity: 0.95; line-height: 1.4; margin-bottom: 12px;">Channel join karein aur payein <b>instant ₹20 seedha apne wallet mein!</b></p>
         <div style="display: flex; gap: 8px;">
-            <a href="https://t.me/your_official_channel" target="_blank" onclick="markTgVisited()" 
-               style="flex: 1; background: #ffffff; color: #0369a1; text-decoration: none; text-align: center; padding: 11px; border-radius: 14px; font-size: 12px; font-weight: 800; display: block;">
-                📢 Step 1: Join Channel
-            </a>
-            <button id="btnClaimTg" onclick="claimTelegramReward()" 
-                    style="flex: 1; background: #22c55e; color: #ffffff; border: none; padding: 11px; border-radius: 14px; font-size: 12px; font-weight: 900; cursor: pointer;">
-                🎁 Step 2: Claim ₹20
-            </button>
+            <a href="https://t.me/your_official_channel" target="_blank" onclick="markTgVisited()" style="flex: 1; background: #ffffff; color: #0369a1; text-decoration: none; text-align: center; padding: 11px; border-radius: 14px; font-size: 12px; font-weight: 800; display: block;">📢 Step 1: Join Channel</a>
+            <button id="btnClaimTg" onclick="claimTelegramReward()" style="flex: 1; background: #22c55e; color: #ffffff; border: none; padding: 11px; border-radius: 14px; font-size: 12px; font-weight: 900; cursor: pointer;">🎁 Step 2: Claim ₹20</button>
         </div>
     </div>
 
-    <!-- 2 Kaveri Style Mode Switchers -->
+    <!-- Mode Switchers -->
     <div class="tab-switcher">
         <button class="tab-btn active" id="permTabBtn" onclick="switchTaskTab('perm')">
             <div class="tab-icon">🎯</div>
-            <div class="tab-info">
-                <h4>Permanent Task</h4>
-                <p>Team recharge targets</p>
-            </div>
+            <div class="tab-info"><h4>Permanent Task</h4><p>Team recharge targets</p></div>
         </button>
         <button class="tab-btn" id="dailyTabBtn" onclick="switchTaskTab('daily')">
             <div class="tab-icon">📋</div>
-            <div class="tab-info">
-                <h4>Daily Task</h4>
-                <p>Complete daily reviews</p>
-            </div>
+            <div class="tab-info"><h4>Daily Task</h4><p>Complete daily reviews</p></div>
         </button>
     </div>
 
     <!-- Permanent Tab Content -->
     <div id="permSection">
         <div class="notice-strip">
-            <div>
-                <h4>Team Recharge Targets</h4>
-                <p>One-time tasks — lifetime rewards</p>
-            </div>
+            <div><h4>Team Recharge Targets</h4><p>One-time tasks — lifetime rewards</p></div>
             <span class="badge-tag">LIFETIME</span>
         </div>
-
         <div class="mission-card">
-            <div class="table-head">
-                <div>Target</div>
-                <div>Reward</div>
-                <div style="text-align: right;">Status</div>
-            </div>
-
-            <!-- Milestone Rows -->
-            <div class="table-row">
-                <div>₹10,000+</div>
-                <div class="col-reward">₹250</div>
-                <div style="text-align: right;"><button class="btn-status-pill">Pending</button></div>
-            </div>
-            <div class="table-row">
-                <div>₹30,000+</div>
-                <div class="col-reward">₹500</div>
-                <div style="text-align: right;"><button class="btn-status-pill">Pending</button></div>
-            </div>
-            <div class="table-row">
-                <div>₹50,000+</div>
-                <div class="col-reward">₹1,000</div>
-                <div style="text-align: right;"><button class="btn-status-pill">Pending</button></div>
-            </div>
-            <div class="table-row">
-                <div>₹80,000+</div>
-                <div class="col-reward">₹1,500</div>
-                <div style="text-align: right;"><button class="btn-status-pill">Pending</button></div>
-            </div>
-            <div class="table-row">
-                <div>₹100,000+</div>
-                <div class="col-reward">₹3,000</div>
-                <div style="text-align: right;"><button class="btn-status-pill">Pending</button></div>
-            </div>
-            <div class="table-row">
-                <div>₹200,000+</div>
-                <div class="col-reward">₹5,000</div>
-                <div style="text-align: right;"><button class="btn-status-pill">Pending</button></div>
-            </div>
+            <div class="table-head"><div>Target</div><div>Reward</div><div style="text-align: right;">Status</div></div>
+            <div class="table-row"><div>₹10,000+</div><div class="col-reward">₹250</div><div style="text-align: right;"><button class="btn-status-pill">Pending</button></div></div>
+            <div class="table-row"><div>₹30,000+</div><div class="col-reward">₹500</div><div style="text-align: right;"><button class="btn-status-pill">Pending</button></div></div>
+            <div class="table-row"><div>₹50,000+</div><div class="col-reward">₹1,000</div><div style="text-align: right;"><button class="btn-status-pill">Pending</button></div></div>
         </div>
     </div>
-
-    <!-- Daily Tab Content -->
-    <div id="dailySection" class="daily-task-box">
-        <h3 style="font-size: 16px; font-weight: 900; color: #123e24; margin-bottom: 4px;">Seed Batch Inspection</h3>
-        <p style="font-size: 12px; color: #648a72;">Complete daily reviews to unlock earnings.</p>
-
-        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 800; color: #123e24; margin-top: 16px;">
-            <span>Completed Today</span>
-            <b id="completedCount">0 / 5</b>
+        <!-- Daily Tab Content (Multiple Active Plans Separate Tasks) -->
+    <div id="dailySection" style="display: none;">
+        <div id="allTasksContainer">
+            <!-- Active plans task boxes load dynamically -->
         </div>
-        <div class="daily-progress-wrap">
-            <div class="daily-progress-bar" id="dailyBar"></div>
-        </div>
-
-        <button class="btn-daily-submit" id="dailyBtn" onclick="runDailyReview()">Verify Seed Batch (Earn ₹10)</button>
     </div>
 
     <!-- Bottom Navigation -->
     <div class="bottom-nav">
-        <a href="index.html" class="nav-link">
-            <span class="nav-icon">🏠</span>
-            <span>Home</span>
-        </a>
-        <a href="tasks.html" class="nav-link active-pill">
-            <span class="nav-icon">📈</span>
-            <span>Income</span>
-        </a>
-        <a href="team.html" class="nav-link">
-            <span class="nav-icon">👥</span>
-            <span>Team</span>
-        </a>
-        <a href="team.html" class="nav-link">
-            <span class="nav-icon">🔗</span>
-            <span>Share</span>
-        </a>
-        <a href="profile.html" class="nav-link">
-            <span class="nav-icon">👤</span>
-            <span>My</span>
-        </a>
+        <a href="index.html" class="nav-link"><span class="nav-icon">🏠</span><span>Home</span></a>
+        <a href="tasks.html" class="nav-link active-pill"><span class="nav-icon">📈</span><span>Income</span></a>
+        <a href="team.html" class="nav-link"><span class="nav-icon">👥</span><span>Team</span></a>
+        <a href="team.html" class="nav-link"><span class="nav-icon">🔗</span><span>Share</span></a>
+        <a href="profile.html" class="nav-link"><span class="nav-icon">👤</span><span>My</span></a>
     </div>
 
-</div>
+    </div>
 <script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
@@ -244,114 +162,122 @@ const savedUser = JSON.parse(localStorage.getItem('annapurna_user') || '{}');
 if (!savedUser.mobile) { window.location.href = 'login.html'; }
 
 let userBalance = 0;
-let completedReviews = 0;
-const maxReviews = 5;
 let hasVisitedTg = false;
 
-// 1. Initialize Tasks & Check 12 AM Reset Status
 async function initTasks() {
     try {
-        const { data } = await client.from('users').select('balance, telegram_claimed, last_task_date').eq('mobile', savedUser.mobile).single();
+        const { data } = await client.from('users').select('balance, telegram_claimed').eq('mobile', savedUser.mobile).single();
         if (data) {
             userBalance = Number(data.balance || 0);
             document.getElementById('userWalletTop').innerText = "₹" + userBalance.toFixed(2);
-
-            if (data.telegram_claimed) {
-                renderTgClaimedUI();
-            }
-
-            // Check if 12 AM reset is required for a new day
-            const todayStr = new Date().toISOString().split('T')[0];
-            if (data.last_task_date !== todayStr) {
-                completedReviews = 0; // Naya din, 0 reviews completed
-            }
-            updateProgressUI();
+            if (data.telegram_claimed) { renderTgClaimedUI(); }
         }
-    } catch(e) {
-        console.error("Init Error:", e);
-    }
+        loadUserActivePortfoliosTasks();
+    } catch(e) { console.error("Init Error:", e); }
 }
 initTasks();
 
-function updateProgressUI() {
-    document.getElementById('completedCount').innerText = `${completedReviews} / ${maxReviews}`;
-    document.getElementById('dailyBar').style.width = `${(completedReviews / maxReviews) * 100}%`;
-    
-    if (completedReviews >= maxReviews) {
-        const btn = document.getElementById('dailyBtn');
-        if (btn) {
-            btn.disabled = true;
-            btn.innerText = "Daily Tasks Completed ✅";
-            btn.style.background = "#94a3b8";
-        }
+async function loadUserActivePortfoliosTasks() {
+    const todayStr = new Date().toISOString().split('T')[0];
+    const { data: plans } = await client.from('user_plans').select('*').eq('mobile', savedUser.mobile);
+    const container = document.getElementById('allTasksContainer');
+    container.innerHTML = "";
+
+    if (!plans || plans.length === 0) {
+        container.innerHTML = `
+            <div class="daily-task-box" style="text-align: center;">
+                <h3 style="color:#123e24; font-size:15px;">❌ No Active Agro Plan</h3>
+                <p style="font-size:11px; color:#64748b; margin-top:6px;">Task complete karne ke liye pehle Home page se koi plan active karein.</p>
+            </div>`;
+        return;
     }
+
+    for (let plan of plans) {
+        // 12 AM Reset Logic for each individual plan
+        let completedToday = plan.completed_today || 0;
+        if (plan.last_task_date !== todayStr) {
+            completedToday = 0;
+            await client.from('user_plans').update({ completed_today: 0, last_task_date: todayStr }).eq('id', plan.id);
+        }
+
+        const isCompleted = completedToday >= plan.total_reviews;
+        const perReviewIncome = Number(plan.daily_income / plan.total_reviews).toFixed(2);
+
+        const card = document.createElement('div');
+        card.className = "daily-task-box";
+        card.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <b style="font-size: 13px; color: #14532d;">🌱 ${plan.plan_name} (₹${plan.plan_price})</b>
+                <span style="font-size: 9px; background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 6px; font-weight: 800;">750 Days Valid</span>
+            </div>
+            <p style="font-size: 11px; color: #648a72;">Daily Income: ₹${plan.daily_income} (${plan.total_reviews} Reviews)</p>
+
+            <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 800; color: #123e24; margin-top: 12px;">
+                <span>Completed Today</span>
+                <b>${completedToday} / ${plan.total_reviews}</b>
+            </div>
+            <div class="daily-progress-wrap">
+                <div class="daily-progress-bar" style="width: ${(completedToday / plan.total_reviews) * 100}%;"></div>
+            </div>
+
+            <button class="btn-daily-submit" id="taskBtn_${plan.id}" 
+                onclick="runPlanTask(${plan.id}, ${perReviewIncome}, ${plan.total_reviews}, ${completedToday})" 
+                ${isCompleted ? 'disabled style="background: #94a3b8;"' : ''}>
+                ${isCompleted ? 'Plan Tasks Completed ✅' : `Verify Seed Batch (Earn ₹${perReviewIncome})`}
+            </button>
+        `;
+        container.appendChild(card);
+    }
+}
+
+async function runPlanTask(planId, rewardPerReview, totalReviews, currentCompleted) {
+    const btn = document.getElementById(`taskBtn_${planId}`);
+    btn.disabled = true;
+    btn.innerText = "Verifying Batch...";
+
+    setTimeout(async () => {
+        const newCompleted = currentCompleted + 1;
+        const todayStr = new Date().toISOString().split('T')[0];
+
+        const { data: uData } = await client.from('users').select('balance').eq('mobile', savedUser.mobile).single();
+        const currentBal = Number(uData?.balance || userBalance);
+        const newBal = currentBal + Number(rewardPerReview);
+
+        await client.from('users').update({ balance: newBal }).eq('mobile', savedUser.mobile);
+        await client.from('user_plans').update({ 
+            completed_today: newCompleted,
+            last_task_date: todayStr
+        }).eq('id', planId);
+
+        userBalance = newBal;
+        document.getElementById('userWalletTop').innerText = "₹" + newBal.toFixed(2);
+        alert(`🎉 Seed quality verified! ₹${rewardPerReview} wallet me add ho gaye.`);
+
+        loadUserActivePortfoliosTasks();
+    }, 1000);
+}
+
+function markTgVisited() { hasVisitedTg = true; }
+
+async function claimTelegramReward() {
+    if (!hasVisitedTg) { alert("Pehle Telegram channel join karein!"); return; }
+    const { data: user } = await client.from('users').select('balance, telegram_claimed').eq('mobile', savedUser.mobile).single();
+    if (user && user.telegram_claimed) { alert("Pehle hi claim kar chuke hain!"); return; }
+    const newBal = Number(user.balance || 0) + 20;
+    await client.from('users').update({ balance: newBal, telegram_claimed: true }).eq('mobile', savedUser.mobile);
+    document.getElementById('userWalletTop').innerText = "₹" + newBal.toFixed(2);
+    renderTgClaimedUI();
+    alert("🎉 Telegram bonus ₹20 credit ho gaya!");
 }
 
 function renderTgClaimedUI() {
     const card = document.getElementById('tgTaskCard');
     if (card) {
         card.className = "tg-bonus-card claimed";
-        card.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <span style="font-size: 22px;">✅</span>
-                    <div>
-                        <b style="font-size: 13px; color: #1e293b;">Telegram Bonus Claimed</b>
-                        <p style="font-size: 11px; color: #648a72; margin: 2px 0 0;">₹20 aapke wallet mein successfully add ho chuke hain.</p>
-                    </div>
-                </div>
-                <span style="color: #16a34a; font-weight: 900; font-size: 12px; background: #dcfce7; padding: 4px 10px; border-radius: 10px;">Completed</span>
-            </div>
-        `;
+        card.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: center;"><div style="display: flex; gap: 10px; align-items: center;"><span style="font-size: 22px;">✅</span><div><b style="font-size: 13px; color: #1e293b;">Telegram Bonus Claimed</b><p style="font-size: 11px; color: #648a72;">₹20 added successfully.</p></div></div><span style="color: #16a34a; font-weight: 900; background: #dcfce7; padding: 4px 10px; border-radius: 10px;">Completed</span></div>`;
     }
 }
 
-function markTgVisited() {
-    hasVisitedTg = true;
-}
-
-// 2. Claim Telegram ₹20 Logic
-async function claimTelegramReward() {
-    if (!hasVisitedTg) {
-        alert("Pehle 'Step 1: Join Channel' par click karke Telegram channel join karein!");
-        return;
-    }
-
-    const btn = document.getElementById('btnClaimTg');
-    btn.disabled = true;
-    btn.innerText = "Claiming...";
-
-    try {
-        const { data: user } = await client.from('users').select('balance, telegram_claimed').eq('mobile', savedUser.mobile).single();
-        
-        if (user && user.telegram_claimed) {
-            alert("Aap yeh reward pehle hi claim kar chuke hain!");
-            renderTgClaimedUI();
-            return;
-        }
-
-        const newBal = Number(user.balance || 0) + 20;
-
-        const { error } = await client.from('users').update({
-            balance: newBal,
-            telegram_claimed: true
-        }).eq('mobile', savedUser.mobile);
-
-        if (error) throw error;
-
-        userBalance = newBal;
-        document.getElementById('userWalletTop').innerText = "₹" + newBal.toFixed(2);
-        renderTgClaimedUI();
-        alert("🎉 Badhaai ho! Telegram join karne par ₹20 aapke wallet mein credit ho gaye.");
-
-    } catch(err) {
-        alert("Claim error: " + err.message);
-        btn.disabled = false;
-        btn.innerText = "🎁 Step 2: Claim ₹20";
-    }
-}
-
-// 3. Tab Switcher
 function switchTaskTab(tab) {
     const permBtn = document.getElementById('permTabBtn');
     const dailyBtn = document.getElementById('dailyTabBtn');
@@ -359,92 +285,15 @@ function switchTaskTab(tab) {
     const dailySec = document.getElementById('dailySection');
 
     if (tab === 'perm') {
-        permBtn.classList.add('active');
-        dailyBtn.classList.remove('active');
-        permSec.style.display = 'block';
-        dailySec.style.display = 'none';
+        permBtn.classList.add('active'); dailyBtn.classList.remove('active');
+        permSec.style.display = 'block'; dailySec.style.display = 'none';
     } else {
-        dailyBtn.classList.add('active');
-        permBtn.classList.remove('active');
-        permSec.style.display = 'none';
-        dailySec.style.display = 'block';
+        dailyBtn.classList.add('active'); permBtn.classList.remove('active');
+        permSec.style.display = 'none'; dailySec.style.display = 'block';
     }
 }
-
-// 4. Secure Daily Review Engine (Strict Plan + Database Limit Tracking)
-async function runDailyReview() {
-    try {
-        // Step A: Check Active Plan & Today's Task Count from Database
-        const { data: userData } = await client.from('users').select('active_plan, plan_purchase_date, balance, last_task_date, today_tasks_count').eq('mobile', savedUser.mobile).single();
-        
-        if (!userData || !userData.active_plan || Number(userData.active_plan) <= 0) {
-            alert("❌ Task complete karne ke liye pehle koi bhi Agro Plan active karna anivarya hai!");
-            window.location.href = 'index.html';
-            return;
-        }
-
-        // Step B: 12 AM Reset & Today Count Sync
-        const todayStr = new Date().toISOString().split('T')[0];
-        let dbCount = 0;
-        
-        if (userData.last_task_date === todayStr) {
-            dbCount = userData.today_tasks_count || 0;
-            completedReviews = dbCount;
-        } else {
-            // Naya din shuru ho gaya, count 0 se shuru hoga
-            completedReviews = 0;
-            await client.from('users').update({ today_tasks_count: 0, last_task_date: todayStr }).eq('mobile', savedUser.mobile);
-        }
-
-        updateProgressUI();
-
-        // Step C: Check Daily Limit (5/5)
-        if (completedReviews >= maxReviews) {
-            alert("⚠️ Aaj ke saare 5/5 reviews complete ho chuke hain! Kal raat 12 AM ke baad naye tasks milenge.");
-            updateProgressUI();
-            return;
-        }
-
-        const btn = document.getElementById('dailyBtn');
-        btn.disabled = true;
-        btn.innerText = "Verifying Seed Batch...";
-
-        setTimeout(async () => {
-            completedReviews++;
-            updateProgressUI();
-
-            const currentBal = Number(userData.balance || userBalance);
-            const newBal = currentBal + 10;
-
-            // Database mein balance aur aaj ka task count update karein
-            await client.from('users').update({ 
-                balance: newBal,
-                last_task_date: todayStr,
-                today_tasks_count: completedReviews
-            }).eq('mobile', savedUser.mobile);
-
-            userBalance = newBal;
-            document.getElementById('userWalletTop').innerText = "₹" + newBal.toFixed(2);
-
-            alert("🎉 Seed quality verified! ₹10 wallet me add ho gaye.");
-            
-            if (completedReviews >= maxReviews) {
-                btn.disabled = true;
-                btn.innerText = "Daily Tasks Completed ✅";
-                btn.style.background = "#94a3b8";
-            } else {
-                btn.disabled = false;
-                btn.innerText = "Verify Seed Batch (Earn ₹10)";
-            }
-        }, 1200);
-
-    } catch(e) {
-        console.error("Task error:", e);
-        alert("Kuch error aaya, kripya dobara koshish karein.");
-    }
-                }
-    
 </script>
-
 </body>
 </html>
+
+    
