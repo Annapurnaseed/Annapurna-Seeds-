@@ -68,7 +68,7 @@
             box-shadow: 0 4px 12px rgba(21, 128, 61, 0.35);
         }
 
-        /* Notice Banner */
+        /* Pinned Announcement */
         .pinned-notice-card {
             background: linear-gradient(135deg, #1e5e3a, #0d3820);
             border-radius: 24px;
@@ -77,8 +77,6 @@
             margin-bottom: 16px;
             box-shadow: 0 8px 20px rgba(13, 56, 32, 0.25);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            position: relative;
-            overflow: hidden;
         }
         .notice-tag {
             display: inline-block;
@@ -102,7 +100,7 @@
             line-height: 1.4;
         }
 
-        /* Post Cards */
+        /* Post Card With Slide-In Animation */
         .post-card {
             background: #ffffff;
             border-radius: 26px;
@@ -110,9 +108,20 @@
             margin-bottom: 16px;
             box-shadow: 0 6px 18px rgba(18, 62, 36, 0.05);
             border: 1.5px solid #e1eee4;
+            animation: slideInDown 0.5s ease-out;
         }
 
-        /* Author Row */
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .author-row {
             display: flex;
             align-items: center;
@@ -162,7 +171,6 @@
             border-radius: 12px;
         }
 
-        /* Post Body */
         .post-text {
             font-size: 13px;
             color: #2c4a38;
@@ -171,7 +179,6 @@
             font-weight: 600;
         }
 
-        /* Visual Attachment / Proof Badge */
         .proof-box {
             background: linear-gradient(135deg, #f0fdf4, #dcfce7);
             border: 1.5px solid #86efac;
@@ -214,7 +221,6 @@
             color: #15803d;
         }
 
-        /* Interactive Footer (Likes & Comments) */
         .interaction-row {
             display: flex;
             align-items: center;
@@ -331,12 +337,8 @@
             border-radius: 16px;
             box-shadow: 0 4px 12px rgba(30,130,76,0.3);
         }
-        .nav-link.active-pill span {
-            color: #fff !important;
-        }
-        .nav-icon {
-            font-size: 18px;
-        }
+        .nav-link.active-pill span { color: #fff !important; }
+        .nav-icon { font-size: 18px; }
     </style>
 </head>
 <body>
@@ -362,7 +364,7 @@
     <!-- Live Posts Container -->
     <div id="postsList">
 
-        <!-- Post 1 (Payout Proof) -->
+        <!-- Default Post 1 -->
         <div class="post-card">
             <div class="author-row">
                 <div class="author-info">
@@ -391,43 +393,8 @@
                 <button class="interact-btn" onclick="toggleLike(this, 142)">
                     <span>👍</span> <b class="like-cnt">142</b> Likes
                 </button>
-                <button class="interact-btn" onclick="alert('Comments will open in next update!')">
+                <button class="interact-btn" onclick="alert('Comments will open soon!')">
                     <span>💬</span> 18 Comments
-                </button>
-            </div>
-        </div>
-
-        <!-- Post 2 (Daily Quality Task Proof) -->
-        <div class="post-card">
-            <div class="author-row">
-                <div class="author-info">
-                    <div class="author-avatar">🌱</div>
-                    <div class="author-meta">
-                        <h4>Suresh Verma <span class="verified-tick">✓</span></h4>
-                        <span>2 hours ago • Meerut</span>
-                    </div>
-                </div>
-                <div class="plan-tag-badge">Plan B Active</div>
-            </div>
-            <p class="post-text">Golden Wheat Crop quality inspection complete! Daily ₹150 tasks bonus wallet me turant reflect ho gaya. Best platform for farmers.</p>
-
-            <div class="proof-box" style="background: linear-gradient(135deg, #fefce8, #fef9c3); border-color: #facc15;">
-                <div class="proof-left">
-                    <div class="proof-icon" style="background: #eab308;">🌾</div>
-                    <div class="proof-text">
-                        <b style="color: #713f12;">Batch #4092 Inspection Passed</b>
-                        <span style="color: #854d0e;">High Germination Certified</span>
-                    </div>
-                </div>
-                <div class="proof-amount" style="color: #ca8a04;">+₹150</div>
-            </div>
-
-            <div class="interaction-row">
-                <button class="interact-btn" onclick="toggleLike(this, 89)">
-                    <span>👍</span> <b class="like-cnt">89</b> Likes
-                </button>
-                <button class="interact-btn" onclick="alert('Comments will open in next update!')">
-                    <span>💬</span> 6 Comments
                 </button>
             </div>
         </div>
@@ -436,26 +403,11 @@
 
     <!-- Bottom Navigation Bar -->
     <div class="bottom-nav">
-        <a href="index.html" class="nav-link">
-            <span class="nav-icon">🏠</span>
-            <span>Home</span>
-        </a>
-        <a href="tasks.html" class="nav-link">
-            <span class="nav-icon">📈</span>
-            <span>Income</span>
-        </a>
-        <a href="team.html" class="nav-link">
-            <span class="nav-icon">👥</span>
-            <span>Team</span>
-        </a>
-        <a href="team.html" class="nav-link">
-            <span class="nav-icon">🔗</span>
-            <span>Share</span>
-        </a>
-        <a href="profile.html" class="nav-link">
-            <span class="nav-icon">👤</span>
-            <span>My</span>
-        </a>
+        <a href="index.html" class="nav-link"><span class="nav-icon">🏠</span><span>Home</span></a>
+        <a href="tasks.html" class="nav-link"><span class="nav-icon">📈</span><span>Income</span></a>
+        <a href="team.html" class="nav-link"><span class="nav-icon">👥</span><span>Team</span></a>
+        <a href="team.html" class="nav-link"><span class="nav-icon">🔗</span><span>Share</span></a>
+        <a href="profile.html" class="nav-link"><span class="nav-icon">👤</span><span>My</span></a>
     </div>
 
 </div>
@@ -468,9 +420,12 @@
         <button class="btn-submit-post" onclick="submitPost()">Publish Review</button>
         <p onclick="closeCreateModal()" style="font-size: 12px; color: #ef4444; font-weight: 700; text-align: center; margin-top: 12px; cursor: pointer;">Cancel</p>
     </div>
-</div>
+                        </div>
+                        <script>
+const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
+const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-<script>
 const savedUser = JSON.parse(localStorage.getItem('annapurna_user') || '{}');
 
 function toggleLike(btn, count) {
@@ -513,7 +468,7 @@ function submitPost() {
                 <div class="author-avatar">🌱</div>
                 <div class="author-meta">
                     <h4>User ${savedUser.mobile.slice(-4)} <span class="verified-tick">✓</span></h4>
-                    <span>Just now • Verified Farmer</span>
+                    <span>Just now • Verified Member</span>
                 </div>
             </div>
             <div class="plan-tag-badge">VIP 1 Member</div>
@@ -534,6 +489,152 @@ function submitPost() {
     document.getElementById('postInput').value = "";
     alert("Aapki post live publish ho gayi!");
 }
+
+// -------------------------------------------------------------
+// Auto-Bot Messages Pool (Indian Agricultural Cities & Names)
+// -------------------------------------------------------------
+const autoMessages = [
+    {
+        name: "Mukesh Tyagi",
+        city: "Meerut",
+        badge: "VIP 1 Member",
+        avatar: "🌾",
+        text: "Daily seed germination task complete kar liya. ₹120 wallet balance me add ho gaye!",
+        amount: "+₹120",
+        label: "Task Bonus Received"
+    },
+    {
+        name: "Arun Chauhan",
+        city: "Najibabad",
+        badge: "VIP 3 Member",
+        avatar: "👨‍🌾",
+        text: "Pehle dar lag raha tha lekin ₹1,320 ka withdrawal 20 minute me bank account me aa gaya. Best company!",
+        amount: "+₹1,320",
+        label: "Bank Withdrawal Successful"
+    },
+    {
+        name: "Devendra Saini",
+        city: "Bijnor",
+        badge: "VIP 2 Member",
+        avatar: "🌱",
+        text: "Team referral commission ₹450 instant balance me credit hua. 15% reward program lajawab hai.",
+        amount: "+₹450",
+        label: "Level 1 Referral Bonus"
+    },
+    {
+        name: "Karan Singh",
+        city: "Moradabad",
+        badge: "VIP 1 Member",
+        avatar: "🚜",
+        text: "Aaj ka ₹550 ka payout clear! Bank message turant aa gaya.",
+        amount: "+₹550",
+        label: "Bank Withdrawal Successful"
+    },
+    {
+        name: "Harish Pal",
+        city: "Saharanpur",
+        badge: "VIP 2 Member",
+        avatar: "🌾",
+        text: "Hybrid Paddy inspection test report submit ho gayi. Daily yield time par mil raha hai.",
+        amount: "+₹260",
+        label: "Inspection Passed"
+    }
+];
+
+let botIndex = 0;
+
+function injectBotMessage(customData = null) {
+    let post = customData;
+    if (!post) {
+        post = autoMessages[botIndex];
+        botIndex = (botIndex + 1) % autoMessages.length;
+    }
+
+    const randomLikes = Math.floor(Math.random() * 25) + 12;
+    const randomUtr = "40" + Math.floor(1000000000 + Math.random() * 9000000000);
+
+    const card = document.createElement('div');
+    card.className = "post-card";
+    card.innerHTML = `
+        <div class="author-row">
+            <div class="author-info">
+                <div class="author-avatar">${post.avatar || '👨‍🌾'}</div>
+                <div class="author-meta">
+                    <h4>${post.name} <span class="verified-tick">✓</span></h4>
+                    <span>Just now • ${post.city}</span>
+                </div>
+            </div>
+            <div class="plan-tag-badge">${post.badge || 'VIP Member'}</div>
+        </div>
+        <p class="post-text">${post.text}</p>
+        
+        <div class="proof-box">
+            <div class="proof-left">
+                <div class="proof-icon">💰</div>
+                <div class="proof-text">
+                    <b>${post.label || 'Bank Withdrawal Successful'}</b>
+                    <span>UTR: ${randomUtr} • Approved</span>
+                </div>
+            </div>
+            <div class="proof-amount">${post.amount || '+₹950'}</div>
+        </div>
+
+        <div class="interaction-row">
+            <button class="interact-btn" onclick="toggleLike(this, ${randomLikes})">
+                <span>👍</span> <b class="like-cnt">${randomLikes}</b> Likes
+            </button>
+            <button class="interact-btn">
+                <span>💬</span> ${Math.floor(randomLikes / 3)} Comments
+            </button>
+        </div>
+    `;
+
+    const list = document.getElementById('postsList');
+    list.prepend(card);
+
+    // Page ko clean rakhne ke liye max 12 cards allow karein
+    if (list.children.length > 12) {
+        list.removeChild(list.lastChild);
+    }
+}
+
+// -------------------------------------------------------------
+// Admin Sync Controller Loop
+// -------------------------------------------------------------
+async function checkAdminAndSync() {
+    try {
+        const { data } = await client.from('community_controls').select('*').eq('id', 1).single();
+
+        // 1. Agar Admin ne Bot OFF kar diya hai toh message aana ruk jayega
+        if (data && data.is_active === false) {
+            return;
+        }
+
+        // 2. Agar Admin ne Custom message bheja hai toh turant inject karo aur clear karo
+        if (data && data.custom_msg) {
+            injectBotMessage({
+                name: data.custom_name || 'Farmer',
+                city: data.custom_city || 'India',
+                text: data.custom_msg,
+                amount: data.custom_amount || '+₹950',
+                badge: 'Verified VIP',
+                avatar: '🌱'
+            });
+
+            // Ek baar push ho gaya toh database me message reset kar do
+            await client.from('community_controls').update({ custom_msg: null }).eq('id', 1);
+            return;
+        }
+
+        // 3. Normal Auto Bot post
+        injectBotMessage();
+    } catch(err) {
+        injectBotMessage();
+    }
+}
+
+// Har 12 second me check & inject hoga
+setInterval(checkAdminAndSync, 12000);
 </script>
 
 </body>
