@@ -195,7 +195,7 @@
         </div>
     </div>
 
-    <!-- 5. Controls Tab (Multi-UPI + Meeting Manager + Community Controls) -->
+    <!-- 5. Controls Tab -->
     <div id="settingsTab" class="tab-pane">
         
         <!-- Live Community Meeting & Seminar Controls -->
@@ -274,15 +274,17 @@
             <button class="btn-action btn-green" style="width: 100%; padding: 12px; font-size: 13px; margin-top: 10px;" onclick="saveAllUpiChannels()">💾 Save All 4 UPI Channels</button>
         </div>
 
+        <!-- Broadcast Home Alert Panel -->
         <div class="card-panel">
-            <h3 style="margin-bottom: 10px;">Broadcast Home Alert</h3>
-            <input type="text" id="cfgNotice" placeholder="Important announcement..." style="width: 100%; padding: 10px; border-radius: 10px; border: 1.5px solid #cbd5e1; margin-bottom: 10px;">
-            <button class="btn-action btn-green" onclick="alert('Notice broadcasted!')">Publish Alert</button>
+            <h3 style="margin-bottom: 10px;">📢 Broadcast Home Alert (Bell Notification)</h3>
+            <p style="font-size: 11px; color: #64748b; margin-bottom: 8px;">Yahan likha notice Home page ke Bell icon / Announcement card me turant update hoga:</p>
+            <textarea id="cfgNotice" rows="3" placeholder="Important announcement yahan likhein..." style="width: 100%; padding: 10px; border-radius: 10px; border: 1.5px solid #cbd5e1; font-size: 13px; outline: none; margin-bottom: 10px;"></textarea>
+            <button class="btn-action btn-green" style="width: 100%; padding: 12px; font-size: 13px;" onclick="publishBroadcastAlert()">🚀 Publish Alert to Home</button>
         </div>
     </div>
 
-            </div>
-    <script>
+                        </div>
+                <script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -306,6 +308,7 @@ document.querySelectorAll('.tab-btn').forEach(button => {
             loadAllUpiChannels();
             loadCommunityBotStatus();
             loadAdminMeeting();
+            loadCurrentNotice();
         }
     });
 });
@@ -487,7 +490,7 @@ async function saveAllUpiChannels() {
     }
 }
 
-// 6. Live Meeting Manager Engine (Admin -> Community Sync)
+// 6. Live Meeting Manager Engine
 async function loadAdminMeeting() {
     try {
         const { data } = await client.from('meeting_posts').select('*').eq('id', 1).single();
@@ -579,11 +582,37 @@ async function pushCustomCommunityPost() {
     }
 }
 
+// 8. Broadcast Home Alert Handlers
+async function loadCurrentNotice() {
+    try {
+        const { data } = await client.from('app_settings').select('broadcast_notice').eq('id', 1).single();
+        if (data && data.broadcast_notice) {
+            document.getElementById('cfgNotice').value = data.broadcast_notice;
+        }
+    } catch(e) {}
+}
+
+async function publishBroadcastAlert() {
+    const msg = document.getElementById('cfgNotice').value.trim();
+    try {
+        const { error } = await client.from('app_settings').upsert({
+            id: 1,
+            broadcast_notice: msg
+        });
+
+        if (error) throw error;
+        alert("✅ Notice successfully Home Page par broadcast kar diya gaya!");
+    } catch (err) {
+        alert("Broadcast Error: " + err.message);
+    }
+}
+
 // Initial Run
 loadFinancialStats();
 loadAllUpiChannels();
 loadCommunityBotStatus();
 loadAdminMeeting();
+loadCurrentNotice();
 </script>
 
 </body>
