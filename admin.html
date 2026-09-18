@@ -378,7 +378,7 @@ async function approveRecharge(id, mobile, amount) {
     if (!confirm(`Confirm ₹${amount} for ${mobile}?`)) return;
 
     try {
-        // 1. Mark recharge as approved in recharges table
+        // 1. Mark recharge as approved
         await client.from('recharges').update({ status: 'approved' }).eq('id', id);
 
         // 2. Fetch current user balance
@@ -386,44 +386,12 @@ async function approveRecharge(id, mobile, amount) {
         const currentBal = Number(userData?.balance || 0);
         const newBalance = currentBal + Number(amount);
 
-        // 3. Update user balance in users table
+        // 3. Update ONLY Wallet Balance in users table (Plan user khud kharidega)
         await client.from('users').update({ 
-            balance: newBalance,
-            active_plan: Number(amount)
+            balance: newBalance
         }).eq('mobile', mobile);
 
-        // 4. Determine plan name, daily income & reviews dynamically based on recharge amount
-        let planName = "Agro Growth Plan";
-        let dailyInc = Number(amount) * 0.10;
-        let revCount = 5;
-
-        const amtNum = Number(amount);
-        if (amtNum <= 600) {
-            planName = "Wheat F1 Hybrid Seed";
-            dailyInc = 50;
-            revCount = 5;
-        } else if (amtNum > 600 && amtNum <= 2500) {
-            planName = "Soybean Prime Seed";
-            dailyInc = 210;
-            revCount = 10;
-        } else if (amtNum > 2500) {
-            planName = "Gold Organic Premium";
-            dailyInc = 550;
-            revCount = 15;
-        }
-
-        // 5. Insert into user_plans table with 750 Days validity
-        await client.from('user_plans').insert({
-            mobile: mobile,
-            plan_name: planName,
-            plan_price: amtNum,
-            daily_income: dailyInc,
-            total_reviews: revCount,
-            validity_days: 750,
-            completed_today: 0
-        });
-
-        alert("✅ Recharge successfully approved, balance added to wallet, and 750-day plan activated!");
+        alert("✅ Recharge approved successfully! Balance added to user's wallet.");
         loadRecharges();
         loadFinancialStats();
 
