@@ -12,6 +12,7 @@
             margin: 0;
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -62,6 +63,32 @@
             display: flex;
             align-items: center;
             gap: 5px;
+        }
+
+        /* Notification Bell Icon */
+        .bell-btn {
+            position: relative;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 1.5px solid #dcece0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .bell-dot {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 9px;
+            height: 9px;
+            background: #ef4444;
+            border-radius: 50%;
+            border: 1.5px solid #ffffff;
         }
 
         /* Poster Hero Banner */
@@ -152,7 +179,6 @@
             position: relative;
         }
 
-        /* Full Big Image Container */
         .big-img-container {
             width: 100%;
             height: 280px;
@@ -196,7 +222,6 @@
             border-radius: 10px;
         }
 
-        /* Highlight Review & Yield Box */
         .plan-desc-box {
             background: #f0fdf4;
             border: 1.5px solid #dcfce7;
@@ -224,7 +249,6 @@
             gap: 6px;
         }
 
-        /* Grid Metrics */
         .metrics-bar {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -251,7 +275,6 @@
             margin-top: 2px;
         }
 
-        /* Buy & Locked Buttons */
         .btn-buy {
             display: flex;
             align-items: center;
@@ -290,7 +313,6 @@
             box-shadow: none;
         }
 
-        /* Bottom Floating Bar */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -324,14 +346,20 @@
     </style>
 </head>
 <body>
-
 <div class="mobile-wrapper">
 
     <!-- Top Navigation Header -->
     <div class="top-bar">
         <div class="brand-title">🌾 Annapurna Seeds</div>
-        <div class="user-chip" id="userBalChip">
-            <span>💰</span> <b id="headerBal">₹0.00</b>
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <!-- Bell Notification Trigger Button -->
+            <div class="bell-btn" onclick="openAgroModal()">
+                🔔
+                <span id="bellRedDot" class="bell-dot"></span>
+            </div>
+            <div class="user-chip" id="userBalChip">
+                <span>💰</span> <b id="headerBal">₹0.00</b>
+            </div>
         </div>
     </div>
 
@@ -415,8 +443,7 @@
         </div>
         <a href="recharge.html?plan=2120" class="btn-buy">🛒 Invest & Activate Plan ₹2,120</a>
     </div>
-
-    <!-- PLAN 3: Mustard Elite ₹4920 (🔒 LOCKED) -->
+        <!-- PLAN 3: Mustard Elite ₹4920 (🔒 LOCKED) -->
     <div class="plan-card" style="border: 2px dashed #cbd5e1; background: #fafafa; opacity: 0.92;">
         <div class="big-img-container" style="filter: grayscale(70%);">
             <img src="plan-3.png" alt="Mustard Elite Annapurna Seeds">
@@ -438,8 +465,9 @@
         <button class="btn-locked" onclick="alert('🔒 Yeh Plan LOCKED hai!\nPehle ₹520 ya ₹2,120 ka plan activate karein aur daily reviews complete karein.')">
             🔒 Locked (Complete Previous Tasks)
         </button>
-                </div>
-                    <!-- PLAN 4: Sunflower Gold ₹9820 (🔒 LOCKED) -->
+    </div>
+
+    <!-- PLAN 4: Sunflower Gold ₹9820 (🔒 LOCKED) -->
     <div class="plan-card" style="border: 2px dashed #cbd5e1; background: #fafafa; opacity: 0.92;">
         <div class="big-img-container" style="filter: grayscale(70%);">
             <img src="plan-4.png" alt="Sunflower Gold Annapurna Seeds">
@@ -536,6 +564,128 @@
     </div>
 
 </div>
+<!-- Annapurna Seeds Important Update Popup Modal (Kaveri Style - No Sign-up Bonus) -->
+<div id="agroNoticeModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 15, 8, 0.78); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 9999; align-items: center; justify-content: center; padding: 14px;">
+    
+    <div style="position: relative; width: 100%; max-width: 380px; max-height: 88vh; overflow-y: auto; background: linear-gradient(180deg, #dcfce7 0%, #f0fdf4 15%, #ffffff 100%); border-radius: 28px; border: 3px solid #86efac; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45); padding: 18px 14px; scrollbar-width: none;">
+        
+        <!-- Round Close Button -->
+        <button onclick="closeAgroModal()" style="position: sticky; top: 0; float: right; margin-top: -6px; margin-right: -4px; width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #22c55e, #15803d); color: #ffffff; border: 2px solid #ffffff; font-size: 16px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.25); z-index: 10;">
+            ✕
+        </button>
+
+        <!-- Header Ribbon Badge -->
+        <div style="text-align: center; margin-bottom: 12px; clear: both;">
+            <div style="display: inline-block; background: linear-gradient(135deg, #14532d, #052e16); color: #facc15; padding: 6px 18px; border-radius: 20px; border: 2px solid #fde047; box-shadow: 0 4px 14px rgba(20, 83, 45, 0.35);">
+                <span style="font-size: 15px;">🔔</span>
+                <b style="font-size: 14px; letter-spacing: 0.8px; text-transform: uppercase; margin-left: 4px;">IMPORTANT UPDATE</b>
+            </div>
+            <div style="font-size: 11px; font-weight: 900; color: #166534; margin-top: 5px; letter-spacing: 0.5px;">
+                🌾 ANNAPURNA SEEDS APP • KEY INFORMATION
+            </div>
+        </div>
+
+        <!-- 2 Slabs Cards: Min Recharge & Min Withdrawal -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;">
+            <!-- Minimum Recharge -->
+            <div style="background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%); border: 1.5px solid #86efac; border-radius: 18px; padding: 10px; text-align: center; box-shadow: 0 4px 10px rgba(22, 101, 52, 0.08);">
+                <div style="font-size: 18px;">💳</div>
+                <span style="font-size: 10px; font-weight: 800; color: #15803d; text-transform: uppercase; display: block;">Min Recharge</span>
+                <b style="font-size: 20px; font-weight: 900; color: #0d3820; display: block; margin-top: 2px;">₹520</b>
+            </div>
+
+            <!-- Minimum Withdrawal -->
+            <div style="background: linear-gradient(180deg, #ffffff 0%, #fffbeb 100%); border: 1.5px solid #fde68a; border-radius: 18px; padding: 10px; text-align: center; box-shadow: 0 4px 10px rgba(180, 83, 9, 0.08);">
+                <div style="font-size: 18px;">🏦</div>
+                <span style="font-size: 10px; font-weight: 800; color: #b45309; text-transform: uppercase; display: block;">Min Withdrawal</span>
+                <b style="font-size: 20px; font-weight: 900; color: #9a3412; display: block; margin-top: 2px;">₹330</b>
+            </div>
+        </div>
+
+        <!-- 2nd Plan Example Card -->
+        <div style="background: #ffffff; border: 1.5px solid #86efac; border-radius: 18px; padding: 12px 14px; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(22, 101, 52, 0.06);">
+            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px dashed #cbd5e1; padding-bottom: 6px; margin-bottom: 8px;">
+                <b style="font-size: 12px; color: #14532d; text-transform: uppercase;">👑 2nd Plan Example</b>
+                <span style="font-size: 10px; background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 6px; font-weight: 800;">BUY ₹2,120 PLAN</span>
+            </div>
+            
+            <div style="font-size: 11px; font-weight: 700; color: #334155; display: flex; flex-direction: column; gap: 4px;">
+                <div style="display: flex; justify-content: space-between;">
+                    <span>Plan Price :</span>
+                    <b style="color: #0f172a;">₹2,120</b>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span>Daily Task Income :</span>
+                    <b style="color: #16a34a;">₹210 / Day</b>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span>Plan Cycle :</span>
+                    <b style="color: #0f172a;">75 Days</b>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-top: 1px solid #f1f5f9; padding-top: 4px; margin-top: 2px;">
+                    <span style="color: #14532d; font-weight: 900;">Total Net Yield :</span>
+                    <b style="color: #15803d; font-size: 13px; font-weight: 900;">₹15,750</b>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Commission Slabs -->
+        <div style="background: #ffffff; border: 1.5px solid #bbf7d0; border-radius: 18px; padding: 12px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(22, 101, 52, 0.06);">
+            <div style="text-align: center; margin-bottom: 8px;">
+                <span style="font-size: 11px; font-weight: 900; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px;">🏆 Team Referral Commission</span>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; text-align: center;">
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 8px 4px;">
+                    <span style="font-size: 10px; color: #64748b; font-weight: 800; display: block;">LEVEL 1</span>
+                    <b style="font-size: 15px; color: #15803d; font-weight: 900;">15%</b>
+                    <span style="font-size: 9px; color: #16a34a; font-weight: 700; display: block;">Direct</span>
+                </div>
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 8px 4px;">
+                    <span style="font-size: 10px; color: #64748b; font-weight: 800; display: block;">LEVEL 2</span>
+                    <b style="font-size: 15px; color: #0284c7; font-weight: 900;">3%</b>
+                    <span style="font-size: 9px; color: #0369a1; font-weight: 700; display: block;">Team</span>
+                </div>
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 8px 4px;">
+                    <span style="font-size: 10px; color: #64748b; font-weight: 800; display: block;">LEVEL 3</span>
+                    <b style="font-size: 15px; color: #eab308; font-weight: 900;">1%</b>
+                    <span style="font-size: 9px; color: #ca8a04; font-weight: 700; display: block;">Network</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4 Small Trust Badges -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; text-align: center; margin-bottom: 12px;">
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 6px 2px;">
+                <span style="font-size: 14px;">🛡️</span>
+                <span style="font-size: 9px; font-weight: 800; color: #334155; display: block; margin-top: 2px;">Safe Agro</span>
+            </div>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 6px 2px;">
+                <span style="font-size: 14px;">🌱</span>
+                <span style="font-size: 9px; font-weight: 800; color: #334155; display: block; margin-top: 2px;">Daily Yield</span>
+            </div>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 6px 2px;">
+                <span style="font-size: 14px;">👥</span>
+                <span style="font-size: 9px; font-weight: 800; color: #334155; display: block; margin-top: 2px;">Team Club</span>
+            </div>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 6px 2px;">
+                <span style="font-size: 14px;">🎧</span>
+                <span style="font-size: 9px; font-weight: 800; color: #334155; display: block; margin-top: 2px;">24/7 Care</span>
+            </div>
+        </div>
+
+        <!-- Join Telegram Channel Button -->
+        <a id="modalTgLink" href="https://t.me/your_official_channel" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%); color: #ffffff; text-decoration: none; padding: 12px; border-radius: 16px; font-size: 13px; font-weight: 900; box-shadow: 0 6px 16px rgba(3, 105, 161, 0.35);">
+            <span>✈️</span> <span>JOIN OUR TELEGRAM CHANNEL ➔</span>
+        </a>
+
+        <!-- Bottom Acknowledgement Button -->
+        <button onclick="closeAgroModal()" style="width: 100%; background: linear-gradient(180deg, #22c55e 0%, #15803d 100%); color: #ffffff; border: none; border-radius: 16px; padding: 12px; font-size: 13px; font-weight: 900; cursor: pointer; margin-top: 8px; box-shadow: 0 6px 16px rgba(21, 128, 61, 0.25);">
+            I Understand & Continue
+        </button>
+
+    </div>
+</div>
 
 <script>
 // Supabase Client Setup
@@ -568,9 +718,30 @@ async function syncHeaderBalance() {
     }
 }
 
-syncHeaderBalance();
+// -------------------------------------------------------------
+// Agro Important Update Modal Handlers
+// -------------------------------------------------------------
+function openAgroModal() {
+    const modal = document.getElementById('agroNoticeModal');
+    if (modal) modal.style.display = 'flex';
+    const dot = document.getElementById('bellRedDot');
+    if (dot) dot.style.display = 'none';
+}
+
+function closeAgroModal() {
+    const modal = document.getElementById('agroNoticeModal');
+    if (modal) modal.style.display = 'none';
+    sessionStorage.setItem('annapurna_popup_viewed', 'true');
+}
+
+// Auto-trigger on First Visit
+window.addEventListener('DOMContentLoaded', () => {
+    syncHeaderBalance();
+    if (!sessionStorage.getItem('annapurna_popup_viewed')) {
+        setTimeout(openAgroModal, 500);
+    }
+});
 </script>
 
 </body>
-                </html>
-    
+</html>
