@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Withdrawal - Annapurna Seeds</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #dcefe3;
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(163, 230, 53, 0.25) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(34, 197, 94, 0.2) 0%, transparent 40%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .mobile-wrapper {
+            width: 100%;
+            max-width: 420px;
+            background: #eef8f2;
+            min-height: 100vh;
+            padding: 12px 14px 100px;
+            position: relative;
+            box-shadow: 0 0 35px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Top Header Navigation */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .btn-circle-back {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1b4332;
+            font-size: 20px;
+            font-weight: 900;
+            text-decoration: none;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2f0e6;
+        }
+
+        .wallet-pill {
+            background: linear-gradient(180deg, #ea580c 0%, #c2410c 100%);
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 6px 16px rgba(194, 65, 12, 0.35);
+        }
+        .wallet-pill .meta { display: flex; flex-direction: column; text-align: left; line-height: 1.1; }
+        .wallet-pill .meta span { font-size: 10px; opacity: 0.9; }
+        .wallet-pill .meta b { font-size: 14px; font-weight: 800; }
+
+        /* Clay 3D Cards */
+        .clay-card {
+            background: #ffffff;
+            border-radius: 26px;
+            padding: 20px 16px;
+            margin-bottom: 14px;
+            box-shadow: 0 10px 25px rgba(18, 62, 36, 0.05);
+            border: 1.5px solid #ffffff;
+        }
+
+        .card-header-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .clay-round-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #ffffff;
+            box-shadow: 0 6px 14px rgba(234, 88, 12, 0.3);
+        }
+
+        .header-text h3 { font-size: 16px; font-weight: 900; color: #113820; }
+        .header-text p { font-size: 11px; color: #648a72; font-weight: 600; margin-top: 2px; }
+
+        /* Sunken Input Box */
+        .sunken-input-box {
+            background: #f1f8f3;
+            border-radius: 18px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.06);
+            border: 1px solid #ddecde;
+            margin-bottom: 14px;
+        }
+        .currency-symbol { font-size: 18px; font-weight: 900; color: #c2410c; margin-right: 8px; }
+        .sunken-input-box input {
+            border: none;
+            background: transparent;
+            font-size: 18px;
+            font-weight: 900;
+            color: #113820;
+            outline: none;
+            width: 100%;
+        }
+
+        /* Fixed Slabs */
+        .slabs-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        .slab-pill {
+            background: #f1f8f3;
+            border: 1.5px solid #dcece0;
+            border-radius: 14px;
+            padding: 12px 4px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 800;
+            color: #1b4332;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .slab-pill.active {
+            background: linear-gradient(180deg, #f97316 0%, #ea580c 100%);
+            color: #ffffff;
+            border-color: #ea580c;
+            box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3);
+        }
+
+        /* Bank Form Fields */
+        .field-label {
+            font-size: 11px;
+            font-weight: 800;
+            color: #475569;
+            display: block;
+            margin-bottom: 4px;
+            margin-top: 8px;
+        }
+        .form-input {
+            width: 100%;
+            background: #f1f8f3;
+            border: 1.5px solid #ddecde;
+            border-radius: 14px;
+            padding: 11px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #113820;
+            outline: none;
+        }
+        .form-input:focus {
+            border-color: #ea580c;
+        }
+
+        /* Rules Info Strip */
+        .rules-strip {
+            background: #fff7ed;
+            border: 1.5px solid #ffedd5;
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+        .rules-strip p {
+            font-size: 11px;
+            color: #9a3412;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        /* Submit Button */
+        .btn-withdraw-submit {
+            width: 100%;
+            background: linear-gradient(180deg, #f97316 0%, #ea580c 100%);
+            border: none;
+            border-radius: 24px;
+            padding: 16px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(234, 88, 12, 0.35);
+        }
+        .btn-withdraw-submit:active {
+            transform: scale(0.98);
+        }
+
+        /* Bottom Floating Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 420px;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            border-top: 1px solid #e2eee5;
+            box-shadow: 0 -4px 16px rgba(0,0,0,0.04);
+            z-index: 100;
+        }
+        .nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #6c8a77;
+            font-size: 10px;
+            font-weight: 700;
+            gap: 3px;
+        }
+        .nav-icon { font-size: 18px; }
+    </style>
+</head>
+<body>
+
+<div class="mobile-wrapper">
+
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <a href="index.html" class="btn-circle-back">‹</a>
+        <div class="wallet-pill">
+            <span style="font-size: 16px;">👛</span>
+            <div class="meta">
+                <span>Withdrawable Balance</span>
+                <b id="userBalanceVal">₹0.00</b>
+            </div>
+        </div>
+    </div>
+
+    <!-- Amount Selection Card -->
+    <div class="clay-card">
+        <div class="card-header-row">
+            <div class="clay-round-icon">🏛️</div>
+            <div class="header-text">
+                <h3>Withdrawal Amount</h3>
+                <p>Choose or enter your payout slab</p>
+            </div>
+        </div>
+
+        <div class="sunken-input-box">
+            <span class="currency-symbol">₹</span>
+            <input type="number" id="withdrawAmt" value="330">
+        </div>
+
+        <div class="slabs-grid">
+            <div class="slab-pill active" onclick="selectWithdrawSlab(330, this)">₹330</div>
+            <div class="slab-pill" onclick="selectWithdrawSlab(550, this)">₹550</div>
+            <div class="slab-pill" onclick="selectWithdrawSlab(950, this)">₹950</div>
+        </div>
+    </div>
+
+    <!-- Bank Details Card -->
+    <div class="clay-card">
+        <div class="card-header-row">
+            <div class="clay-round-icon" style="background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);">🏦</div>
+            <div class="header-text">
+                <h3>Receiving Bank Details</h3>
+                <p>Enter correct account to avoid delays</p>
+            </div>
+        </div>
+
+        <span class="field-label">Account Holder Full Name</span>
+        <input type="text" id="bankHolder" class="form-input" placeholder="e.g. Rameshwar Patel">
+
+        <span class="field-label">Bank Name</span>
+        <input type="text" id="bankName" class="form-input" placeholder="e.g. State Bank of India">
+
+        <span class="field-label">Account Number</span>
+        <input type="text" id="bankAccount" class="form-input" placeholder="Enter bank account number">
+
+        <span class="field-label">IFSC Code</span>
+        <input type="text" id="bankIfsc" class="form-input" placeholder="e.g. SBIN0001234" style="text-transform: uppercase;">
+    </div>
+
+    <!-- Payout Notice -->
+    <div class="rules-strip">
+        <p>⚠️ Payout Timings: 10:00 AM to 06:00 PM.<br>Bank settlement typically credits within 15-45 minutes after admin verification.</p>
+    </div>
+
+    <button class="btn-withdraw-submit" id="btnSubmitWithdraw" onclick="requestPayout()">
+        Confirm Withdrawal ₹330
+    </button>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-link"><span class="nav-icon">🏠</span><span>Home</span></a>
+        <a href="tasks.html" class="nav-link"><span class="nav-icon">📈</span><span>Income</span></a>
+        <a href="team.html" class="nav-link"><span class="nav-icon">👥</span><span>Team</span></a>
+        <a href="team.html" class="nav-link"><span class="nav-icon">🔗</span><span>Share</span></a>
+        <a href="profile.html" class="nav-link"><span class="nav-icon">👤</span><span>My</span></a>
+    </div>
+
+</div>
+<script>
+const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
+const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+const savedUser = JSON.parse(localStorage.getItem('annapurna_user') || '{}');
+if (!savedUser.mobile) {
+    window.location.href = 'login.html';
+}
+
+let availableBalance = 0;
+let currentWithdrawAmount = 330;
+
+// 1. Sync User Balance & Auto-fill Saved Bank Details
+async function initWithdrawPage() {
+    try {
+        const { data: user } = await client.from('users').select('*').eq('mobile', savedUser.mobile).single();
+        if (user) {
+            availableBalance = Number(user.balance || 0);
+            document.getElementById('userBalanceVal').innerText = "₹" + availableBalance.toFixed(2);
+
+            // Pre-fill agar user ne profile me pehle se bank save kar rakha ho
+            if (user.bank_holder) document.getElementById('bankHolder').value = user.bank_holder;
+            if (user.bank_name) document.getElementById('bankName').value = user.bank_name;
+            if (user.bank_account) document.getElementById('bankAccount').value = user.bank_account;
+            if (user.bank_ifsc) document.getElementById('bankIfsc').value = user.bank_ifsc;
+        }
+    } catch(err) {
+        console.error("Balance load error:", err);
+    }
+}
+initWithdrawPage();
+
+function selectWithdrawSlab(amt, el) {
+    currentWithdrawAmount = amt;
+    document.getElementById('withdrawAmt').value = amt;
+    document.querySelectorAll('.slab-pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('btnSubmitWithdraw').innerText = `Confirm Withdrawal ₹${amt}`;
+}
+
+document.getElementById('withdrawAmt').addEventListener('input', (e) => {
+    currentWithdrawAmount = Number(e.target.value) || 0;
+    document.getElementById('btnSubmitWithdraw').innerText = `Confirm Withdrawal ₹${currentWithdrawAmount}`;
+});
+
+// 2. Submit Payout Request to Supabase
+async function requestPayout() {
+    const amt = Number(document.getElementById('withdrawAmt').value);
+    const holder = document.getElementById('bankHolder').value.trim();
+    const bank = document.getElementById('bankName').value.trim();
+    const acc = document.getElementById('bankAccount').value.trim();
+    const ifsc = document.getElementById('bankIfsc').value.trim().toUpperCase();
+
+    if (!amt || amt < 330) {
+        alert("Minimum withdrawal amount ₹330 hai!");
+        return;
+    }
+
+    if (amt > availableBalance) {
+        alert(`Insufficient Balance! Aapka current balance ₹${availableBalance.toFixed(2)} hai.`);
+        return;
+    }
+
+    if (!holder || !acc || !ifsc) {
+        alert("Kripya apna Holder Name, Account Number aur IFSC Code sahi bharein!");
+        return;
+    }
+
+    const btn = document.getElementById('btnSubmitWithdraw');
+    btn.disabled = true;
+    btn.innerText = "Processing...";
+
+    try {
+        // Step A: Insert Withdrawal Request
+        const { error: reqError } = await client.from('withdrawals').insert([{
+            mobile: savedUser.mobile,
+            amount: amt,
+            bank_holder: holder,
+            bank_account: acc,
+            bank_ifsc: ifsc,
+            bank_name: bank,
+            status: 'pending'
+        }]);
+
+        if (reqError) throw reqError;
+
+        // Step B: Deduct Balance from User
+        const newBalance = availableBalance - amt;
+        await client.from('users').update({ 
+            balance: newBalance,
+            bank_holder: holder,
+            bank_account: acc,
+            bank_ifsc: ifsc,
+            bank_name: bank
+        }).eq('mobile', savedUser.mobile);
+
+        alert(`₹${amt} ka withdrawal request submit ho gaya! Admin verify karke aapke bank account me transfer kar dega.`);
+        window.location.href = "profile.html";
+
+    } catch(err) {
+        alert("Withdrawal Failed: " + err.message);
+        btn.disabled = false;
+        btn.innerText = `Confirm Withdrawal ₹${amt}`;
+    }
+}
+</script>
+
+</body>
+</html>
