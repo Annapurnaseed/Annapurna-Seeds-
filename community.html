@@ -102,11 +102,11 @@
             line-height: 1.4;
         }
 
-        /* Live Meeting Card Styling */
+        /* Live Real Meeting Card */
         .meeting-box {
             background: #ffffff;
             border-radius: 24px;
-            padding: 16px;
+            padding: 14px;
             margin-bottom: 16px;
             box-shadow: 0 8px 22px rgba(18, 62, 36, 0.08);
             border: 1.5px solid #86efac;
@@ -118,30 +118,32 @@
             margin-bottom: 10px;
         }
         .live-pill {
-            background: #fef2f2;
-            color: #dc2626;
-            border: 1px solid #fecaca;
+            background: #dc2626;
+            color: #ffffff;
             font-size: 10px;
             font-weight: 900;
             padding: 4px 8px;
-            border-radius: 8px;
+            border-radius: 6px;
             display: inline-flex;
             align-items: center;
             gap: 4px;
+            letter-spacing: 0.5px;
         }
         .meeting-img-wrap {
             width: 100%;
-            height: 215px;
+            height: 250px;
             border-radius: 18px;
             overflow: hidden;
-            background: #f1f5f9;
+            background: #0f172a;
             margin-bottom: 10px;
-            border: 1px solid #e2e8f0;
+            border: 1.5px solid #dcece0;
         }
         .meeting-img-wrap img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: center top;
+            display: block;
         }
         .meeting-meta-grid {
             display: flex;
@@ -414,30 +416,32 @@
         <p>Invite your agricultural partners and earn 15% on Level 1 direct recharges instantly in your wallet! Regular payouts processed daily.</p>
     </div>
 
-    <!-- Live Regional Meeting Card (Auto-Cycles Daily 3-Times) -->
+    <!-- Live Regional Meeting Card (Real Crowd Photo + Admin Sync) -->
     <div class="meeting-box">
         <div class="meeting-top-strip">
-            <span class="live-pill">🔴 LIVE SEMINAR TODAY</span>
-            <span id="meetTimeTag" style="font-size: 11px; font-weight: 800; color: #15803d;">Loading...</span>
+            <div style="display: flex; align-items: center; gap: 6px;">
+                <span class="live-pill">● LIVE</span>
+                <b id="meetTitle" style="font-size: 12px; color: #0d3820;">District Investor & Farmer Meet</b>
+            </div>
+            <span id="meetTimeTag" style="font-size: 11px; font-weight: 800; color: #15803d;">Updating...</span>
         </div>
 
         <div class="meeting-img-wrap">
-            <img id="meetImg" src="" alt="Regional Seminar Today">
+            <img id="meetImg" src="meet-real.jpg" alt="Real Regional Seminar" onerror="this.src='bg-agro.png'">
         </div>
 
         <div class="meeting-meta-grid">
             <div>
-                <span style="font-size: 10px; font-weight: 800; color: #64748b; display: block;">TEAM LEADER</span>
-                <b id="meetLeader" style="font-size: 13px; color: #113820;">Loading...</b>
+                <span style="font-size: 10px; font-weight: 800; color: #64748b; display: block; text-transform: uppercase;">Team Leader</span>
+                <b id="meetLeader" style="font-size: 13px; color: #113820; display: block; margin-top: 2px;">Krishan Murari Saini</b>
             </div>
             <div style="text-align: right;">
-                <span style="font-size: 10px; font-weight: 800; color: #64748b; display: block;">LOCATION</span>
-                <b id="meetCity" style="font-size: 13px; color: #16a34a;">Loading...</b>
+                <span style="font-size: 10px; font-weight: 800; color: #64748b; display: block; text-transform: uppercase;">Location</span>
+                <b id="meetCity" style="font-size: 13px; color: #16a34a; display: block; margin-top: 2px;">Jaipur, Rajasthan</b>
             </div>
         </div>
     </div>
-
-    <!-- Live Posts Container -->
+        <!-- Live Posts Container -->
     <div id="postsList">
 
         <!-- Natural Initial Post 1 -->
@@ -540,7 +544,7 @@
 
 </div>
 
-<!-- Attractive Proof-Selector Modal -->
+<!-- Proof Selector Modal -->
 <div class="modal-overlay" id="postModal">
     <div class="modal-box">
         <h3>Share Farmer Review</h3>
@@ -561,8 +565,8 @@
         <button class="btn-submit-post" onclick="submitPost()">🚀 Publish Review to Feed</button>
         <p onclick="closeCreateModal()" style="font-size: 12px; color: #ef4444; font-weight: 700; text-align: center; margin-top: 12px; cursor: pointer;">Cancel</p>
     </div>
-    </div>
-    <script>
+</div>
+<script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -570,61 +574,64 @@ const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 const savedUser = JSON.parse(localStorage.getItem('annapurna_user') || '{}');
 
 // -------------------------------------------------------------
-// Daily Dynamic Meeting Algorithm (3 Times Daily Auto-Rotate)
+// 1. Natural Dynamic Time Engine (Non-Fixed)
 // -------------------------------------------------------------
-const meetingPhotoPool = [
-    "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1559223607-a43c990c692c?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?auto=format&fit=crop&w=800&q=80"
-];
-
-const leadersList = [
-    "Krishan Murari Saini", "Dharmendra Verma", "Rajeshwar Rao", 
-    "Bhupendra Singh", "Vikram Rathore", "Suresh Chandra Patel", 
-    "Manoj Tyagi", "Devendra Chauhan"
-];
-
-const citiesList = [
-    "Jaipur, Rajasthan", "Meerut, UP", "Indore, MP", 
-    "Bijnor, UP", "Kota, Rajasthan", "Bhopal, MP", 
-    "Bareilly, UP", "Udaipur, Rajasthan"
-];
-
-function updateDailyDynamicMeeting() {
+function getNaturalMeetingTime() {
     const now = new Date();
-    const day = now.getDate();
-    const hour = now.getHours();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
 
-    let slotNumber = 0;
-    let slotTag = "Morning Meet • 11:30 AM";
+    // Natural offset calculation
+    const offsetMin = ((now.getDate() * 7) + (now.getDay() * 3)) % 18 + 7;
+    let calcMin = currentMinute - offsetMin;
+    let calcHour = currentHour;
 
-    if (hour >= 9 && hour < 14) {
-        slotNumber = 0;
-        slotTag = "Morning Session • 11:30 AM";
-    } else if (hour >= 14 && hour < 18) {
-        slotNumber = 1;
-        slotTag = "Afternoon Seminar • 03:30 PM";
-    } else {
-        slotNumber = 2;
-        slotTag = "Grand Evening Meet • 07:15 PM";
+    if (calcMin < 0) {
+        calcMin += 60;
+        calcHour -= 1;
     }
 
-    const uniqueIndex = (day * 3 + slotNumber) % meetingPhotoPool.length;
+    const period = calcHour >= 12 ? "PM" : "AM";
+    const displayHour = calcHour % 12 || 12;
+    const displayMin = calcMin < 10 ? "0" + calcMin : calcMin;
 
-    document.getElementById('meetLeader').innerText = leadersList[uniqueIndex % leadersList.length];
-    document.getElementById('meetCity').innerText = citiesList[uniqueIndex % citiesList.length];
-    document.getElementById('meetImg').src = meetingPhotoPool[uniqueIndex];
-    document.getElementById('meetTimeTag').innerText = slotTag;
+    if (currentHour >= 9 && currentHour < 13) {
+        return `Live Session • Started ${displayHour}:${displayMin} ${period}`;
+    } else if (currentHour >= 13 && currentHour < 17) {
+        return `Afternoon Meet • Active (${displayHour}:${displayMin} ${period})`;
+    } else if (currentHour >= 17 && currentHour < 22) {
+        return `Evening Seminar • Concluding (${displayHour}:${displayMin} ${period})`;
+    } else {
+        return `Today's Session Recorded • Verified`;
+    }
 }
-updateDailyDynamicMeeting();
 
 // -------------------------------------------------------------
-// Interaction and Creation Handlers
+// 2. Fetch Meeting Data (Admin Sync / Database)
+// -------------------------------------------------------------
+async function syncLiveMeetingCard() {
+    try {
+        const { data } = await client.from('meeting_posts').select('*').eq('id', 1).single();
+        if (data) {
+            document.getElementById('meetImg').src = data.image_url || 'meet-real.jpg';
+            document.getElementById('meetLeader').innerText = data.leader_name || 'Krishan Murari Saini';
+            document.getElementById('meetCity').innerText = data.city_name || 'Jaipur, Rajasthan';
+            if (document.getElementById('meetTitle')) {
+                document.getElementById('meetTitle').innerText = data.session_title || 'District Investor & Farmer Meet';
+            }
+        }
+    } catch (e) {
+        document.getElementById('meetImg').src = 'meet-real.jpg';
+        document.getElementById('meetLeader').innerText = 'Krishan Murari Saini';
+        document.getElementById('meetCity').innerText = 'Jaipur, Rajasthan';
+    }
+
+    document.getElementById('meetTimeTag').innerText = getNaturalMeetingTime();
+}
+syncLiveMeetingCard();
+
+// -------------------------------------------------------------
+// 3. User Interaction Handlers
 // -------------------------------------------------------------
 function toggleLike(btn, count) {
     const isLiked = btn.classList.contains('liked');
@@ -710,7 +717,7 @@ function submitPost() {
 }
 
 // -------------------------------------------------------------
-// Auto-Bot Messages Pool
+// 4. Auto-Feed Messages Pool & Intervals
 // -------------------------------------------------------------
 const autoMessages = [
     {
@@ -841,9 +848,6 @@ function injectBotMessage(customData = null) {
     }
 }
 
-// -------------------------------------------------------------
-// Admin Sync Controller Loop
-// -------------------------------------------------------------
 async function checkAdminAndSync() {
     try {
         const { data } = await client.from('community_controls').select('*').eq('id', 1).single();
@@ -876,5 +880,4 @@ setInterval(checkAdminAndSync, 14000);
 </script>
 
 </body>
-    </html>
-    
+</html>
