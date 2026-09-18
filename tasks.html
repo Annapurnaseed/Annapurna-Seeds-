@@ -235,7 +235,6 @@
     </div>
 
 </div>
-
 <script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
@@ -249,24 +248,44 @@ let completedReviews = 0;
 const maxReviews = 5;
 let hasVisitedTg = false;
 
-// 1. Initialize Tasks & Check Telegram Bonus Status
+// 1. Initialize Tasks & Check 12 AM Reset Status
 async function initTasks() {
     try {
-        const { data } = await client.from('users').select('balance, telegram_claimed').eq('mobile', savedUser.mobile).single();
+        const { data } = await client.from('users').select('balance, telegram_claimed, last_task_date').eq('mobile', savedUser.mobile).single();
         if (data) {
             userBalance = Number(data.balance || 0);
             document.getElementById('userWalletTop').innerText = "₹" + userBalance.toFixed(2);
 
-            // Check if Telegram reward is already claimed
             if (data.telegram_claimed) {
                 renderTgClaimedUI();
             }
+
+            // Check if 12 AM reset is required for a new day
+            const todayStr = new Date().toISOString().split('T')[0];
+            if (data.last_task_date !== todayStr) {
+                completedReviews = 0; // Naya din, 0 reviews completed
+            }
+            updateProgressUI();
         }
     } catch(e) {
         console.error("Init Error:", e);
     }
 }
 initTasks();
+
+function updateProgressUI() {
+    document.getElementById('completedCount').innerText = `${completedReviews} / ${maxReviews}`;
+    document.getElementById('dailyBar').style.width = `${(completedReviews / maxReviews) * 100}%`;
+    
+    if (completedReviews >= maxReviews) {
+        const btn = document.getElementById('dailyBtn');
+        if (btn) {
+            btn.disabled = true;
+            btn.innerText = "Daily Tasks Completed ✅";
+            btn.style.background = "#94a3b8";
+        }
+    }
+}
 
 function renderTgClaimedUI() {
     const card = document.getElementById('tgTaskCard');
@@ -352,30 +371,38 @@ function switchTaskTab(tab) {
     }
 }
 
-// 4. Secure Daily Review Engine (Strict Plan & Limit Verification)
+// 4. Secure Daily Review Engine (Strict Plan + Next Day Start + 12 AM Reset)
 async function runDailyReview() {
-    // Step A: Check if user has an active agro plan purchased
     try {
-        const { data: userData } = await client.from('users').select('active_plan, balance').eq('mobile', savedUser.mobile).single();
+        // Step A: Check Active Plan & Purchase Date
+        const { data: userData } = await client.from('users').select('active_plan, plan_purchase_date, balance').eq('mobile', savedUser.mobile).single();
         
         if (!userData || !userData.active_plan || Number(userData.active_plan) <= 0) {
-            alert("❌ Task complete karne ke liye pehle koi bhi Agro Plan (Jaise ₹520 ya ₹2,120) active karna anivarya hai!");
+            alert("❌ Task complete karne ke liye pehle koi bhi Agro Plan active karna anivarya hai!");
             window.location.href = 'index.html';
             return;
         }
+
+        // Step B: Rule - Plan purchase karne ke AGLE DIN (Next Day) se hi task start honge
+        if (userData.plan_purchase_date) {
+            const purchaseDate = new Date(userData.plan_purchase_date);
+            const currentDate = new Date();
+            
+            const purchaseDayStr = purchaseDate.toISOString().split('T')[0];
+            const currentDayStr = currentDate.toISOString().split('T')[0];
+
+            if (purchaseDayStr === currentDayStr) {
+                alert("⏳ Niyam ke anusaar, plan purchase karne ke AGLE DIN (Next Day) se task start honge! Aaj aapka plan activate hua hai.");
+                return;
+            }
+        }
     } catch(e) {
-        console.error("Plan verification error:", e);
+        console.error("Validation error:", e);
     }
 
-    // Step B: Check Daily Review Limit
+    // Step C: Check Daily Limit (5/5)
     if (completedReviews >= maxReviews) {
-        alert("⚠️ Aaj ke saare 5/5 reviews complete ho chuke hain! Kal dobara koshish karein.");
-        const btn = document.getElementById('dailyBtn');
-        if (btn) {
-            btn.disabled = true;
-            btn.innerText = "Daily Tasks Completed ✅";
-            btn.style.background = "#94a3b8";
-        }
+        alert("⚠️ Aaj ke saare 5/5 reviews complete ho chuke hain! Kal raat 12 AM ke baad naye tasks milenge.");
         return;
     }
 
@@ -385,15 +412,19 @@ async function runDailyReview() {
 
     setTimeout(async () => {
         completedReviews++;
-        document.getElementById('completedCount').innerText = `${completedReviews} / ${maxReviews}`;
-        document.getElementById('dailyBar').style.width = `${(completedReviews / maxReviews) * 100}%`;
+        updateProgressUI();
 
-        // Fetch latest balance from database and add ₹10 securely
+        const todayStr = new Date().toISOString().split('T')[0];
         const { data: latest } = await client.from('users').select('balance').eq('mobile', savedUser.mobile).single();
         const currentBal = Number(latest?.balance || userBalance);
         const newBal = currentBal + 10;
 
-        await client.from('users').update({ balance: newBal }).eq('mobile', savedUser.mobile);
+        // Balance update aur last task date save karein taaki 12 AM reset track ho sake
+        await client.from('users').update({ 
+            balance: newBal,
+            last_task_date: todayStr
+        }).eq('mobile', savedUser.mobile);
+
         userBalance = newBal;
         document.getElementById('userWalletTop').innerText = "₹" + newBal.toFixed(2);
 
@@ -412,5 +443,4 @@ async function runDailyReview() {
 </script>
 
 </body>
-    </html>
-    
+</html>
