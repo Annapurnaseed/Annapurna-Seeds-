@@ -621,6 +621,72 @@ async function syncHeaderBalance() {
     } catch (e) { console.error(e); }
 }
 
+// Plan Purchase Function
+async function buyPlan(planName, price, dailyIncome, totalReviews) {
+    if (!currentUser.mobile) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    if (!confirm(`Kya aap ₹${price} ka ${planName} kharidna chahte hain?`)) return;
+
+    try {
+        const { data: userData, error: userErr } = await client
+            .from('users')
+            .select('balance')
+            .eq('mobile', currentUser.mobile)
+            .single();
+
+        if (userErr || !userData) {
+            alert("User data fetch karne me error aayi!");
+            return;
+        }
+
+        const currentBal = Number(userData.balance || 0);
+
+        if (currentBal < Number(price)) {
+            alert("❌ Wallet me balance kam hai! Kripya pehle Recharge karein.");
+            window.location.href = 'recharge.html';
+            return;
+        }
+
+        const newBalance = currentBal - Number(price);
+
+        const { error: updateErr } = await client
+            .from('users')
+            .update({ 
+                balance: newBalance,
+                active_plan: Number(price)
+            })
+            .eq('mobile', currentUser.mobile);
+
+        if (updateErr) throw updateErr;
+
+        const { error: planErr } = await client
+            .from('user_plans')
+            .insert({
+                mobile: currentUser.mobile,
+                plan_name: planName,
+                plan_price: Number(price),
+                daily_income: Number(dailyIncome),
+                total_reviews: Number(totalReviews),
+                validity_days: 750,
+                completed_today: 0
+            });
+
+        if (planErr) {
+            alert("Plan Table Error: " + planErr.message);
+            return;
+        }
+
+        alert(`🎉 Badhai ho! ${planName} safaltaपूर्वक purchase ho gaya hai.`);
+        window.location.href = 'tasks.html';
+
+    } catch (err) {
+        alert("Purchase Error: " + err.message);
+    }
+}
+
 function openAgroModal() { document.getElementById('agroNoticeModal').style.display = 'flex'; }
 function closeAgroModal() { document.getElementById('agroNoticeModal').style.display = 'none'; sessionStorage.setItem('annapurna_popup_viewed', 'true'); }
 
