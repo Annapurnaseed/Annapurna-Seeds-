@@ -176,6 +176,20 @@
             display: block;
         }
 
+        /* Active Plan Card */
+        .active-plan-display-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            margin: 0 14px 14px;
+            border-radius: 20px;
+            padding: 14px 16px;
+            border: 1.5px solid #86efac;
+            box-shadow: 0 6px 18px rgba(22, 101, 52, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         .mid-banner {
             margin: 0 14px 14px;
             background: linear-gradient(135deg, rgba(216,243,220,0.92), rgba(183,228,199,0.92));
@@ -336,7 +350,6 @@
     </style>
 </head>
 <body>
-
 <img src="bg-nature.png" class="bg-fixed-img" alt="Farm Nature Background" onerror="this.src='bg-field.png'">
 
 <div class="mobile-wrapper">
@@ -376,6 +389,18 @@
             <div class="clay-icon icon-purple">📈</div>
             <b id="totalCommissionVal">₹0.00</b>
             <span>TT Income</span>
+        </div>
+    </div>
+
+    <!-- Active Agro Investment Plan Display Card -->
+    <div class="active-plan-display-card">
+        <div>
+            <span style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block;">Active Agro Package</span>
+            <h4 id="userActivePlanTitle" style="font-size: 15px; font-weight: 900; color: #14532d; margin-top: 2px;">No Active Plan</h4>
+            <p id="userPlanDateText" style="font-size: 10px; color: #475569; margin-top: 2px;">Purchase a plan to start daily task earnings.</p>
+        </div>
+        <div style="width: 38px; height: 38px; border-radius: 12px; background: #dcfce7; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 18px;">
+            🌱
         </div>
     </div>
 
@@ -513,8 +538,8 @@
         </button>
         <p onclick="closeBankModal()" style="font-size: 12px; color: #ef4444; font-weight: 700; text-align: center; margin-top: 12px; cursor: pointer;">Cancel</p>
     </div>
-    </div>
-                    <script>
+                </div>
+                                        <script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -548,6 +573,20 @@ async function syncProfile() {
                 document.getElementById('vipLevel').innerText = "VIP 2";
             } else {
                 document.getElementById('vipLevel').innerText = "VIP 1";
+            }
+
+            // Render Active Plan Details in Profile Card
+            if (plan > 0) {
+                document.getElementById('userActivePlanTitle').innerText = `₹${plan} Agro Plan Active`;
+                if (data.plan_purchase_date) {
+                    const pDate = new Date(data.plan_purchase_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+                    document.getElementById('userPlanDateText').innerText = `Purchased on: ${pDate} • Earning Active`;
+                } else {
+                    document.getElementById('userPlanDateText').innerText = `Package Verified & Running`;
+                }
+            } else {
+                document.getElementById('userActivePlanTitle').innerText = `No Active Plan`;
+                document.getElementById('userPlanDateText').innerText = `Recharge & buy a plan to start earning.`;
             }
 
             if (data.bank_account) {
