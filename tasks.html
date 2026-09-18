@@ -235,6 +235,7 @@
     </div>
 
 </div>
+
 <script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
@@ -351,36 +352,65 @@ function switchTaskTab(tab) {
     }
 }
 
-// 4. Daily Review Engine
-function runDailyReview() {
+// 4. Secure Daily Review Engine (Strict Plan & Limit Verification)
+async function runDailyReview() {
+    // Step A: Check if user has an active agro plan purchased
+    try {
+        const { data: userData } = await client.from('users').select('active_plan, balance').eq('mobile', savedUser.mobile).single();
+        
+        if (!userData || !userData.active_plan || Number(userData.active_plan) <= 0) {
+            alert("❌ Task complete karne ke liye pehle koi bhi Agro Plan (Jaise ₹520 ya ₹2,120) active karna anivarya hai!");
+            window.location.href = 'index.html';
+            return;
+        }
+    } catch(e) {
+        console.error("Plan verification error:", e);
+    }
+
+    // Step B: Check Daily Review Limit
     if (completedReviews >= maxReviews) {
-        alert("Aaj ke saare reviews complete ho chuke hain!");
+        alert("⚠️ Aaj ke saare 5/5 reviews complete ho chuke hain! Kal dobara koshish karein.");
+        const btn = document.getElementById('dailyBtn');
+        if (btn) {
+            btn.disabled = true;
+            btn.innerText = "Daily Tasks Completed ✅";
+            btn.style.background = "#94a3b8";
+        }
         return;
     }
+
     const btn = document.getElementById('dailyBtn');
     btn.disabled = true;
-    btn.innerText = "Verifying Batch...";
+    btn.innerText = "Verifying Seed Batch...";
 
     setTimeout(async () => {
         completedReviews++;
         document.getElementById('completedCount').innerText = `${completedReviews} / ${maxReviews}`;
         document.getElementById('dailyBar').style.width = `${(completedReviews / maxReviews) * 100}%`;
 
-        const newBal = userBalance + 10;
+        // Fetch latest balance from database and add ₹10 securely
+        const { data: latest } = await client.from('users').select('balance').eq('mobile', savedUser.mobile).single();
+        const currentBal = Number(latest?.balance || userBalance);
+        const newBal = currentBal + 10;
+
         await client.from('users').update({ balance: newBal }).eq('mobile', savedUser.mobile);
         userBalance = newBal;
         document.getElementById('userWalletTop').innerText = "₹" + newBal.toFixed(2);
 
-        alert("Seed quality verified! ₹10 wallet me add ho gaye.");
-        btn.disabled = false;
-        btn.innerText = "Verify Seed Batch (Earn ₹10)";
+        alert("🎉 Seed quality verified! ₹10 wallet me add ho gaye.");
+        
         if (completedReviews >= maxReviews) {
             btn.disabled = true;
             btn.innerText = "Daily Tasks Completed ✅";
+            btn.style.background = "#94a3b8";
+        } else {
+            btn.disabled = false;
+            btn.innerText = "Verify Seed Batch (Earn ₹10)";
         }
-    }, 1500);
+    }, 1200);
 }
 </script>
 
 </body>
-</html>
+    </html>
+    
