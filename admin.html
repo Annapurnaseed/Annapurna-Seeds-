@@ -195,9 +195,43 @@
         </div>
     </div>
 
-    <!-- 5. Controls Tab (Multi-UPI + Community Controls) -->
+    <!-- 5. Controls Tab (Multi-UPI + Meeting Manager + Community Controls) -->
     <div id="settingsTab" class="tab-pane">
         
+        <!-- Live Community Meeting & Seminar Controls -->
+        <div class="card-panel" style="border: 2px solid #86efac; background: #ffffff;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                <div style="width:40px; height:40px; border-radius:12px; background:linear-gradient(135deg, #16a34a, #15803d); color:#fff; display:flex; align-items:center; justify-content:center; font-size:20px;">
+                    📸
+                </div>
+                <div>
+                    <h3 style="font-size:15px; font-weight:900; color:#113820; margin:0;">Live Meeting & Seminar Control</h3>
+                    <p style="font-size:11px; color:#64748b; margin:0;">Community feed par live meeting photo & details update karein</p>
+                </div>
+            </div>
+
+            <label class="upi-label">Meeting Image File / Link</label>
+            <input type="text" id="admMeetImg" class="upi-input" placeholder="e.g. meet-real.jpg ya https://...">
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
+                <div>
+                    <label class="upi-label">Team Leader Name</label>
+                    <input type="text" id="admMeetLeader" class="upi-input" placeholder="e.g. Krishan Murari Saini">
+                </div>
+                <div>
+                    <label class="upi-label">Location / City</label>
+                    <input type="text" id="admMeetCity" class="upi-input" placeholder="e.g. Jaipur, Rajasthan">
+                </div>
+            </div>
+
+            <label class="upi-label">Meeting Title / Agenda</label>
+            <input type="text" id="admMeetTitle" class="upi-input" placeholder="e.g. District Farmer & Investor Seminar">
+
+            <button class="btn-action btn-green" style="width: 100%; padding: 12px; font-size: 13px; margin-top: 4px;" onclick="saveAdminMeeting()">
+                🚀 Publish Live Meeting to Community
+            </button>
+        </div>
+
         <!-- Live Community Feed Controls -->
         <div class="card-panel">
             <h3 style="margin-bottom: 8px;">📢 Live Community Feed Controls</h3>
@@ -247,8 +281,8 @@
         </div>
     </div>
 
-                </div>
-                   <script>
+            </div>
+    <script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -271,6 +305,7 @@ document.querySelectorAll('.tab-btn').forEach(button => {
         if (targetTab === 'settingsTab') {
             loadAllUpiChannels();
             loadCommunityBotStatus();
+            loadAdminMeeting();
         }
     });
 });
@@ -452,7 +487,45 @@ async function saveAllUpiChannels() {
     }
 }
 
-// 6. Community Feed Controls Engine
+// 6. Live Meeting Manager Engine (Admin -> Community Sync)
+async function loadAdminMeeting() {
+    try {
+        const { data } = await client.from('meeting_posts').select('*').eq('id', 1).single();
+        if (data) {
+            document.getElementById('admMeetImg').value = data.image_url || '';
+            document.getElementById('admMeetLeader').value = data.leader_name || '';
+            document.getElementById('admMeetCity').value = data.city_name || '';
+            document.getElementById('admMeetTitle').value = data.session_title || '';
+        }
+    } catch (e) {
+        console.error("Meeting fetch error:", e);
+    }
+}
+
+async function saveAdminMeeting() {
+    const img = document.getElementById('admMeetImg').value.trim() || 'meet-real.jpg';
+    const leader = document.getElementById('admMeetLeader').value.trim() || 'Krishan Murari Saini';
+    const city = document.getElementById('admMeetCity').value.trim() || 'Jaipur, Rajasthan';
+    const title = document.getElementById('admMeetTitle').value.trim() || 'District Investor & Farmer Meet';
+
+    try {
+        const { error } = await client.from('meeting_posts').upsert({
+            id: 1,
+            image_url: img,
+            leader_name: leader,
+            city_name: city,
+            session_title: title,
+            updated_at: new Date().toISOString()
+        });
+
+        if (error) throw error;
+        alert("✅ Community Live Meeting successfully update ho gayi!");
+    } catch (err) {
+        alert("Update Failed: " + err.message);
+    }
+}
+
+// 7. Community Feed Controls Engine
 let botActiveStatus = true;
 
 async function loadCommunityBotStatus() {
@@ -510,6 +583,7 @@ async function pushCustomCommunityPost() {
 loadFinancialStats();
 loadAllUpiChannels();
 loadCommunityBotStatus();
+loadAdminMeeting();
 </script>
 
 </body>
