@@ -3,44 +3,342 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - Annapurna Seeds</title>
+    <title>About Us & Terms - Annapurna Seeds</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background: #0d2818; min-height: 100vh; display: flex; justify-content: center; }
-        .mobile-wrapper { width: 100%; max-width: 420px; background: rgba(244, 250, 245, 0.95); min-height: 100vh; padding: 14px 14px 40px; }
-        .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-        .btn-circle-back { width: 40px; height: 40px; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #1b4332; font-size: 18px; font-weight: 900; text-decoration: none; border: 1px solid #e2f0e6; }
-        .header-pill { background: #ffffff; color: #1b4332; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 800; }
-        .hero-company-card { background: #ffffff; border-radius: 26px; padding: 20px 16px; text-align: center; margin-bottom: 16px; border: 1.5px solid #ffffff; }
-        .brand-emblem { width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, #d8f3dc, #b7e4c7); display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 10px; border: 3px solid #2ecc71; }
-        .hero-company-card h2 { font-size: 22px; font-weight: 900; color: #0d3820; }
-        .hero-company-card .tagline { font-size: 12px; color: #2e7d32; font-weight: 700; font-style: italic; margin-top: 2px; }
-        .hero-company-card p { font-size: 12px; color: #4a6b57; line-height: 1.5; margin-top: 10px; }
-        .info-clay-card { background: #ffffff; border-radius: 26px; padding: 18px; margin-bottom: 16px; border: 1.5px solid #ffffff; }
-        .card-header-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px dashed #e1eee4; }
-        .header-badge { width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #ffffff; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #0d2818 url('bg-nature.png') center top/cover no-repeat fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .mobile-wrapper {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(244, 250, 245, 0.95);
+            backdrop-filter: blur(14px);
+            min-height: 100vh;
+            padding: 14px 14px 100px;
+            position: relative;
+            box-shadow: 0 0 35px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Top Header */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .btn-circle-back {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1b4332;
+            font-size: 18px;
+            font-weight: 900;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2f0e6;
+        }
+        .header-pill {
+            background: #ffffff;
+            color: #1b4332;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        /* Hero Brand Card */
+        .hero-company-card {
+            background: #ffffff;
+            border-radius: 26px;
+            padding: 20px 16px;
+            text-align: center;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 24px rgba(18, 62, 36, 0.06);
+            border: 1.5px solid #ffffff;
+        }
+        .brand-emblem {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #d8f3dc, #b7e4c7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 10px;
+            border: 3px solid #2ecc71;
+            box-shadow: 0 6px 16px rgba(46,204,113,0.3);
+        }
+        .hero-company-card h2 {
+            font-size: 22px;
+            font-weight: 900;
+            color: #0d3820;
+            letter-spacing: -0.5px;
+        }
+        .hero-company-card .tagline {
+            font-size: 12px;
+            color: #2e7d32;
+            font-weight: 700;
+            font-style: italic;
+            margin-top: 2px;
+        }
+        .hero-company-card p {
+            font-size: 12px;
+            color: #4a6b57;
+            line-height: 1.5;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        /* 3-Pillar Badges Grid */
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .pillar-box {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 12px 6px;
+            text-align: center;
+            border: 1.5px solid #e1eee4;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+        .pillar-icon {
+            font-size: 22px;
+            margin-bottom: 4px;
+        }
+        .pillar-box b {
+            font-size: 11px;
+            font-weight: 800;
+            color: #123e24;
+            display: block;
+        }
+        .pillar-box span {
+            font-size: 9px;
+            color: #648a72;
+            font-weight: 600;
+        }
+
+        /* Section Clay Card */
+        .info-clay-card {
+            background: #ffffff;
+            border-radius: 26px;
+            padding: 18px;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 24px rgba(18, 62, 36, 0.05);
+            border: 1.5px solid #ffffff;
+        }
+        .card-header-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #e1eee4;
+        }
+        .header-badge {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #ffffff;
+        }
+        .bg-green-grad { background: linear-gradient(135deg, #22c55e, #15803d); }
+        .bg-blue-grad { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .bg-orange-grad { background: linear-gradient(135deg, #f59e0b, #d97706); }
         .bg-purple-grad { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
-        .card-header-row h3 { font-size: 15px; font-weight: 900; color: #113820; }
-        .team-member-item { display: flex; align-items: center; gap: 12px; background: #f9fbf9; border: 1px solid #e2f0e6; border-radius: 14px; padding: 10px; margin-bottom: 10px; }
-        .team-avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid #2ecc71; flex-shrink: 0; }
-        .team-info h4 { font-size: 13px; font-weight: 800; color: #113820; }
-        .team-info p { font-size: 10px; color: #4a6b57; margin-top: 2px; line-height: 1.3; }
+
+        .card-header-row h3 {
+            font-size: 15px;
+            font-weight: 900;
+            color: #113820;
+        }
+        .card-header-row span {
+            font-size: 10px;
+            color: #648a72;
+            font-weight: 600;
+        }
+
+        /* Team Member Profile Row */
+        .team-member-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f9fbf9;
+            border: 1px solid #e2f0e6;
+            border-radius: 14px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .team-member-item:last-child { margin-bottom: 0; }
+        .team-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #2ecc71;
+            flex-shrink: 0;
+        }
+        .team-info h4 {
+            font-size: 13px;
+            font-weight: 800;
+            color: #113820;
+        }
+        .team-info p {
+            font-size: 10px;
+            color: #4a6b57;
+            margin-top: 2px;
+            line-height: 1.3;
+        }
+
+        /* Terms List */
+        .term-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            color: #2d4f3b;
+            line-height: 1.45;
+        }
+        .term-item:last-child { margin-bottom: 0; }
+        .term-bullet {
+            background: #eef8f2;
+            color: #16a34a;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 900;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* Disclaimer Callout */
+        .disclaimer-box {
+            background: #fffbeb;
+            border: 1.5px solid #fde68a;
+            border-radius: 20px;
+            padding: 14px;
+            margin-bottom: 16px;
+        }
+        .disclaimer-box h4 {
+            font-size: 12px;
+            font-weight: 800;
+            color: #92400e;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+        .disclaimer-box p {
+            font-size: 11px;
+            color: #78350f;
+            line-height: 1.45;
+        }
+
+        /* Bottom Floating Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 420px;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            border-top: 1px solid #e2eee5;
+            box-shadow: 0 -4px 16px rgba(0,0,0,0.04);
+            z-index: 100;
+        }
+        .nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #6c8a77;
+            font-size: 10px;
+            font-weight: 700;
+            gap: 3px;
+        }
+        .nav-link.active-pill {
+            background: linear-gradient(180deg, #2ecc71 0%, #1e824c 100%);
+            color: #fff;
+            padding: 6px 18px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(30,130,76,0.3);
+        }
+        .nav-link.active-pill span { color: #fff !important; }
+        .nav-icon { font-size: 18px; }
     </style>
 </head>
 <body>
+
 <div class="mobile-wrapper">
+
+    <!-- Top Navigation -->
     <div class="top-header">
         <a href="profile.html" class="btn-circle-back">❮</a>
-        <div class="header-pill">🌾 About Us</div>
+        <div class="header-pill">📜 About & Legal</div>
     </div>
 
+    <!-- Hero Company Profile -->
     <div class="hero-company-card">
         <div class="brand-emblem">🌾</div>
         <h2>Annapurna Seeds</h2>
         <div class="tagline">"Better Seeds • Brighter Future"</div>
-        <p>Annapurna Seeds operates as a progressive agricultural community platform dedicated to empowering modern farmers and agro-investors through certified high-germination seed contracts and daily yield models.</p>
+        <p>
+            Annapurna Seeds operates as a progressive agricultural community platform dedicated to empowering modern farmers and agro-investors. We provide certified high-germination seed contracts, crop insurance partnerships, and guaranteed daily yield dividends to our registered community members.
+        </p>
     </div>
 
+    <!-- 3 Pillars -->
+    <div class="pillars-grid">
+        <div class="pillar-box">
+            <div class="pillar-icon">🌱</div>
+            <b>High Yield</b>
+            <span>Certified Hybrid</span>
+        </div>
+        <div class="pillar-box">
+            <div class="pillar-icon">🛡️</div>
+            <b>Safe Vault</b>
+            <span>100% Payout SLA</span>
+        </div>
+        <div class="pillar-box">
+            <div class="pillar-icon">🤝</div>
+            <b>3-Tier MLM</b>
+            <span>15% Direct Share</span>
+        </div>
+    </div>
+
+    <!-- NEW CARD: Leadership & Management Team -->
     <div class="info-clay-card">
         <div class="card-header-row">
             <div class="header-badge bg-purple-grad">👥</div>
@@ -50,6 +348,7 @@
             </div>
         </div>
 
+        <!-- CEO & Founder -->
         <div class="team-member-item">
             <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150" alt="Rajeshwar Tyagi" class="team-avatar">
             <div class="team-info">
@@ -58,6 +357,7 @@
             </div>
         </div>
 
+        <!-- Co-Founder & CTO -->
         <div class="team-member-item">
             <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150" alt="Vikramaditya Sharma" class="team-avatar">
             <div class="team-info">
@@ -66,6 +366,7 @@
             </div>
         </div>
 
+        <!-- Head of Agronomy -->
         <div class="team-member-item">
             <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150" alt="Dr. Alok Vats" class="team-avatar">
             <div class="team-info">
@@ -74,7 +375,93 @@
             </div>
         </div>
     </div>
+
+    <!-- Card 1: Operating Rules & Terms -->
+    <div class="info-clay-card">
+        <div class="card-header-row">
+            <div class="header-badge bg-green-grad">📋</div>
+            <div>
+                <h3>Terms of Participation</h3>
+                <span>Rules governing contracts & profits</span>
+            </div>
+        </div>
+
+        <div class="term-item">
+            <div class="term-bullet">1</div>
+            <div><b>One Account Per Member:</b> Self-referral via clone accounts or same network exploitation is strictly monitored to safeguard platform integrity.</div>
+        </div>
+        <div class="term-item">
+            <div class="term-bullet">2</div>
+            <div><b>Daily Seed Inspection:</b> Users earn daily contract revenue by completing simple daily quality verification tasks from the Income hub.</div>
+        </div>
+        <div class="term-item">
+            <div class="term-bullet">3</div>
+            <div><b>Tiered Commission Settlement:</b> Downline commissions (15% Level 1, 5% Level 2, 2% Level 3) are instantly credited to your wallet upon admin UTR clearance.</div>
+        </div>
+        <div class="term-item">
+            <div class="term-bullet">4</div>
+            <div><b>Strict Bank Lock:</b> For maximum security against unauthorized transfers, once a bank account is bound, only designated administration can modify it.</div>
+        </div>
+    </div>
+
+    <!-- Card 2: Financial & Withdrawal Policy -->
+    <div class="info-clay-card">
+        <div class="card-header-row">
+            <div class="header-badge bg-blue-grad">💳</div>
+            <div>
+                <h3>Payout & Withdrawal Policy</h3>
+                <span>Slabs, timelines, and gateway criteria</span>
+            </div>
+        </div>
+
+        <div class="term-item">
+            <div class="term-bullet">✓</div>
+            <div><b>Withdrawal Slabs:</b> Fixed withdrawal brackets are ₹330, ₹550, ₹950, and ₹1,320. Minimum balance requirements must be fulfilled.</div>
+        </div>
+        <div class="term-item">
+            <div class="term-bullet">✓</div>
+            <div><b>Processing Window:</b> Withdrawal submissions are verified and dispatched within regular banking business hours (Monday to Friday, 10:00 AM – 5:00 PM).</div>
+        </div>
+        <div class="term-item">
+            <div class="term-bullet">✓</div>
+            <div><b>Recharge Verification:</b> Valid 12-digit UTR submission is mandatory for wallet funding. Duplicate UTR submissions will result in immediate rejection.</div>
+        </div>
+    </div>
+
+    <!-- Card 3: Regulatory Disclaimer -->
+    <div class="disclaimer-box">
+        <h4>⚠️ Official Disclaimer</h4>
+        <p>
+            Participation in agricultural contract plans involves market risk. Yield projections are based on seasonal agro-trade outputs and community operational volumes. Annapurna Seeds does not charge hidden processing fees. Please invest responsibly according to your personal financial capacity.
+        </p>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-link">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="tasks.html" class="nav-link">
+            <span class="nav-icon">📈</span>
+            <span>Income</span>
+        </a>
+        <a href="team.html" class="nav-link">
+            <span class="nav-icon">👥</span>
+            <span>Team</span>
+        </a>
+        <a href="team.html" class="nav-link">
+            <span class="nav-icon">🔗</span>
+            <span>Share</span>
+        </a>
+        <a href="profile.html" class="nav-link active-pill">
+            <span class="nav-icon">👤</span>
+            <span>My</span>
+        </a>
+    </div>
+
 </div>
+
 </body>
-                    </html>
-                    
+    </html>
+                
