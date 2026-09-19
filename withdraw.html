@@ -108,10 +108,14 @@
             border-radius: 18px;
             padding: 12px 16px;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.06);
             border: 1px solid #ddecde;
             margin-bottom: 14px;
+        }
+        .sunken-input-box .display-row {
+            display: flex;
+            align-items: center;
         }
         .currency-symbol { font-size: 18px; font-weight: 900; color: #c2410c; margin-right: 8px; }
         .sunken-input-box input {
@@ -122,6 +126,13 @@
             color: #113820;
             outline: none;
             width: 100%;
+            pointer-events: none;
+        }
+        .fee-info-text {
+            font-size: 11px;
+            color: #c2410c;
+            font-weight: 700;
+            margin-top: 4px;
         }
 
         .slabs-grid {
@@ -252,19 +263,24 @@
             <div class="clay-round-icon">🏛️</div>
             <div class="header-text">
                 <h3>Withdrawal Amount</h3>
-                <p>Choose or enter your payout slab</p>
+                <p>Select fixed payout slab (10% fee applicable)</p>
             </div>
         </div>
 
         <div class="sunken-input-box">
-            <span class="currency-symbol">₹</span>
-            <input type="number" id="withdrawAmt" value="330">
+            <div class="display-row">
+                <span class="currency-symbol">₹</span>
+                <input type="number" id="withdrawAmt" value="150" readonly>
+            </div>
+            <div id="feeCalcText" class="fee-info-text">10% Fee: ₹15.00 | Net Payout to Bank: ₹135.00</div>
         </div>
 
         <div class="slabs-grid">
-            <div class="slab-pill active" onclick="selectWithdrawSlab(330, this)">₹330</div>
-            <div class="slab-pill" onclick="selectWithdrawSlab(550, this)">₹550</div>
-            <div class="slab-pill" onclick="selectWithdrawSlab(950, this)">₹950</div>
+            <div class="slab-pill active" onclick="selectWithdrawSlab(150, this)">₹150</div>
+            <div class="slab-pill" onclick="selectWithdrawSlab(330, this)">₹330</div>
+            <div class="slab-pill" onclick="selectWithdrawSlab(750, this)">₹750</div>
+            <div class="slab-pill" onclick="selectWithdrawSlab(1350, this)">₹1350</div>
+            <div class="slab-pill" onclick="selectWithdrawSlab(1750, this)">₹1750</div>
         </div>
     </div>
 
@@ -297,11 +313,11 @@
 
     <!-- Payout Notice -->
     <div class="rules-strip">
-        <p>⚠️ Payout Timings: 10:00 AM to 06:00 PM.<br>Bank settlement typically credits within 15-45 minutes after admin verification.</p>
+        <p>⚠️ Withdrawal Timing: Opens daily at Morning 08:00 AM.<br>10% platform fee is deducted. Bank settlement credits within 15-45 minutes after admin verification.</p>
     </div>
 
     <button class="btn-withdraw-submit" id="btnSubmitWithdraw" onclick="requestPayout()">
-        Confirm Withdrawal ₹330
+        Confirm Withdrawal ₹150 (Net ₹135)
     </button>
 
     <!-- Bottom Navigation Bar -->
@@ -313,8 +329,8 @@
         <a href="profile.html" class="nav-link"><span class="nav-icon">👤</span><span>My</span></a>
     </div>
 
-    </div>
-    <script>
+</div>
+<script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -325,7 +341,7 @@ if (!savedUser.mobile) {
 }
 
 let availableBalance = 0;
-let currentWithdrawAmount = 330;
+let currentWithdrawAmount = 150;
 let userSecurityPassword = '';
 
 // 1. Sync User Balance, Bank Details & Security Password
@@ -337,7 +353,6 @@ async function initWithdrawPage() {
             document.getElementById('userBalanceVal').innerText = "₹" + availableBalance.toFixed(2);
             userSecurityPassword = user.withdraw_password || '';
 
-            // Pre-fill agar user ne profile mein bank details save ki hain
             if (user.bank_holder) document.getElementById('bankHolder').value = user.bank_holder;
             if (user.bank_name) document.getElementById('bankName').value = user.bank_name;
             if (user.bank_account) document.getElementById('bankAccount').value = user.bank_account;
@@ -352,31 +367,42 @@ initWithdrawPage();
 function selectWithdrawSlab(amt, el) {
     currentWithdrawAmount = amt;
     document.getElementById('withdrawAmt').value = amt;
+    
+    // Calculate 10% fee
+    const fee = amt * 0.10;
+    const netAmount = amt - fee;
+    document.getElementById('feeCalcText').innerText = `10% Fee: ₹${fee.toFixed(2)} | Net Payout to Bank: ₹${netAmount.toFixed(2)}`;
+
     document.querySelectorAll('.slab-pill').forEach(p => p.classList.remove('active'));
     el.classList.add('active');
-    document.getElementById('btnSubmitWithdraw').innerText = `Confirm Withdrawal ₹${amt}`;
+    document.getElementById('btnSubmitWithdraw').innerText = `Confirm Withdrawal ₹${amt} (Net ₹${netAmount.toFixed(2)})`;
 }
 
-document.getElementById('withdrawAmt').addEventListener('input', (e) => {
-    currentWithdrawAmount = Number(e.target.value) || 0;
-    document.getElementById('btnSubmitWithdraw').innerText = `Confirm Withdrawal ₹${currentWithdrawAmount}`;
-});
-
-// 2. Submit Payout Request with Password Authentication
+// 2. Submit Payout Request with Time Window & Password Authentication
 async function requestPayout() {
-    const amt = Number(document.getElementById('withdrawAmt').value);
+    // Time Check: Morning 8 AM window validation
+    const currentHour = new Date().getHours();
+    if (currentHour < 8) {
+        alert("❌ Withdrawal window abhi open nahi hai! Withdrawal ka samay subah 8:00 AM se shuru hota hai.");
+        return;
+    }
+
+    const grossAmt = Number(document.getElementById('withdrawAmt').value);
+    const fee = grossAmt * 0.10;
+    const netAmt = grossAmt - fee; // Net amount shown to admin & deducted
+
     const holder = document.getElementById('bankHolder').value.trim();
     const bank = document.getElementById('bankName').value.trim();
     const acc = document.getElementById('bankAccount').value.trim();
     const ifsc = document.getElementById('bankIfsc').value.trim().toUpperCase();
     const enteredPass = document.getElementById('enterWithPass').value.trim();
 
-    if (!amt || amt < 330) {
-        alert("Minimum withdrawal amount ₹330 hai!");
+    if (!grossAmt || grossAmt < 150) {
+        alert("Minimum withdrawal amount ₹150 hai!");
         return;
     }
 
-    if (amt > availableBalance) {
+    if (grossAmt > availableBalance) {
         alert(`Insufficient Balance! Aapka current balance ₹${availableBalance.toFixed(2)} hai.`);
         return;
     }
@@ -386,14 +412,12 @@ async function requestPayout() {
         return;
     }
 
-    // Check if security PIN is set in Profile
     if (!userSecurityPassword) {
         alert("Aapne abhi tak Withdrawal Password set nahi kiya hai! Pehle Profile -> Bank Details me jaakar apna security password save karein.");
         window.location.href = "profile.html";
         return;
     }
 
-    // Verify Entered Password
     if (!enteredPass) {
         alert("Kripya apna Withdrawal Password (PIN) dalein!");
         return;
@@ -409,10 +433,12 @@ async function requestPayout() {
     btn.innerText = "Processing...";
 
     try {
-        // Step A: Insert Withdrawal Request
+        // Step A: Insert Withdrawal Request with Gross Amount and Net Amount after 10% fee
         const { error: reqError } = await client.from('withdrawals').insert([{
             mobile: savedUser.mobile,
-            amount: amt,
+            amount: netAmt, // Admin sees net amount after 10% fee deduction
+            gross_amount: grossAmt,
+            fee: fee,
             bank_holder: holder,
             bank_account: acc,
             bank_ifsc: ifsc,
@@ -422,8 +448,8 @@ async function requestPayout() {
 
         if (reqError) throw reqError;
 
-        // Step B: Deduct Balance from User
-        const newBalance = availableBalance - amt;
+        // Step B: Deduct Full Gross Amount from User Wallet Balance
+        const newBalance = availableBalance - grossAmt;
         await client.from('users').update({ 
             balance: newBalance,
             bank_holder: holder,
@@ -432,16 +458,16 @@ async function requestPayout() {
             bank_name: bank
         }).eq('mobile', savedUser.mobile);
 
-        alert(`₹${amt} ka withdrawal request submit ho gaya! Admin verification ke baad bank me credit hoga.`);
+        alert(`₹${grossAmt} ka withdrawal request (Net: ₹${netAmt.toFixed(2)} after 10% fee) submit ho gaya!`);
         window.location.href = "profile.html";
 
     } catch(err) {
         alert("Withdrawal Failed: " + err.message);
         btn.disabled = false;
-        btn.innerText = `Confirm Withdrawal ₹${amt}`;
+        btn.innerText = `Confirm Withdrawal ₹${grossAmt} (Net ₹${netAmt.toFixed(2)})`;
     }
 }
 </script>
-
 </body>
-</html>
+    </html>
+    
