@@ -16,7 +16,7 @@
 
         body {
             background: #eef7f0;
-            color: #173824;
+            color: #123e24;
             display: flex;
             justify-content: center;
             min-height: 100vh;
@@ -24,12 +24,12 @@
 
         .mobile-wrapper {
             width: 100%;
-            max-width: 430px;
+            max-width: 420px;
             background: #f7fbf8;
             min-height: 100vh;
             padding-bottom: 85px;
             position: relative;
-            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            box-shadow: 0 0 30px rgba(0,0,0,0.06);
         }
 
         /* Top Header Bar */
@@ -42,10 +42,10 @@
             position: sticky;
             top: 0;
             z-index: 50;
-            border-bottom: 1px solid #e1eee4;
+            border-bottom: 1px solid #e4eee4;
         }
         .brand-title {
-            font-size: 19px;
+            font-size: 18px;
             font-weight: 900;
             color: #1b4332;
             display: flex;
@@ -53,12 +53,12 @@
             gap: 6px;
         }
         .user-chip {
-            background: #e8f5ec;
+            background: #eef5ec;
             color: #2d6a4f;
             padding: 6px 12px;
             border-radius: 20px;
             font-size: 12px;
-            font-weight: 700;
+            font-weight: 900;
             display: flex;
             align-items: center;
             gap: 5px;
@@ -75,9 +75,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
         }
         .bell-dot {
             position: absolute;
@@ -92,19 +92,18 @@
 
         /* Poster Hero Banner */
         .hero-poster-box {
-            margin: 14px 16px;
+            margin: 14px 18px;
             border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 12px 25px rgba(27, 67, 50, 0.18);
+            box-shadow: 0 12px 25px rgba(27, 67, 50, 0.12);
             border: 2px solid #ffffff;
             position: relative;
-            height: 240px;
+            height: 160px;
         }
         .hero-poster-box img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center 20%;
         }
 
         /* 3D Round Action Buttons Grid */
@@ -112,12 +111,12 @@
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 8px;
-            padding: 10px 14px 18px;
+            padding: 10px 14px 14px;
             background: #ffffff;
-            margin: 0 16px 16px;
+            margin: 8px 16px 16px;
             border-radius: 22px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.04);
-            border: 1px solid #e8f3ea;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.04);
+            border: 1px solid #edf5ea;
         }
         .action-btn {
             display: flex;
@@ -127,29 +126,27 @@
             color: #245738;
             font-size: 11px;
             font-weight: 700;
-            gap: 6px;
+            gap: 4px;
         }
         .circle-icon {
-            width: 48px;
-            height: 48px;
+            width: 46px;
+            height: 46px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            box-shadow: 0 5px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
             transition: transform 0.15s;
         }
-        .action-btn:active .circle-icon {
-            transform: scale(0.92);
-        }
-        .bg-recharge { background: linear-gradient(135deg, #10b981, #059669); color: #fff; }
-        .bg-withdraw { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; }
+        .circle-icon:active { transform: scale(0.92); }
+        .bg-recharge { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; }
+        .bg-withdraw { background: linear-gradient(135deg, #a855f7, #7e22ce); color: #fff; }
         .bg-tasks { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; }
         .bg-service { background: linear-gradient(135deg, #ec4899, #be185d); color: #fff; }
-        .bg-channel { background: linear-gradient(135deg, #06b6d4, #0891b2); color: #fff; }
+        .bg-channel { background: linear-gradient(135deg, #06b6d4, #0e7490); color: #fff; }
 
-        /* Section Title */
+        /* Section Header */
         .section-header {
             padding: 4px 18px 14px;
             display: flex;
@@ -157,13 +154,13 @@
             align-items: center;
         }
         .section-header h3 {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 900;
-            color: #0f3820;
+            color: #123820;
         }
         .section-header span {
             font-size: 11px;
-            color: #2e7d32;
+            color: #2e7432;
             font-weight: 800;
         }
 
@@ -171,31 +168,27 @@
         .plan-card {
             background: #ffffff;
             margin: 0 16px 20px;
-            border-radius: 28px;
+            border-radius: 24px;
             padding: 16px;
-            box-shadow: 0 10px 26px rgba(18, 62, 36, 0.08);
+            box-shadow: 0 10px 25px rgba(18, 62, 36, 0.08);
             border: 1.5px solid #dcece0;
             position: relative;
         }
-
         .big-img-container {
             width: 100%;
-            height: 280px;
-            border-radius: 22px;
+            height: 180px;
+            border-radius: 18px;
             overflow: hidden;
             background: #f1f8f3;
             margin-bottom: 14px;
-            border: 1.5px solid #dcece0;
-            box-shadow: inset 0 2px 8px rgba(0,0,0,0.03);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
         }
         .big-img-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center top;
             display: block;
         }
-
         .plan-top-bar {
             display: flex;
             justify-content: space-between;
@@ -203,76 +196,45 @@
             margin-bottom: 12px;
         }
         .plan-title-badge {
-            background: #e8f5ec;
+            background: #eef5ec;
             color: #14532d;
             font-size: 13px;
             font-weight: 900;
             padding: 6px 12px;
             border-radius: 14px;
             border: 1px solid #bbf7d0;
-            letter-spacing: 0.2px;
         }
         .plan-payout-pill {
             background: #fef3c7;
             color: #b45309;
             font-size: 11px;
-            font-weight: 800;
+            font-weight: 900;
             padding: 5px 10px;
             border-radius: 10px;
         }
-
         .plan-desc-box {
-            background: #f0fdf4;
-            border: 1.5px solid #dcfce7;
-            border-radius: 18px;
+            background: #f8faf9;
+            border: 1.5px solid #e2eee5;
+            border-radius: 16px;
             padding: 12px 14px;
             margin-bottom: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
         }
-        .plan-desc-box .task-text {
-            font-size: 13px;
-            font-weight: 800;
-            color: #14532d;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .plan-desc-box .yield-text {
-            font-size: 16px;
-            font-weight: 900;
-            color: #15803d;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .plan-desc-box .task-text { font-size: 13px; font-weight: 800; color: #14532d; margin-bottom: 4px; }
+        .plan-desc-box .yield-text { font-size: 13px; font-weight: 900; color: #15803d; }
 
         .metrics-bar {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 6px;
-            background: #f8fafc;
-            padding: 12px 6px;
-            border-radius: 18px;
+            background: #f0f7f2;
+            padding: 10px 6px;
+            border-radius: 16px;
             margin-bottom: 14px;
-            border: 1.5px solid #e2e8f0;
+            border: 1px solid #dcece0;
             text-align: center;
         }
-        .metric-item span {
-            display: block;
-            font-size: 10px;
-            color: #64748b;
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-        .metric-item b {
-            font-size: 16px;
-            color: #0f172a;
-            font-weight: 900;
-            display: block;
-            margin-top: 2px;
-        }
+        .metric-item span { font-size: 9px; color: #648a72; font-weight: 800; display: block; text-transform: uppercase; }
+        .metric-item b { font-size: 13px; color: #123e24; font-weight: 900; margin-top: 2px; display: block; }
 
         .btn-buy {
             display: flex;
@@ -281,21 +243,16 @@
             width: 100%;
             background: linear-gradient(180deg, #2ecc71 0%, #1e824c 100%);
             color: #ffffff;
-            text-decoration: none;
             padding: 14px;
             border-radius: 20px;
             font-weight: 900;
             font-size: 15px;
-            letter-spacing: 0.3px;
-            box-shadow: 0 6px 18px rgba(30, 130, 76, 0.35);
+            box-shadow: 0 6px 16px rgba(30,130,76,0.35);
             border: none;
             cursor: pointer;
             transition: transform 0.1s;
         }
-        .btn-buy:active {
-            transform: scale(0.98);
-        }
-
+        .btn-buy:active { transform: scale(0.98); }
         .btn-locked {
             display: flex;
             align-items: center;
@@ -309,21 +266,22 @@
             font-size: 14px;
             border: none;
             cursor: not-allowed;
-            box-shadow: none;
         }
 
+        /* Bottom Navigation Bar */
         .bottom-nav {
             position: fixed;
             bottom: 0;
             width: 100%;
-            max-width: 430px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            max-width: 420px;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(12px);
             display: flex;
             justify-content: space-around;
+            align-items: center;
             padding: 10px 0;
-            border-top: 1px solid #e1eee4;
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.03);
+            border-top: 1px solid #e2eee5;
+            box-shadow: 0 -4px 16px rgba(0,0,0,0.04);
             z-index: 100;
         }
         .nav-item {
@@ -336,19 +294,14 @@
             font-weight: 700;
             gap: 3px;
         }
-        .nav-item.active {
-            color: #1b683b;
-        }
-        .nav-item span:first-child {
-            font-size: 19px;
-        }
+        .nav-item.active { color: #1b4332; font-weight: 800; }
+        .nav-item span:first-child { font-size: 19px; }
     </style>
-    <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#2ecc71">
 </head>
 <body>
 <div class="mobile-wrapper">
 
+    <!-- Top Header Bar -->
     <div class="top-bar">
         <div class="brand-title">🌾 Annapurna Seeds</div>
         <div style="display: flex; align-items: center; gap: 8px;">
@@ -356,16 +309,19 @@
                 🔔
                 <span id="bellRedDot" class="bell-dot"></span>
             </div>
-            <div class="user-chip" id="userBalChip">
-                <span>💰</span> <b id="headerBal">₹0.00</b>
+            <div class="user-chip">
+                <span>👛</span>
+                <b id="headerBal">₹0.00</b>
             </div>
         </div>
     </div>
 
+    <!-- Hero Banner -->
     <div class="hero-poster-box">
         <img src="bg-agro.png" alt="Annapurna Seeds Agro Campaign">
     </div>
 
+    <!-- Action Grid -->
     <div class="action-grid">
         <a href="recharge.html" class="action-btn">
             <div class="circle-icon bg-recharge">💳</div>
@@ -379,242 +335,223 @@
             <div class="circle-icon bg-tasks">📋</div>
             <span>Mission</span>
         </a>
-        <a href="https://t.me/Annapurnaseeds" target="_blank" class="action-btn">
-    <div class="circle-icon bg-service">🎧</div>
-    <span>Service</span>
-</a>
-<a href="https://t.me/annapurnaseeds1" target="_blank" class="action-btn">
-    <div class="circle-icon bg-channel">✈️</div>
-    <span>Channel</span>
-</a>
+        <a href="https://t.me/annapurnaseeds1" target="_blank" class="action-btn">
+            <div class="circle-icon bg-service">🎧</div>
+            <span>Service</span>
+        </a>
+        <a href="https://t.me/annapurnaseeds1" target="_blank" class="action-btn">
+            <div class="circle-icon bg-channel">📢</div>
+            <span>Channel</span>
+        </a>
     </div>
 
+    <!-- Section Title -->
     <div class="section-header">
-        <div>
-            <h3>🌾 Official Certified Agro Plans</h3>
-            <span>750 Days Long-Term Yield Payouts</span>
-        </div>
+        <h3>Official Certified Agro Plans</h3>
+        <span>750 Days Long-Term Yield Payouts</span>
     </div>
 
+    <!-- Plan A Card -->
     <div class="plan-card">
         <div class="big-img-container">
             <img src="plan-1.png" alt="Wheat F1 Hybrid Annapurna Seeds">
         </div>
         <div class="plan-top-bar">
-            <span class="plan-title-badge">🌱 PLAN A • WHEAT F1 HYBRID</span>
+            <span class="plan-title-badge">🌱 PLAN A: WHEAT F1 HYBRID</span>
             <span class="plan-payout-pill">DAILY PAYOUT</span>
         </div>
         <div class="plan-desc-box">
-            <div class="task-text">✅ <span>Daily 5 Quality Reviews Mandatory</span></div>
-            <div class="yield-text">💰 <span>Fixed Daily Income: ₹50 / Day</span></div>
+            <div class="task-text">✅ Daily 3 Quality Reviews Mandatory</div>
+            <div class="yield-text">💰 Fixed Daily Income: ₹50 / Day</div>
         </div>
         <div class="metrics-bar">
             <div class="metric-item"><span>Price</span><b>₹520</b></div>
             <div class="metric-item"><span>Daily</span><b style="color: #16a34a;">₹50</b></div>
-            <div class="metric-item"><span>Validity</span><b>750 D</b></div>
+            <div class="metric-item"><span>Validity</span><b>750 Days</b></div>
             <div class="metric-item"><span>Total Yield</span><b style="color: #15803d;">₹37,500</b></div>
         </div>
-        <button onclick="buyPlan('Wheat F1 Hybrid', 520, 50, 5)" class="btn-buy" style="border:none; cursor:pointer;">🛒 Invest & Activate Plan ₹520</button>
+        <button onclick="buyPlan('Wheat F1 Hybrid', 520, 50, 3)" class="btn-buy">Invest ₹520</button>
     </div>
 
+    <!-- Plan B Card -->
     <div class="plan-card">
         <div class="big-img-container">
             <img src="plan-2.png" alt="Soybean Prime Annapurna Seeds">
         </div>
         <div class="plan-top-bar">
-            <span class="plan-title-badge">🌱 PLAN B • SOYBEAN PRIME</span>
+            <span class="plan-title-badge">🌾 PLAN B: SOYBEAN PRIME</span>
             <span class="plan-payout-pill">DAILY PAYOUT</span>
         </div>
         <div class="plan-desc-box">
-            <div class="task-text">✅ <span>Daily 10 Quality Reviews Mandatory</span></div>
-            <div class="yield-text">💰 <span>Fixed Daily Income: ₹210 / Day</span></div>
+            <div class="task-text">✅ Daily 10 Quality Reviews Mandatory</div>
+            <div class="yield-text">💰 Fixed Daily Income: ₹210 / Day</div>
         </div>
         <div class="metrics-bar">
             <div class="metric-item"><span>Price</span><b>₹2,120</b></div>
             <div class="metric-item"><span>Daily</span><b style="color: #16a34a;">₹210</b></div>
-            <div class="metric-item"><span>Validity</span><b>750 D</b></div>
+            <div class="metric-item"><span>Validity</span><b>750 Days</b></div>
             <div class="metric-item"><span>Total Yield</span><b style="color: #15803d;">₹1,57,500</b></div>
         </div>
-<button onclick="buyPlan('Soybean Prime', 2120, 210, 10)" class="btn-buy" style="border:none; cursor:pointer;">🛒 Invest & Activate Plan ₹2,120</button>
+        <button onclick="buyPlan('Soybean Prime', 2120, 210, 10)" class="btn-buy">Invest ₹2,120</button>
     </div>
 
+    <!-- Plan C Card (Locked / VIP 3) -->
     <div class="plan-card" style="border: 2px dashed #cbd5e1; background: #fafafa; opacity: 0.92;">
         <div class="big-img-container" style="filter: grayscale(70%);">
             <img src="plan-3.png" alt="Mustard Elite Annapurna Seeds">
         </div>
         <div class="plan-top-bar">
-            <span class="plan-title-badge" style="background:#fee2e2; color:#b91c1c; border-color:#fecaca;">🔒 LOCKED • MUSTARD ELITE</span>
-            <span class="plan-payout-pill" style="background:#f1f5f9; color:#64748b;">VIP 3 LEVEL</span>
+            <span class="plan-title-badge" style="background: #fee2e2; color: #b91c1c; border-color: #fecaca;">🔒 LOCKED - VIP 3</span>
+            <span class="plan-payout-pill" style="background: #f1f5f9; color: #64748b;">VIP 3 LEVEL</span>
         </div>
-        <div class="plan-desc-box" style="background:#f8fafc; border-color:#e2e8f0;">
-            <div class="task-text" style="color:#64748b;">🔒 <span>Daily 15 Quality Reviews Mandatory</span></div>
-            <div class="yield-text" style="color:#64748b;">💰 <span>Fixed Daily Income: ₹510 / Day</span></div>
+        <div class="plan-desc-box" style="background: #fbfbfc; border-color: #e2e8f0;">
+            <div class="task-text" style="color: #94a3b8;">🔒 Daily 15 Quality Reviews Mandatory</div>
+            <div class="yield-text" style="color: #64748b;">💰 Fixed Daily Income: ₹510 / Day</div>
         </div>
-        <div class="metrics-bar" style="background:#ffffff;">
-            <div class="metric-item"><span>Price</span><b style="color:#64748b;">₹4,920</b></div>
-            <div class="metric-item"><span>Daily</span><b style="color:#64748b;">₹510</b></div>
-            <div class="metric-item"><span>Validity</span><b style="color:#64748b;">750 D</b></div>
-            <div class="metric-item"><span>Total Yield</span><b style="color:#64748b;">₹3,82,500</b></div>
+        <div class="metrics-bar" style="background: #ffffff;">
+            <div class="metric-item"><span>Price</span><b style="color: #64748b;">₹4,920</b></div>
+            <div class="metric-item"><span>Daily</span><b style="color: #64748b;">₹510</b></div>
+            <div class="metric-item"><span>Validity</span><b style="color: #648a72;">750 Days</b></div>
+            <div class="metric-item"><span>Total Yield</span><b style="color: #648a72;">₹3,82,500</b></div>
         </div>
-        <button class="btn-locked" onclick="alert('🔒 Yeh Plan LOCKED hai!\nPehle ₹520 ya ₹2,120 ka plan activate karein.')">
+        <button class="btn-locked" onclick="alert('🔒 Yeh Plan LOCKED hai!\nPehle ₹520 ya ₹2,120 ka plan activate karein.\n🔓 Locked (Complete Previous Tasks)')">
             🔒 Locked (Complete Previous Tasks)
         </button>
     </div>
 
+    <!-- Plan D Card (Locked / VIP 4) -->
     <div class="plan-card" style="border: 2px dashed #cbd5e1; background: #fafafa; opacity: 0.92;">
         <div class="big-img-container" style="filter: grayscale(70%);">
             <img src="plan-4.png" alt="Sunflower Gold Annapurna Seeds">
         </div>
         <div class="plan-top-bar">
-            <span class="plan-title-badge" style="background:#fee2e2; color:#b91c1c; border-color:#fecaca;">🔒 LOCKED • SUNFLOWER GOLD</span>
-            <span class="plan-payout-pill" style="background:#f1f5f9; color:#64748b;">VIP 4 LEVEL</span>
+            <span class="plan-title-badge" style="background: #fee2e2; color: #b91c1c; border-color: #fecaca;">🔒 LOCKED - VIP 4</span>
+            <span class="plan-payout-pill" style="background: #f1f5f9; color: #64748b;">VIP 4 LEVEL</span>
         </div>
-        <div class="plan-desc-box" style="background:#f8fafc; border-color:#e2e8f0;">
-            <div class="task-text" style="color:#64748b;">🔒 <span>Daily 20 Quality Reviews Mandatory</span></div>
-            <div class="yield-text" style="color:#64748b;">💰 <span>Fixed Daily Income: ₹1,050 / Day</span></div>
+        <div class="plan-desc-box" style="background: #fbfbfc; border-color: #e2e8f0;">
+            <div class="task-text" style="color: #94a3b8;">🔒 Daily 20 Quality Reviews Mandatory</div>
+            <div class="yield-text" style="color: #648a72;">💰 Fixed Daily Income: ₹1,050 / Day</div>
         </div>
-        <div class="metrics-bar" style="background:#ffffff;">
-            <div class="metric-item"><span>Price</span><b style="color:#64748b;">₹9,820</b></div>
-            <div class="metric-item"><span>Daily</span><b style="color:#64748b;">₹1,050</b></div>
-            <div class="metric-item"><span>Validity</span><b style="color:#64748b;">750 D</b></div>
-            <div class="metric-item"><span>Total Yield</span><b style="color:#64748b;">₹7,87,500</b></div>
+        <div class="metrics-bar" style="background: #ffffff;">
+            <div class="metric-item"><span>Price</span><b style="color: #648a72;">₹9,820</b></div>
+            <div class="metric-item"><span>Daily</span><b style="color: #648a72;">₹1,050</b></div>
+            <div class="metric-item"><span>Validity</span><b style="color: #648a72;">750 Days</b></div>
+            <div class="metric-item"><span>Total Yield</span><b style="color: #648a72;">₹7,87,500</b></div>
         </div>
-        <button class="btn-locked" onclick="alert('🔒 Yeh Plan LOCKED hai!\nPehle niche wale plans activate karein.')">
+        <button class="btn-locked" onclick="alert('🔒 Yeh Plan LOCKED hai!\nPehle niche wale plan activate karein.\n🔓 Locked (VIP 4 Required)')">
             🔒 Locked (VIP 4 Required)
         </button>
     </div>
 
+    <!-- Plan E Card (Locked / VIP 5) -->
     <div class="plan-card" style="border: 2px dashed #cbd5e1; background: #fafafa; opacity: 0.92;">
         <div class="big-img-container" style="filter: grayscale(70%);">
             <img src="plan-5.png" alt="Cotton King Annapurna Seeds">
         </div>
         <div class="plan-top-bar">
-            <span class="plan-title-badge" style="background:#fee2e2; color:#b91c1c; border-color:#fecaca;">🔒 LOCKED • COTTON KING</span>
-            <span class="plan-payout-pill" style="background:#f1f5f9; color:#64748b;">VIP 5 LEVEL</span>
+            <span class="plan-title-badge" style="background: #fee2e2; color: #b91c1c; border-color: #fecaca;">🔒 LOCKED - VIP 5</span>
+            <span class="plan-payout-pill" style="background: #f1f5f9; color: #64748b;">VIP 5 LEVEL</span>
         </div>
-        <div class="plan-desc-box" style="background:#f8fafc; border-color:#e2e8f0;">
-            <div class="task-text" style="color:#64748b;">🔒 <span>Daily 30 Quality Reviews Mandatory</span></div>
-            <div class="yield-text" style="color:#64748b;">💰 <span>Fixed Daily Income: ₹2,200 / Day</span></div>
+        <div class="plan-desc-box" style="background: #fbfbfc; border-color: #e2e8f0;">
+            <div class="task-text" style="color: #94a3b8;">🔒 Daily 30 Quality Reviews Mandatory</div>
+            <div class="yield-text" style="color: #648a72;">💰 Fixed Daily Income: ₹2,200 / Day</div>
         </div>
-        <div class="metrics-bar" style="background:#ffffff;">
-            <div class="metric-item"><span>Price</span><b style="color:#64748b;">₹19,820</b></div>
-            <div class="metric-item"><span>Daily</span><b style="color:#64748b;">₹2,200</b></div>
-            <div class="metric-item"><span>Validity</span><b style="color:#64748b;">750 D</b></div>
-            <div class="metric-item"><span>Total Yield</span><b style="color:#64748b;">₹16,50,000</b></div>
+        <div class="metrics-bar" style="background: #ffffff;">
+            <div class="metric-item"><span>Price</span><b style="color: #648a72;">₹19,820</b></div>
+            <div class="metric-item"><span>Daily</span><b style="color: #648a72;">₹2,200</b></div>
+            <div class="metric-item"><span>Validity</span><b style="color: #648a72;">750 Days</b></div>
+            <div class="metric-item"><span>Total Yield</span><b style="color: #648a72;">₹16,50,000</b></div>
         </div>
-        <button class="btn-locked" onclick="alert('🔒 Yeh Plan LOCKED hai!')">
+        <button class="btn-locked" onclick="alert('🔒 Yeh Plan LOCKED hai!\n🔓 Locked (VIP 5 Required)')">
             🔒 Locked (VIP 5 Required)
         </button>
     </div>
 
+    <!-- Plan F Card (Locked / State Leader) -->
     <div class="plan-card" style="border: 2px dashed #cbd5e1; background: #fafafa; opacity: 0.92;">
         <div class="big-img-container" style="filter: grayscale(70%);">
             <img src="plan-6.png" alt="Paddy Supreme F1 Annapurna Seeds">
         </div>
         <div class="plan-top-bar">
-            <span class="plan-title-badge" style="background:#fee2e2; color:#b91c1c; border-color:#fecaca;">🔒 LOCKED • PADDY SUPREME F1</span>
-            <span class="plan-payout-pill" style="background:#f1f5f9; color:#64748b;">STATE LEADER</span>
+            <span class="plan-title-badge" style="background: #fee2e2; color: #b91c1c; border-color: #fecaca;">🔒 LOCKED - STATE LEADER</span>
+            <span class="plan-payout-pill" style="background: #f1f5f9; color: #64748b;">STATE LEADER</span>
         </div>
-        <div class="plan-desc-box" style="background:#f8fafc; border-color:#e2e8f0;">
-            <div class="task-text" style="color:#64748b;">🔒 <span>Daily 40 Quality Reviews Mandatory</span></div>
-            <div class="yield-text" style="color:#64748b;">💰 <span>Fixed Daily Income: ₹3,400 / Day</span></div>
+        <div class="plan-desc-box" style="background: #fbfbfc; border-color: #e2e8f0;">
+            <div class="task-text" style="color: #94a3b8;">🔒 Daily 40 Quality Reviews Mandatory</div>
+            <div class="yield-text" style="color: #648a72;">💰 Fixed Daily Income: ₹5,400 / Day</div>
         </div>
-        <div class="metrics-bar" style="background:#ffffff;">
-            <div class="metric-item"><span>Price</span><b style="color:#64748b;">₹29,200</b></div>
-            <div class="metric-item"><span>Daily</span><b style="color:#64748b;">₹3,400</b></div>
-            <div class="metric-item"><span>Validity</span><b style="color:#64748b;">750 D</b></div>
-            <div class="metric-item"><span>Total Yield</span><b style="color:#64748b;">₹25,50,000</b></div>
+        <div class="metrics-bar" style="background: #ffffff;">
+            <div class="metric-item"><span>Price</span><b style="color: #648a72;">₹49,100</b></div>
+            <div class="metric-item"><span>Daily</span><b style="color: #648a72;">₹5,400</b></div>
+            <div class="metric-item"><span>Validity</span><b style="color: #648a72;">750 Days</b></div>
+            <div class="metric-item"><span>Total Yield</span><b style="color: #648a72;">₹40,50,000</b></div>
         </div>
-        <button class="btn-locked" onclick="alert('🔒 Yeh Plan LOCKED hai!')">
+        <button class="btn-locked" onclick="alert('🔒 Yeh Plan LOCKED hai!\n🔓 Locked (State Leader Level)')">
             🔒 Locked (State Leader Level)
         </button>
     </div>
-        <!-- Baki sabhi cards / content yahan honge -->
-
-    <!-- Install App Button -->
-    <button id="installBtn" style="display:none; background: #2ecc71; color: #fff; padding: 12px 20px; border:none; border-radius: 12px; font-weight: bold; width: 100%; margin-top: 10px;">📲 Install Annapurna App</button>
 
     <!-- Bottom Navigation Bar -->
     <div class="bottom-nav">
-        ...
-    </div>
-    
-
-    <div class="bottom-nav">
-        <a href="index.html" class="nav-item active"><span>🏠</span><span>Home</span></a>
-        <a href="tasks.html" class="nav-item"><span>📋</span><span>Tasks</span></a>
-        <a href="team.html" class="nav-item"><span>👥</span><span>Team</span></a>
-        <a href="community.html" class="nav-item"><span>💬</span><span>Community</span></a>
-        <a href="profile.html" class="nav-item"><span>👤</span><span>My</span></a>
+        <a href="index.html" class="nav-item active">
+            <span>🏠</span><span>Home</span>
+        </a>
+        <a href="tasks.html" class="nav-item">
+            <span>📈</span><span>Income</span>
+        </a>
+        <a href="team.html" class="nav-item">
+            <span>👥</span><span>Team</span>
+        </a>
+        <a href="team.html" class="nav-item">
+            <span>🔗</span><span>Share</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <span>👤</span><span>My</span>
+        </a>
     </div>
 
 </div>
-<div id="agroNoticeModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 15, 8, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center; padding: 12px;">
-    
-    <div style="position: relative; width: 100%; max-width: 390px; max-height: 92vh; overflow-y: auto; background: #062b16 url('popup-bg.png') center top/cover no-repeat; border-radius: 28px; border: 3px solid #86efac; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6); padding: 14px 12px 16px; scrollbar-width: none;">
-        
-        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(6, 43, 22, 0.45) 0%, rgba(6, 43, 22, 0.75) 45%, rgba(6, 43, 22, 0.96) 100%); border-radius: 26px; pointer-events: none; z-index: 1;"></div>
-
-        <div style="position: relative; z-index: 2;">
-            <button onclick="closeAgroModal()" style="float: right; width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #22c55e, #15803d); color: #ffffff; border: 2px solid #ffffff; font-size: 16px; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.4); margin-bottom: 6px;">✕</button>
-
-            <div style="text-align: center; margin-bottom: 12px; clear: both;">
-                <div style="display: inline-block; background: linear-gradient(135deg, #14532d, #052e16); color: #facc15; padding: 6px 18px; border-radius: 20px; border: 2px solid #fde047; box-shadow: 0 4px 14px rgba(0,0,0,0.35);">
-                    <span style="font-size: 15px;">🔔</span>
-                    <b style="font-size: 14px; letter-spacing: 0.8px; text-transform: uppercase; margin-left: 4px;">IMPORTANT UPDATE</b>
-                </div>
-                <div style="font-size: 11px; font-weight: 900; color: #bbf7d0; margin-top: 6px; letter-spacing: 0.5px;">
-                    🌾 ANNAPURNA SEEDS APP • KEY INFORMATION
-                </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
-                <div style="background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(8px); border: 1.5px solid #86efac; border-radius: 18px; padding: 10px; text-align: center;">
-                    <div style="font-size: 20px;">💳</div>
-                    <span style="font-size: 10px; font-weight: 800; color: #15803d; text-transform: uppercase; display: block;">Min Recharge</span>
-                    <b style="font-size: 21px; font-weight: 900; color: #0d3820; display: block; margin-top: 2px;">₹520</b>
-                </div>
-                <div style="background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(8px); border: 1.5px solid #fde68a; border-radius: 18px; padding: 10px; text-align: center;">
-                    <div style="font-size: 20px;">🏦</div>
-                    <span style="font-size: 10px; font-weight: 800; color: #b45309; text-transform: uppercase; display: block;">Min Withdrawal</span>
-                    <b style="font-size: 21px; font-weight: 900; color: #9a3412; display: block; margin-top: 2px;">₹330</b>
-                </div>
-            </div>
-
-            <div style="background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(8px); border: 1.5px solid #86efac; border-radius: 18px; padding: 12px 14px; margin-bottom: 10px;">
-                <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px dashed #cbd5e1; padding-bottom: 6px; margin-bottom: 8px;">
-                    <b style="font-size: 12px; color: #14532d; text-transform: uppercase;">👑 2nd Plan Example</b>
-                    <span style="font-size: 10px; background: #dcfce7; color: #15803d; padding: 3px 8px; border-radius: 8px; font-weight: 900;">BUY ₹2,120 PLAN</span>
-                </div>
-                <div style="font-size: 11px; font-weight: 800; color: #1e293b; display: flex; flex-direction: column; gap: 5px;">
-                    <div style="display: flex; justify-content: space-between;"><span>Plan Price :</span><b>₹2,120</b></div>
-                    <div style="display: flex; justify-content: space-between;"><span>Daily Task Income :</span><b style="color: #16a34a;">₹210 / Day</b></div>
-                    <div style="display: flex; justify-content: space-between;"><span>Plan Cycle :</span><b>750 Days</b></div>
-                    <div style="display: flex; justify-content: space-between; border-top: 1px solid #e2e8f0; padding-top: 5px;">
-                        <span style="color: #14532d; font-weight: 900;">Total Net Yield :</span>
-                        <b style="color: #15803d; font-size: 13px;">₹1,57,500</b>
-                    </div>
-                </div>
-            </div>
-
-            <div style="background: rgba(255, 255, 255, 0.94); border: 1.5px solid #bbf7d0; border-radius: 18px; padding: 12px; margin-bottom: 10px;">
-                <div style="text-align: center; margin-bottom: 8px;"><span style="font-size: 11px; font-weight: 900; color: #15803d; text-transform: uppercase;">🏆 Team Referral Commission</span></div>
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; text-align: center;">
-                    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 8px 4px;"><span style="font-size: 9px; color: #64748b; font-weight: 800; display: block;">LEVEL 1</span><b style="font-size: 15px; color: #15803d;">15%</b></div>
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 8px 4px;"><span style="font-size: 9px; color: #64748b; font-weight: 800; display: block;">LEVEL 2</span><b style="font-size: 15px; color: #0284c7;">3%</b></div>
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 8px 4px;"><span style="font-size: 9px; color: #64748b; font-weight: 800; display: block;">LEVEL 3</span><b style="font-size: 15px; color: #eab308;">1%</b></div>
-                </div>
-            </div>
-
-            <a href="https://t.me/annapurnaseeds1" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%); color: #ffffff; text-decoration: none; padding: 12px; border-radius: 16px; font-size: 13px; font-weight: 900; margin-bottom: 8px;">
-    <span>✈️</span> <span>JOIN OUR TELEGRAM CHANNEL ➔</span>
-            </a>
-            
-
-            <button onclick="closeAgroModal()" style="width: 100%; background: linear-gradient(180deg, #22c55e 0%, #15803d 100%); color: #ffffff; border: none; border-radius: 16px; padding: 12px; font-size: 13px; font-weight: 900; cursor: pointer;">
-                I Understand & Continue
-            </button>
+<!-- Agro Campaign Notice Modal -->
+<div id="agroNoticeModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); backdrop-filter: blur(8px); z-index: 200; align-items: center; justify-content: center; padding: 16px;">
+    <div style="position: relative; width: 100%; max-width: 390px; max-height: 85vh; overflow-y: auto; background: #fdfdfc; border-radius: 28px; padding: 24px 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 2px solid #bbf7d0;">
+        <button onclick="closeAgroModal()" style="position: absolute; top: 14px; right: 14px; width: 34px; height: 34px; border-radius: 50%; background: #eef6f0; border: none; font-size: 16px; font-weight: 900; color: #1e824c; cursor: pointer; display: flex; align-items: center; justify-content: center;">✕</button>
+        <div style="text-align: center; margin-bottom: 12px; clear: both;">
+            <div style="display: inline-block; background: linear-gradient(135deg, #14532d, #052e16); color: #a3e635; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase;">Annapurna Seeds App • Key Information</div>
         </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+            <div style="background: rgba(255, 255, 255, 0.92); border-radius: 16px; padding: 12px 10px; border: 1.3px solid #6ee7b7; text-align: center;">
+                <span style="font-size: 10px; color: #15803d; text-transform: uppercase; display: block;">Plan A (Wheat)</span>
+                <b style="font-size: 21px; font-weight: 900; color: #0d3820; display: block; margin-top: 2px;">₹520</b>
+            </div>
+            <div style="background: rgba(255, 255, 255, 0.92); border-radius: 16px; padding: 12px 10px; border: 1.3px solid #6ee7b7; text-align: center;">
+                <span style="font-size: 10px; color: #044330; text-transform: uppercase; display: block;">Plan B (Soybean)</span>
+                <b style="font-size: 21px; font-weight: 900; color: #1e824c; display: block; margin-top: 2px;">₹2,120</b>
+            </div>
+        </div>
+
+        <div style="background: rgba(255, 255, 255, 0.94); border-radius: 18px; padding: 14px 14px; border: 1.5px solid #dcece0; margin-bottom: 12px;">
+            <b style="font-size: 12px; color: #14532d; text-transform: uppercase; display: block; margin-bottom: 4px;">🌱 2nd Plan Example</b>
+            <div style="font-size: 11px; font-weight: 800; color: #1e824c; display: flex; justify-content: space-between;"><span>Plan Price :</span><span>₹2,120</span></div>
+            <div style="font-size: 11px; font-weight: 800; color: #1e824c; display: flex; justify-content: space-between;"><span>Daily Task Income :</span><span>₹210 / Day</span></div>
+            <div style="font-size: 11px; font-weight: 800; color: #1e824c; display: flex; justify-content: space-between;"><span>Plan Cycle :</span><span>750 Days</span></div>
+            <div style="font-size: 12px; font-weight: 900; color: #14532d; display: flex; justify-content: space-between; border-top: 1px solid #dcece0; margin-top: 6px; padding-top: 6px;">
+                <span>Total Net Yield :</span>
+                <b style="color: #15803d; font-size: 13px;">₹1,57,500</b>
+            </div>
+        </div>
+
+        <div style="background: rgba(255, 255, 255, 0.94); border: 1.5px solid #bbf7d0; border-radius: 18px; padding: 12px 14px; text-align: center; margin-bottom: 14px;">
+            <div style="text-align: center; margin-bottom: 6px;">
+                <a href="https://t.me/annapurnaseeds1" target="_blank" style="display: inline-block; background: #eef6f0; color: #15803d; text-decoration: none; padding: 8px 14px; border-radius: 12px; font-size: 12px; font-weight: 900; border: 1px solid #bbf7d0;">
+                    ✈️ JOIN OUR TELEGRAM CHANNEL
+                </a>
+            </div>
+        </div>
+
+        <button onclick="closeAgroModal()" style="width: 100%; background: linear-gradient(180deg, #22c55e 0%, #15803d 100%); border: none; border-radius: 20px; padding: 13px; color: #ffffff; font-size: 14px; font-weight: 900; cursor: pointer; box-shadow: 0 6px 16px rgba(21,128,61,0.3); text-transform: uppercase;">
+            I Understand & Continue
+        </button>
     </div>
 </div>
 
@@ -625,18 +562,70 @@ const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 const savedUserStr = localStorage.getItem('annapurna_user');
 if (!savedUserStr) { window.location.href = 'login.html'; }
-const currentUser = JSON.parse(savedUserStr || '{}');
+const currentuser = JSON.parse(savedUserStr || '{}');
 
 async function syncHeaderBalance() {
     try {
-        const { data } = await client.from('users').select('balance').eq('mobile', currentUser.mobile).single();
-        if (data) { document.getElementById('headerBal').innerText = "₹" + Number(data.balance || 0).toFixed(2); }
-    } catch (e) { console.error(e); }
+        const { data } = await client.from('users').select('balance').eq('mobile', currentuser.mobile).single();
+        if (data) {
+            document.getElementById('headerBal').innerText = "₹" + Number(data.balance || 0).toFixed(2);
+        }
+    } catch(e) {
+        console.error(e);
+    }
+}
+syncHeaderBalance();
+
+// 3-Tier Commission Distribution Function (L1: 15%, L2: 5%, L3: 2%)
+async function distributeCommission(buyerMobile, planPrice) {
+    try {
+        const { data: buyer } = await client.from('users').select('invited_by').eq('mobile', buyerMobile).single();
+        if (!buyer || !buyer.invited_by) return;
+
+        let l1Code = buyer.invited_by;
+        const { data: l1User } = await client.from('users').select('mobile, balance, commission, invited_by, invite_code').eq('invite_code', l1Code).single();
+        
+        if (l1User) {
+            let l1Comm = planPrice * 0.15; // Level 1 (15%)
+            await client.from('users').update({
+                balance: Number(l1User.balance || 0) + l1Comm,
+                commission: Number(l1User.commission || 0) + l1Comm
+            }).eq('mobile', l1User.mobile);
+
+            if (l1User.invited_by) {
+                let l2Code = l1User.invited_by;
+                const { data: l2User } = await client.from('users').select('mobile, balance, commission, invited_by, invite_code').eq('invite_code', l2Code).single();
+                
+                if (l2User) {
+                    let l2Comm = planPrice * 0.05; // Level 2 (5%)
+                    await client.from('users').update({
+                        balance: Number(l2User.balance || 0) + l2Comm,
+                        commission: Number(l2User.commission || 0) + l2Comm
+                    }).eq('mobile', l2User.mobile);
+
+                    if (l2User.invited_by) {
+                        let l3Code = l2User.invited_by;
+                        const { data: l3User } = await client.from('users').select('mobile, balance, commission').eq('invite_code', l3Code).single();
+                        
+                        if (l3User) {
+                            let l3Comm = planPrice * 0.02; // Level 3 (2%)
+                            await client.from('users').update({
+                                balance: Number(l3User.balance || 0) + l3Comm,
+                                commission: Number(l3User.commission || 0) + l3Comm
+                            }).eq('mobile', l3User.mobile);
+                        }
+                    }
+                }
+            }
+        }
+    } catch (err) {
+        console.error("Commission Distribution Error:", err);
+    }
 }
 
-// Plan Purchase Function
+// Plan Purchase Function with Commission Trigger
 async function buyPlan(planName, price, dailyIncome, totalReviews) {
-    if (!currentUser.mobile) {
+    if (!currentuser.mobile) {
         window.location.href = 'login.html';
         return;
     }
@@ -647,7 +636,7 @@ async function buyPlan(planName, price, dailyIncome, totalReviews) {
         const { data: userData, error: userErr } = await client
             .from('users')
             .select('balance')
-            .eq('mobile', currentUser.mobile)
+            .eq('mobile', currentuser.mobile)
             .single();
 
         if (userErr || !userData) {
@@ -656,10 +645,9 @@ async function buyPlan(planName, price, dailyIncome, totalReviews) {
         }
 
         const currentBal = Number(userData.balance || 0);
-
         if (currentBal < Number(price)) {
-            alert("❌ Wallet me balance kam hai! Kripya pehle Recharge karein.");
-            window.location.href = 'recharge.html';
+            alert("❌ Wallet me balance kam hai! Kripya pehle recharge karein.");
+            window.location.href = "recharge.html";
             return;
         }
 
@@ -671,67 +659,53 @@ async function buyPlan(planName, price, dailyIncome, totalReviews) {
                 balance: newBalance,
                 active_plan: Number(price)
             })
-            .eq('mobile', currentUser.mobile);
+            .eq('mobile', currentuser.mobile);
 
         if (updateErr) throw updateErr;
 
         const { error: planErr } = await client
             .from('user_plans')
-            .insert({
-                mobile: currentUser.mobile,
+            .insert([{
+                mobile: currentuser.mobile,
                 plan_name: planName,
                 plan_price: Number(price),
                 daily_income: Number(dailyIncome),
                 total_reviews: Number(totalReviews),
                 validity_days: 750,
                 completed_today: 0
-            });
+            }]);
 
         if (planErr) {
             alert("Plan Table Error: " + planErr.message);
             return;
         }
 
-        alert(`🎉 Badhai ho! ${planName} safaltaपूर्वक purchase ho gaya hai.`);
-        window.location.href = 'tasks.html';
+        // Trigger 3-Tier Commission Distribution
+        await distributeCommission(currentuser.mobile, Number(price));
+
+        alert(`🎉 Badhai ho! ${planName} safaltapurvak purchase ho gaya hai.`);
+        window.location.href = "tasks.html";
 
     } catch (err) {
         alert("Purchase Error: " + err.message);
     }
 }
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js')
-        .then(() => console.log('Service Worker Registered Successfully'))
-        .catch((err) => console.log('SW Registration Failed', err));
-        }
-    
-function openAgroModal() { document.getElementById('agroNoticeModal').style.display = 'flex'; }
-function closeAgroModal() { document.getElementById('agroNoticeModal').style.display = 'none'; sessionStorage.setItem('annapurna_popup_viewed', 'true'); }
+
+function openAgroModal() {
+    document.getElementById('agroNoticeModal').style.display = 'flex';
+}
+function closeAgroModal() {
+    document.getElementById('agroNoticeModal').style.display = 'none';
+    sessionStorage.setItem('annapurna_popup_viewed', 'true');
+}
 
 window.addEventListener('DOMContentLoaded', () => {
     syncHeaderBalance();
-    if (!sessionStorage.getItem('annapurna_popup_viewed')) { setTimeout(openAgroModal, 500); }
-});
-</script>
-    <script>
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    document.getElementById('installBtn').style.display = 'block';
-});
-
-document.getElementById('installBtn').addEventListener('click', async () => {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-            console.log('User accepted the install prompt');
-        }
-        deferredPrompt = null;
-        document.getElementById('installBtn').style.display = 'none';
+    if (!sessionStorage.getItem('annapurna_popup_viewed')) {
+        setTimeout(openAgroModal, 500);
     }
 });
-    </script>
+</script>
+
 </body>
 </html>
