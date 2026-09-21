@@ -14,7 +14,6 @@
         }
 
         body {
-            /* Aapki nayi upload ki hui image yahan background me fit hogi */
             background: linear-gradient(rgba(10, 35, 20, 0.45), rgba(10, 35, 20, 0.7)), url('bg-field.png') center top/cover no-repeat fixed;
             background-color: #1b4332;
             min-height: 100vh;
@@ -542,7 +541,8 @@ async function initShare() {
         document.getElementById('refLinkInput').value = registerUrl;
         document.getElementById('refCodeInput').value = inviteCode;
 
-        const { data: team } = await client.from('users').select('mobile, active_plan').eq('referred_by', inviteCode);
+        // Corrected from referred_by to invited_by
+        const { data: team } = await client.from('users').select('mobile, active_plan').eq('invited_by', inviteCode);
         const count = team ? team.length : 0;
         document.getElementById('totalInvites').innerText = count;
 
@@ -579,4 +579,4 @@ initShare();
 
 </body>
     </html>
-    
+                
