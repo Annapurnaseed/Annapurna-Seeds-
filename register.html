@@ -256,12 +256,12 @@
                 </div>
             </div>
 
-            <!-- Referral Code -->
+            <!-- Referral Code (Compulsory) -->
             <div class="pill-field">
                 <div class="field-icon icon-gift">🎁</div>
                 <div class="field-body">
-                    <label>Invitation Code (Optional)</label>
-                    <input type="text" id="regInviteCode" placeholder="Enter referral code">
+                    <label>Invitation Code *</label>
+                    <input type="text" id="regInviteCode" placeholder="Enter referral code" required>
                 </div>
             </div>
 
@@ -314,10 +314,29 @@ async function handleRegister(e) {
         return;
     }
 
+    if (!invite) {
+        alert("Invitation code bharna anivarya (mandatory) hai!");
+        return;
+    }
+
     btn.disabled = true;
     btn.querySelector('span:nth-child(2)').innerText = "Creating...";
 
     try {
+        // Check if referral code exists in database before registering
+        const { data: inviterCheck, error: inviterErr } = await client
+            .from('users')
+            .select('invite_code')
+            .eq('invite_code', invite)
+            .maybeSingle();
+
+        if (!inviterCheck) {
+            alert("Galat Invitation Code! Kripya sahi code dalein.");
+            btn.disabled = false;
+            btn.querySelector('span:nth-child(2)').innerText = "Register Now";
+            return;
+        }
+
         const { data: existingUser } = await client
             .from('users')
             .select('mobile')
@@ -337,7 +356,7 @@ async function handleRegister(e) {
                 mobile: mobile,
                 password: pass,
                 invite_code: myCode,
-                invited_by: invite || null,
+                invited_by: invite,
                 balance: 0.00
             }]);
 
@@ -356,5 +375,4 @@ async function handleRegister(e) {
 </script>
 
 </body>
-                            </html>
-                            
+</html>
