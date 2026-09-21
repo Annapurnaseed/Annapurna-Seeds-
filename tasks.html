@@ -107,21 +107,36 @@
             <span style="background: #22c55e; color: #ffffff; font-size: 13px; font-weight: 900; padding: 4px 10px; border-radius: 12px;">+₹20</span>
         </div>
         
-        <p style="font-size: 11px; opacity: 0.95; line-height: 1.4; margin-bottom: 12px;">
-            Channel join karein aur payein <b>instant ₹20 seedha apne wallet mein!</b>
-        </p>
-
-        <div style="display: flex; gap: 8px;">
-            <a href="https://t.me/your_official_channel" target="_blank" onclick="markTgVisited()" 
-               style="flex: 1; background: #ffffff; color: #0369a1; text-decoration: none; text-align: center; padding: 11px; border-radius: 14px; font-size: 12px; font-weight: 800; display: block;">
-                📢 Step 1: Join Channel
-            </a>
-            <button id="btnClaimTg" onclick="claimTelegramReward()" 
-                    style="flex: 1; background: #22c55e; color: #ffffff; border: none; padding: 11px; border-radius: 14px; font-size: 12px; font-weight: 900; cursor: pointer;">
-                🎁 Step 2: Claim ₹20
-            </button>
+        <!-- Telegram Channel Task (₹10) -->
+<div id="tgTaskCard" class="tg-bonus-card" style="background: linear-gradient(135deg, #0284c7, #0369a1); border-radius: 24px; padding: 16px; margin: 0 14px 14px; color: #fff;">
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+        <div style="width: 42px; height: 42px; border-radius: 14px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 20px;">✈️</div>
+        <div>
+            <h3 style="font-size: 15px; font-weight: 900;">Join Official Telegram</h3>
+            <p style="font-size: 11px; opacity: 0.9;">Join channel and claim ₹10 instant bonus</p>
         </div>
     </div>
+    <div style="display: flex; gap: 8px;">
+        <a href="https://t.me/annapurnaseeds1" target="_blank" onclick="markVisited('tg')" style="flex: 1; background: #ffffff; color: #0284c7; text-decoration: none; text-align: center; padding: 10px; border-radius: 12px; font-weight: 900; font-size: 12px;">Step 1: Join Channel</a>
+        <button id="btnClaimTg" onclick="claimTaskReward('tg', 10)" style="flex: 1; background: #22c55e; color: #fff; border: none; padding: 10px; border-radius: 12px; font-weight: 900; font-size: 12px; cursor: pointer;">Step 2: Claim ₹10</button>
+    </div>
+</div>
+
+<!-- WhatsApp Group Task (₹10) -->
+<div id="waTaskCard" class="tg-bonus-card" style="background: linear-gradient(135deg, #16a34a, #15803d); border-radius: 24px; padding: 16px; margin: 0 14px 14px; color: #fff;">
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+        <div style="width: 42px; height: 42px; border-radius: 14px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 20px;">💬</div>
+        <div>
+            <h3 style="font-size: 15px; font-weight: 900;">Join Official WhatsApp</h3>
+            <p style="font-size: 11px; opacity: 0.9;">Join group and claim ₹10 instant bonus</p>
+        </div>
+    </div>
+    <div style="display: flex; gap: 8px;">
+        <a href="https://chat.whatsapp.com/LXQO8uNpByzIQCyXyByVR9?s=sh&p=a&mlu=4&ilr=4" target="_blank" onclick="markVisited('wa')" style="flex: 1; background: #ffffff; color: #16a34a; text-decoration: none; text-align: center; padding: 10px; border-radius: 12px; font-weight: 900; font-size: 12px;">Step 1: Join Group</a>
+        <button id="btnClaimWa" onclick="claimTaskReward('wa', 10)" style="flex: 1; background: #f59e0b; color: #fff; border: none; padding: 10px; border-radius: 12px; font-weight: 900; font-size: 12px; cursor: pointer;">Step 2: Claim ₹10</button>
+    </div>
+</div>
+        
 
     <!-- 2 Kaveri Style Mode Switchers -->
     <div class="tab-switcher">
@@ -330,19 +345,43 @@ async function runPlanTask(planId, rewardPerReview, totalReviews, currentComplet
     }, 1000);
 }
 
-function markTgVisited() { hasVisitedTg = true; }
+let hasVisitedTg = false;
+let hasVisitedWa = false;
 
-async function claimTelegramReward() {
-    if (!hasVisitedTg) { alert("Pehle Telegram channel join karein!"); return; }
-    const { data: user } = await client.from('users').select('balance, telegram_claimed').eq('mobile', savedUser.mobile).single();
-    if (user && user.telegram_claimed) { alert("Pehle hi claim kar chuke hain!"); return; }
-    const newBal = Number(user.balance || 0) + 20;
-    await client.from('users').update({ balance: newBal, telegram_claimed: true }).eq('mobile', savedUser.mobile);
-    document.getElementById('userWalletTop').innerText = "₹" + newBal.toFixed(2);
-    renderTgClaimedUI();
-    alert("🎉 Telegram bonus ₹20 credit ho gaya!");
+function markVisited(type) {
+    if(type === 'tg') hasVisitedTg = true;
+    if(type === 'wa') hasVisitedWa = true;
 }
 
+async function claimTaskReward(type, amount) {
+    if (type === 'tg' && !hasVisitedTg) { alert("Pehle Telegram channel join karein!"); return; }
+    if (type === 'wa' && !hasVisitedWa) { alert("Pehle WhatsApp group join karein!"); return; }
+
+    const dbField = type === 'tg' ? 'telegram_claimed' : 'whatsapp_claimed';
+
+    try {
+        const { data: checkData } = await client.from('users').select(dbField).eq('mobile', savedUser.mobile).single();
+        if (checkData && checkData[dbField]) {
+            alert("⚠️ Aap yeh bonus pehle hi claim kar chuke hain!");
+            return;
+        }
+
+        const { data: userData } = await client.from('users').select('balance').eq('mobile', savedUser.mobile).single();
+        const newBal = Number(userData.balance || 0) + amount;
+
+        const updateObj = { balance: newBal };
+        updateObj[dbField] = true;
+
+        const { error } = await client.from('users').update(updateObj).eq('mobile', savedUser.mobile);
+        if (error) throw error;
+
+        document.getElementById('userWalletTop').innerText = "₹" + newBal.toFixed(2);
+        alert(`🎉 Badhai ho! ₹${amount} successfully aapke wallet mein add ho gaye hain.`);
+        location.reload();
+    } catch(e) {
+        alert("Error: " + e.message);
+    }
+}
 function renderTgClaimedUI() {
     const card = document.getElementById('tgTaskCard');
     if (card) {
