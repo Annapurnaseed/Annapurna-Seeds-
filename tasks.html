@@ -20,9 +20,8 @@
         .brand-logo-row h2 { font-size: 20px; font-weight: 900; color: #0d3820; }
         .brand-logo-row span { font-size: 11px; color: #2e7d32; font-style: italic; }
 
-        /* Telegram Task Card */
+        /* Bonus Cards */
         .tg-bonus-card {
-            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
             border-radius: 24px;
             padding: 16px;
             margin: 0 14px 14px;
@@ -31,9 +30,9 @@
             border: 1.5px solid rgba(255,255,255,0.25);
         }
         .tg-bonus-card.claimed {
-            background: #ffffff;
+            background: #ffffff !important;
             border: 1.5px solid #dcece0;
-            color: #475569;
+            color: #475569 !important;
             box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
 
@@ -46,6 +45,7 @@
         .tab-info { text-align: left; }
         .tab-info h4 { font-size: 13px; font-weight: 900; line-height: 1.2; }
         .tab-info p { font-size: 9px; opacity: 0.85; }
+        .tab-btn:not(.active) .tab-info p { color: #648a72; }
 
         /* Target Notice Strip */
         .notice-strip { margin: 0 14px 12px; background: linear-gradient(135deg, #1e824c, #145a32); color: #fff; border-radius: 18px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 14px rgba(20,90,50,0.2); }
@@ -92,51 +92,35 @@
         <span>Tasks & Rewards Hub (750 Days Valid)</span>
     </div>
 
-    <!-- One-Time Telegram ₹20 Bonus Task Card -->
-    <div id="tgTaskCard" class="tg-bonus-card">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <div style="width: 42px; height: 42px; border-radius: 14px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 22px;">
-                    ✈️
-                </div>
-                <div>
-                    <span style="background: #fef08a; color: #854d0e; font-size: 9px; font-weight: 900; padding: 2px 8px; border-radius: 8px; text-transform: uppercase;">New User Task</span>
-                    <h3 style="font-size: 15px; font-weight: 900; margin-top: 3px;">Join Official Telegram</h3>
-                </div>
+    <!-- Telegram Channel Task (₹10) -->
+    <div id="tgTaskCard" class="tg-bonus-card" style="background: linear-gradient(135deg, #0284c7, #0369a1);">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+            <div style="width: 42px; height: 42px; border-radius: 14px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 20px;">✈️</div>
+            <div>
+                <h3 style="font-size: 15px; font-weight: 900;">Join Official Telegram</h3>
+                <p style="font-size: 11px; opacity: 0.9;">Join channel and claim ₹10 instant bonus</p>
             </div>
-            <span style="background: #22c55e; color: #ffffff; font-size: 13px; font-weight: 900; padding: 4px 10px; border-radius: 12px;">+₹20</span>
         </div>
-        
-        <!-- Telegram Channel Task (₹10) -->
-<div id="tgTaskCard" class="tg-bonus-card" style="background: linear-gradient(135deg, #0284c7, #0369a1); border-radius: 24px; padding: 16px; margin: 0 14px 14px; color: #fff;">
-    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
-        <div style="width: 42px; height: 42px; border-radius: 14px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 20px;">✈️</div>
-        <div>
-            <h3 style="font-size: 15px; font-weight: 900;">Join Official Telegram</h3>
-            <p style="font-size: 11px; opacity: 0.9;">Join channel and claim ₹10 instant bonus</p>
+        <div style="display: flex; gap: 8px;">
+            <a href="https://t.me/annapurnaseeds1" target="_blank" onclick="markVisited('tg')" style="flex: 1; background: #ffffff; color: #0284c7; text-decoration: none; text-align: center; padding: 10px; border-radius: 12px; font-weight: 900; font-size: 12px;">Step 1: Join Channel</a>
+            <button id="btnClaimTg" onclick="claimTaskReward('tg', 10)" style="flex: 1; background: #22c55e; color: #fff; border: none; padding: 10px; border-radius: 12px; font-weight: 900; font-size: 12px; cursor: pointer;">Step 2: Claim ₹10</button>
         </div>
     </div>
-    <div style="display: flex; gap: 8px;">
-        <a href="https://t.me/annapurnaseeds1" target="_blank" onclick="markVisited('tg')" style="flex: 1; background: #ffffff; color: #0284c7; text-decoration: none; text-align: center; padding: 10px; border-radius: 12px; font-weight: 900; font-size: 12px;">Step 1: Join Channel</a>
-        <button id="btnClaimTg" onclick="claimTaskReward('tg', 10)" style="flex: 1; background: #22c55e; color: #fff; border: none; padding: 10px; border-radius: 12px; font-weight: 900; font-size: 12px; cursor: pointer;">Step 2: Claim ₹10</button>
-    </div>
-</div>
 
-<!-- WhatsApp Group Task (₹10) -->
-<div id="waTaskCard" class="tg-bonus-card" style="background: linear-gradient(135deg, #16a34a, #15803d); border-radius: 24px; padding: 16px; margin: 0 14px 14px; color: #fff;">
-    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
-        <div style="width: 42px; height: 42px; border-radius: 14px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 20px;">💬</div>
-        <div>
-            <h3 style="font-size: 15px; font-weight: 900;">Join Official WhatsApp</h3>
-            <p style="font-size: 11px; opacity: 0.9;">Join group and claim ₹10 instant bonus</p>
+    <!-- WhatsApp Group Task (₹10) -->
+    <div id="waTaskCard" class="tg-bonus-card" style="background: linear-gradient(135deg, #16a34a, #15803d);">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+            <div style="width: 42px; height: 42px; border-radius: 14px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 20px;">💬</div>
+            <div>
+                <h3 style="font-size: 15px; font-weight: 900;">Join Official WhatsApp</h3>
+                <p style="font-size: 11px; opacity: 0.9;">Join group and claim ₹10 instant bonus</p>
+            </div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+            <a href="https://chat.whatsapp.com/LXQO8uNpByzIQCyXyByVR9?s=sh&p=a&mlu=4&ilr=4" target="_blank" onclick="markVisited('wa')" style="flex: 1; background: #ffffff; color: #16a34a; text-decoration: none; text-align: center; padding: 10px; border-radius: 12px; font-weight: 900; font-size: 12px;">Step 1: Join Group</a>
+            <button id="btnClaimWa" onclick="claimTaskReward('wa', 10)" style="flex: 1; background: #f59e0b; color: #fff; border: none; padding: 10px; border-radius: 12px; font-weight: 900; font-size: 12px; cursor: pointer;">Step 2: Claim ₹10</button>
         </div>
     </div>
-    <div style="display: flex; gap: 8px;">
-        <a href="https://chat.whatsapp.com/LXQO8uNpByzIQCyXyByVR9?s=sh&p=a&mlu=4&ilr=4" target="_blank" onclick="markVisited('wa')" style="flex: 1; background: #ffffff; color: #16a34a; text-decoration: none; text-align: center; padding: 10px; border-radius: 12px; font-weight: 900; font-size: 12px;">Step 1: Join Group</a>
-        <button id="btnClaimWa" onclick="claimTaskReward('wa', 10)" style="flex: 1; background: #f59e0b; color: #fff; border: none; padding: 10px; border-radius: 12px; font-weight: 900; font-size: 12px; cursor: pointer;">Step 2: Claim ₹10</button>
-    </div>
-</div>
-        
 
     <!-- 2 Kaveri Style Mode Switchers -->
     <div class="tab-switcher">
@@ -154,9 +138,8 @@
                 <p>Complete daily reviews</p>
             </div>
         </button>
-    </div>
-
-    <!-- Permanent Tab Content -->
+            </div>
+                <!-- Permanent Tab Content -->
     <div id="permSection">
         <div class="notice-strip">
             <div>
@@ -206,7 +189,8 @@
             </div>
         </div>
     </div>
-        <!-- Daily Tab Content (Multiple Active Plans Separate Tasks) -->
+
+    <!-- Daily Tab Content (Multiple Active Plans Separate Tasks) -->
     <div id="dailySection" style="display: none;">
         <div id="allTasksContainer">
             <!-- Active plans task boxes load dynamically -->
@@ -238,7 +222,8 @@
     </div>
 
     </div>
-    <script>
+
+<script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -248,16 +233,16 @@ if (!savedUser.mobile) { window.location.href = 'login.html'; }
 
 let userBalance = 0;
 let hasVisitedTg = false;
+let hasVisitedWa = false;
 
 async function initTasks() {
     try {
-        const { data } = await client.from('users').select('balance, telegram_claimed').eq('mobile', savedUser.mobile).single();
+        const { data } = await client.from('users').select('balance, telegram_claimed, whatsapp_claimed').eq('mobile', savedUser.mobile).single();
         if (data) {
             userBalance = Number(data.balance || 0);
             document.getElementById('userWalletTop').innerText = "₹" + userBalance.toFixed(2);
-            if (data.telegram_claimed) {
-                renderTgClaimedUI();
-            }
+            if (data.telegram_claimed) { renderTgClaimedUI(); }
+            if (data.whatsapp_claimed) { renderWaClaimedUI(); }
         }
         loadUserActivePortfoliosTasks();
     } catch(e) {
@@ -345,9 +330,6 @@ async function runPlanTask(planId, rewardPerReview, totalReviews, currentComplet
     }, 1000);
 }
 
-let hasVisitedTg = false;
-let hasVisitedWa = false;
-
 function markVisited(type) {
     if(type === 'tg') hasVisitedTg = true;
     if(type === 'wa') hasVisitedWa = true;
@@ -382,11 +364,20 @@ async function claimTaskReward(type, amount) {
         alert("Error: " + e.message);
     }
 }
+
 function renderTgClaimedUI() {
     const card = document.getElementById('tgTaskCard');
     if (card) {
         card.className = "tg-bonus-card claimed";
-        card.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: center;"><div style="display: flex; gap: 10px; align-items: center;"><span style="font-size: 22px;">✅</span><div><b style="font-size: 13px; color: #1e293b;">Telegram Bonus Claimed</b><p style="font-size: 11px; color: #648a72;">₹20 added successfully.</p></div></div><span style="color: #16a34a; font-weight: 900; background: #dcfce7; padding: 4px 10px; border-radius: 10px;">Completed</span></div>`;
+        card.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: center;"><div style="display: flex; gap: 10px; align-items: center;"><span style="font-size: 22px;">✅</span><div><b style="font-size: 13px; color: #1e293b;">Telegram Bonus Claimed</b><p style="font-size: 11px; color: #648a72;">₹10 added successfully.</p></div></div><span style="color: #16a34a; font-weight: 900; background: #dcfce7; padding: 4px 10px; border-radius: 10px;">Completed</span></div>`;
+    }
+}
+
+function renderWaClaimedUI() {
+    const card = document.getElementById('waTaskCard');
+    if (card) {
+        card.className = "tg-bonus-card claimed";
+        card.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: center;"><div style="display: flex; gap: 10px; align-items: center;"><span style="font-size: 22px;">✅</span><div><b style="font-size: 13px; color: #1e293b;">WhatsApp Bonus Claimed</b><p style="font-size: 11px; color: #648a72;">₹10 added successfully.</p></div></div><span style="color: #16a34a; font-weight: 900; background: #dcfce7; padding: 4px 10px; border-radius: 10px;">Completed</span></div>`;
     }
 }
 
@@ -397,11 +388,15 @@ function switchTaskTab(tab) {
     const dailySec = document.getElementById('dailySection');
 
     if (tab === 'perm') {
-        permBtn.classList.add('active'); dailyBtn.classList.remove('active');
-        permSec.style.display = 'block'; dailySec.style.display = 'none';
+        permBtn.classList.add('active'); 
+        dailyBtn.classList.remove('active');
+        permSec.style.display = 'block'; 
+        dailySec.style.display = 'none';
     } else {
-        dailyBtn.classList.add('active'); permBtn.classList.remove('active');
-        permSec.style.display = 'none'; dailySec.style.display = 'block';
+        dailyBtn.classList.add('active'); 
+        permBtn.classList.remove('active');
+        permSec.style.display = 'none'; 
+        dailySec.style.display = 'block';
     }
 }
 </script>
