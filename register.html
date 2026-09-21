@@ -15,7 +15,6 @@
         }
 
         body {
-            /* Aapka bheja hua photo background me */
             background: linear-gradient(rgba(0, 30, 15, 0.45), rgba(0, 30, 15, 0.65)), url('bg-agro.png') center/cover no-repeat fixed;
             min-height: 100vh;
             display: flex;
@@ -338,7 +337,7 @@ async function handleRegister(e) {
                 mobile: mobile,
                 password: pass,
                 invite_code: myCode,
-                referred_by: invite || null,
+                invited_by: invite || null,
                 balance: 0.00
             }]);
 
@@ -357,4 +356,5 @@ async function handleRegister(e) {
 </script>
 
 </body>
-</html>
+                            </html>
+                            
