@@ -106,6 +106,38 @@
             object-fit: cover;
         }
 
+        /* Live Meeting Banner Widget */
+        .live-meeting-box {
+            margin: 0 18px 14px;
+            background: linear-gradient(135deg, #14532d, #052e16);
+            border-radius: 20px;
+            padding: 14px;
+            color: #ffffff;
+            box-shadow: 0 8px 20px rgba(20, 83, 45, 0.2);
+            border: 1.5px solid #86efac;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .live-meet-img {
+            width: 55px;
+            height: 55px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid #86efac;
+            flex-shrink: 0;
+        }
+
+        /* Live Community Feed Ticker Widget */
+        .community-feed-box {
+            margin: 0 18px 16px;
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 12px 14px;
+            border: 1.5px solid #dcece0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+
         /* 3D Round Action Buttons Grid */
         .action-grid {
             display: grid;
@@ -321,6 +353,29 @@
         <img src="bg-agro.png" alt="Annapurna Seeds Agro Campaign">
     </div>
 
+    <!-- Live Meeting Dynamic Banner (Linked from Admin Panel) -->
+    <div id="homeMeetingWidget" class="live-meeting-box" style="display: none;">
+        <img id="homeMeetImg" src="meet-real.jpg" class="live-meet-img" alt="Seminar">
+        <div style="flex: 1; overflow: hidden;">
+            <div style="display: flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 900; color: #86efac; text-transform: uppercase;">
+                <span>🔴 LIVE SEMINAR</span>
+            </div>
+            <h4 id="homeMeetTitle" style="font-size: 13px; font-weight: 900; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 2px 0;">District Farmer Meet</h4>
+            <p id="homeMeetMeta" style="font-size: 11px; color: #cbd5e1; font-weight: 700;">Leader: Krishan Murari | Jaipur</p>
+        </div>
+    </div>
+
+    <!-- Live Community Feed Ticker (Linked from Admin Panel) -->
+    <div class="community-feed-box" id="homeFeedTicker">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+            <span style="font-size: 11px; font-weight: 900; color: #15803d; display: flex; align-items: center; gap: 4px;">🌱 LIVE EARNING PROOF</span>
+            <span id="feedTime" style="font-size: 9px; color: #64748b; font-weight: 700;">Just now</span>
+        </div>
+        <div style="font-size: 12px; font-weight: 800; color: #113820;" id="feedTextContent">
+            Ramesh (Meerut) successfully received withdrawal of <b style="color: #16a34a;">+₹950</b>!
+        </div>
+    </div>
+
     <!-- Action Grid -->
     <div class="action-grid">
         <a href="recharge.html" class="action-btn">
@@ -344,8 +399,7 @@
             <span>Channel</span>
         </a>
     </div>
-
-    <!-- Section Title -->
+        <!-- Section Title -->
     <div class="section-header">
         <h3>Official Certified Agro Plans</h3>
         <span>750 Days Long-Term Yield Payouts</span>
@@ -406,11 +460,11 @@
         </div>
         <div class="plan-desc-box" style="background: #fbfbfc; border-color: #e2e8f0;">
             <div class="task-text" style="color: #94a3b8;">🔒 Daily 15 Quality Reviews Mandatory</div>
-            <div class="yield-text" style="color: #64748b;">💰 Fixed Daily Income: ₹510 / Day</div>
+            <div class="yield-text" style="color: #648a72;">💰 Fixed Daily Income: ₹510 / Day</div>
         </div>
         <div class="metrics-bar" style="background: #ffffff;">
-            <div class="metric-item"><span>Price</span><b style="color: #64748b;">₹4,920</b></div>
-            <div class="metric-item"><span>Daily</span><b style="color: #64748b;">₹510</b></div>
+            <div class="metric-item"><span>Price</span><b style="color: #648a72;">₹4,920</b></div>
+            <div class="metric-item"><span>Daily</span><b style="color: #648a72;">₹510</b></div>
             <div class="metric-item"><span>Validity</span><b style="color: #648a72;">750 Days</b></div>
             <div class="metric-item"><span>Total Yield</span><b style="color: #648a72;">₹3,82,500</b></div>
         </div>
@@ -575,6 +629,29 @@ async function syncHeaderBalance() {
     }
 }
 syncHeaderBalance();
+
+async function loadHomeLiveWidgets() {
+    try {
+        const { data: meet } = await client.from('meeting_posts').select('*').eq('id', 1).single();
+        if (meet && meet.session_title) {
+            document.getElementById('homeMeetTitle').innerText = meet.session_title;
+            document.getElementById('homeMeetMeta').innerText = `Leader: ${meet.leader_name} | ${meet.city_name}`;
+            if (meet.image_url) document.getElementById('homeMeetImg').src = meet.image_url;
+            document.getElementById('homeMeetingWidget').style.display = 'flex';
+        }
+
+        const { data: feed } = await client.from('community_controls').select('*').eq('id', 1).single();
+        if (feed && feed.is_active && feed.custom_msg) {
+            document.getElementById('feedTextContent').innerHTML = `${feed.custom_name} (${feed.custom_city}) successfully received <b style="color: #16a34a;">${feed.custom_amount}</b>! — "${feed.custom_msg}"`;
+            document.getElementById('homeFeedTicker').style.display = 'block';
+        } else if (feed && !feed.is_active) {
+            document.getElementById('homeFeedTicker').style.display = 'none';
+        }
+    } catch(e) {
+        console.error("Widget load error:", e);
+    }
+}
+loadHomeLiveWidgets();
 
 // 3-Tier Commission Distribution Function (L1: 15%, L2: 5%, L3: 2%)
 async function distributeCommission(buyerMobile, planPrice) {
