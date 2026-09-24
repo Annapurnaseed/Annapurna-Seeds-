@@ -283,8 +283,8 @@
         </div>
     </div>
 
-</div>
-<script>
+    </div>
+        <script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -429,10 +429,16 @@ async function loadWithdrawals() {
 
 async function approveWithdrawal(id) {
     if (!confirm("Confirm paid to user bank?")) return;
-    await client.from('withdrawals').update({ status: 'approved' }).eq('id', id);
-    alert("Marked Paid!");
-    loadWithdrawals();
-    loadFinancialStats();
+    try {
+        const { error } = await client.from('withdrawals').update({ status: 'approved' }).eq('id', id);
+        if (error) throw error;
+        
+        alert("✅ Marked Paid successfully!");
+        loadWithdrawals();
+        loadFinancialStats();
+    } catch (err) {
+        alert("Error: " + err.message);
+    }
 }
 
 function renderMembers(users) {
@@ -620,4 +626,5 @@ loadCurrentNotice();
 </script>
 
 </body>
-</html>
+    </html>
+    
