@@ -343,6 +343,7 @@ if (!savedUser.mobile) {
 let availableBalance = 0;
 let currentWithdrawAmount = 150;
 let userSecurityPassword = '';
+let existingBankAcc = '';
 
 // 1. Sync User Balance, Bank Details & Security Password
 async function initWithdrawPage() {
@@ -353,10 +354,23 @@ async function initWithdrawPage() {
             document.getElementById('userBalanceVal').innerText = "₹" + availableBalance.toFixed(2);
             userSecurityPassword = user.withdraw_password || '';
 
-            if (user.bank_holder) document.getElementById('bankHolder').value = user.bank_holder;
-            if (user.bank_name) document.getElementById('bankName').value = user.bank_name;
-            if (user.bank_account) document.getElementById('bankAccount').value = user.bank_account;
-            if (user.bank_ifsc) document.getElementById('bankIfsc').value = user.bank_ifsc;
+            if (user.bank_holder) {
+                document.getElementById('bankHolder').value = user.bank_holder;
+                document.getElementById('bankHolder').readOnly = true; // Lock bank holder name
+            }
+            if (user.bank_name) {
+                document.getElementById('bankName').value = user.bank_name;
+                document.getElementById('bankName').readOnly = true; // Lock bank name
+            }
+            if (user.bank_account) {
+                existingBankAcc = user.bank_account;
+                document.getElementById('bankAccount').value = user.bank_account;
+                document.getElementById('bankAccount').readOnly = true; // Lock bank account number so it cannot be changed
+            }
+            if (user.bank_ifsc) {
+                document.getElementById('bankIfsc').value = user.bank_ifsc;
+                document.getElementById('bankIfsc').readOnly = true; // Lock IFSC code
+            }
         }
     } catch(err) {
         console.error("Balance load error:", err);
@@ -378,7 +392,7 @@ function selectWithdrawSlab(amt, el) {
     document.getElementById('btnSubmitWithdraw').innerText = `Confirm Withdrawal ₹${amt} (Net ₹${netAmount.toFixed(2)})`;
 }
 
-// 2. Submit Payout Request with Time Window & Password Authentication
+// 2. Submit Payout Request with Time Window, Daily Limit & Duplicate Bank Check
 async function requestPayout() {
     // Time Check: Morning 8 AM window validation
     const currentHour = new Date().getHours();
@@ -389,7 +403,7 @@ async function requestPayout() {
 
     const grossAmt = Number(document.getElementById('withdrawAmt').value);
     const fee = grossAmt * 0.10;
-    const netAmt = grossAmt - fee; // Net amount shown to admin & deducted
+    const netAmt = grossAmt - fee; 
 
     const holder = document.getElementById('bankHolder').value.trim();
     const bank = document.getElementById('bankName').value.trim();
@@ -410,6 +424,35 @@ async function requestPayout() {
     if (!holder || !acc || !ifsc) {
         alert("Kripya apna Holder Name, Account Number aur IFSC Code sahi bharein!");
         return;
+    }
+
+    // 1. Daily 1 Withdrawal Limit Check
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+
+    const { data: existingTodayReq } = await client
+        .from('withdrawals')
+        .select('id, created_at')
+        .eq('mobile', savedUser.mobile)
+        .gte('created_at', todayStart.toISOString());
+
+    if (existingTodayReq && existingTodayReq.length > 0) {
+        alert("❌ Aap aaj ki withdrawal limit poori kar chuke hain! Ek ID se din mein sirf 1 hi baar withdrawal lag sakta hai.");
+        return;
+    }
+
+    // 2. Duplicate Bank Account Check (Check if account is already registered on another mobile ID)
+    if (!existingBankAcc || existingBankAcc !== acc) {
+        const { data: duplicateBank } = await client
+            .from('users')
+            .select('mobile')
+            .eq('bank_account', acc)
+            .neq('mobile', savedUser.mobile);
+
+        if (duplicateBank && duplicateBank.length > 0) {
+            alert("❌ Yeh Bank Account number pehle hi kisi aur account ke sath registered hai! Duplicate account allowed nahi hai.");
+            return;
+        }
     }
 
     if (!userSecurityPassword) {
@@ -433,10 +476,10 @@ async function requestPayout() {
     btn.innerText = "Processing...";
 
     try {
-        // Step A: Insert Withdrawal Request with Gross Amount and Net Amount after 10% fee
+        // Step A: Insert Withdrawal Request
         const { error: reqError } = await client.from('withdrawals').insert([{
             mobile: savedUser.mobile,
-            amount: netAmt, // Admin sees net amount after 10% fee deduction
+            amount: netAmt,
             gross_amount: grossAmt,
             fee: fee,
             bank_holder: holder,
@@ -448,7 +491,7 @@ async function requestPayout() {
 
         if (reqError) throw reqError;
 
-        // Step B: Deduct Full Gross Amount from User Wallet Balance
+        // Step B: Deduct Balance & Save Bank Details (Locked)
         const newBalance = availableBalance - grossAmt;
         await client.from('users').update({ 
             balance: newBalance,
