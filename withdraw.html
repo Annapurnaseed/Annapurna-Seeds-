@@ -208,9 +208,40 @@
             font-weight: 900;
             cursor: pointer;
             box-shadow: 0 8px 20px rgba(234, 88, 12, 0.35);
+            margin-bottom: 20px;
         }
         .btn-withdraw-submit:active {
             transform: scale(0.98);
+        }
+
+        .history-card {
+            background: #ffffff;
+            border-radius: 26px;
+            padding: 20px 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(18, 62, 36, 0.05);
+            border: 1.5px solid #ffffff;
+        }
+        .history-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+        .history-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 900;
+            font-size: 13px;
+            color: #113820;
+        }
+        .history-details {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 4px;
+            line-height: 1.4;
         }
 
         .bottom-nav {
@@ -245,7 +276,6 @@
 
 <div class="mobile-wrapper">
 
-    <!-- Top Navigation -->
     <div class="top-nav">
         <a href="index.html" class="btn-circle-back">‹</a>
         <div class="wallet-pill">
@@ -257,7 +287,6 @@
         </div>
     </div>
 
-    <!-- Amount Selection Card -->
     <div class="clay-card">
         <div class="card-header-row">
             <div class="clay-round-icon">🏛️</div>
@@ -284,7 +313,6 @@
         </div>
     </div>
 
-    <!-- Bank Details Card -->
     <div class="clay-card">
         <div class="card-header-row">
             <div class="clay-round-icon" style="background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);">🏦</div>
@@ -306,12 +334,10 @@
         <span class="field-label">IFSC Code</span>
         <input type="text" id="bankIfsc" class="form-input" placeholder="e.g. SBIN0001234" style="text-transform: uppercase;">
 
-        <!-- Security Password Field -->
         <span class="field-label" style="color: #b45309; margin-top: 14px;">🔒 Withdrawal Password (Security PIN)</span>
         <input type="password" id="enterWithPass" maxlength="6" class="form-input" placeholder="Enter your 4-6 digit security PIN" style="border-color: #fed7aa; background: #fffbeb; color: #9a3412;">
     </div>
 
-    <!-- Payout Notice -->
     <div class="rules-strip">
         <p>⚠️ Withdrawal Timing: Opens daily at Morning 08:00 AM.<br>10% platform fee is deducted. Bank settlement credits within 15-45 minutes after admin verification.</p>
     </div>
@@ -320,7 +346,19 @@
         Confirm Withdrawal ₹150 (Net ₹135)
     </button>
 
-    <!-- Bottom Navigation Bar -->
+    <div class="history-card">
+        <div class="card-header-row" style="margin-bottom: 10px;">
+            <div class="clay-round-icon" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);">📜</div>
+            <div class="header-text">
+                <h3>Withdrawal History</h3>
+                <p>Track your payout request status</p>
+            </div>
+        </div>
+        <div id="withdrawalHistoryContainer">
+            <p style="text-align: center; color: #64748b; font-size: 12px; padding: 10px;">Loading history...</p>
+        </div>
+    </div>
+
     <div class="bottom-nav">
         <a href="index.html" class="nav-link"><span class="nav-icon">🏠</span><span>Home</span></a>
         <a href="tasks.html" class="nav-link"><span class="nav-icon">📈</span><span>Income</span></a>
@@ -330,7 +368,7 @@
     </div>
 
 </div>
-<script>
+    <script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -345,7 +383,6 @@ let currentWithdrawAmount = 150;
 let userSecurityPassword = '';
 let existingBankAcc = '';
 
-// 1. Sync User Balance, Bank Details & Security Password
 async function initWithdrawPage() {
     try {
         const { data: user } = await client.from('users').select('*').eq('mobile', savedUser.mobile).single();
@@ -356,33 +393,74 @@ async function initWithdrawPage() {
 
             if (user.bank_holder) {
                 document.getElementById('bankHolder').value = user.bank_holder;
-                document.getElementById('bankHolder').readOnly = true; // Lock bank holder name
+                document.getElementById('bankHolder').readOnly = true; 
             }
             if (user.bank_name) {
                 document.getElementById('bankName').value = user.bank_name;
-                document.getElementById('bankName').readOnly = true; // Lock bank name
+                document.getElementById('bankName').readOnly = true; 
             }
             if (user.bank_account) {
                 existingBankAcc = user.bank_account;
                 document.getElementById('bankAccount').value = user.bank_account;
-                document.getElementById('bankAccount').readOnly = true; // Lock bank account number so it cannot be changed
+                document.getElementById('bankAccount').readOnly = true; 
             }
             if (user.bank_ifsc) {
                 document.getElementById('bankIfsc').value = user.bank_ifsc;
-                document.getElementById('bankIfsc').readOnly = true; // Lock IFSC code
+                document.getElementById('bankIfsc').readOnly = true; 
             }
         }
+        loadWithdrawHistory();
     } catch(err) {
-        console.error("Balance load error:", err);
+        console.error("Initialization error:", err);
     }
 }
 initWithdrawPage();
+
+async function loadWithdrawHistory() {
+    try {
+        const { data: history, error } = await client
+            .from('withdrawals')
+            .select('*')
+            .eq('mobile', savedUser.mobile)
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        let container = document.getElementById('withdrawalHistoryContainer');
+        let html = '';
+
+        if (history && history.length > 0) {
+            history.forEach(item => {
+                let statusColor = item.status === 'approved' ? '#16a34a' : (item.status === 'rejected' ? '#dc2626' : '#d97706');
+                let statusText = item.status === 'approved' ? 'Paid / Approved' : (item.status === 'rejected' ? 'Rejected' : 'Pending Verification');
+                
+                html += `
+                    <div class="history-item">
+                        <div class="history-top">
+                            <span>₹${item.gross_amount} <small style="color:#648a72; font-weight:normal;">(Net: ₹${Number(item.amount).toFixed(2)})</small></span>
+                            <span style="color: ${statusColor}; text-transform: uppercase; font-size: 11px;">${statusText}</span>
+                        </div>
+                        <div class="history-details">
+                            Bank: ${item.bank_name || 'Bank'} (${item.bank_account})<br>
+                            Date: ${new Date(item.created_at).toLocaleString()}
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        } else {
+            container.innerHTML = '<p style="text-align: center; color: #64748b; font-size: 12px; padding: 10px;">Aapne abhi tak koi withdrawal nahi lagaya hai.</p>';
+        }
+    } catch (err) {
+        console.error("History load error:", err);
+        document.getElementById('withdrawalHistoryContainer').innerHTML = '<p style="text-align: center; color: #dc2626; font-size: 12px; padding: 10px;">History load karne me samasya aayi.</p>';
+    }
+}
 
 function selectWithdrawSlab(amt, el) {
     currentWithdrawAmount = amt;
     document.getElementById('withdrawAmt').value = amt;
     
-    // Calculate 10% fee
     const fee = amt * 0.10;
     const netAmount = amt - fee;
     document.getElementById('feeCalcText').innerText = `10% Fee: ₹${fee.toFixed(2)} | Net Payout to Bank: ₹${netAmount.toFixed(2)}`;
@@ -392,9 +470,7 @@ function selectWithdrawSlab(amt, el) {
     document.getElementById('btnSubmitWithdraw').innerText = `Confirm Withdrawal ₹${amt} (Net ₹${netAmount.toFixed(2)})`;
 }
 
-// 2. Submit Payout Request with Time Window, Daily Limit & Duplicate Bank Check
 async function requestPayout() {
-    // Time Check: Morning 8 AM window validation
     const currentHour = new Date().getHours();
     if (currentHour < 8) {
         alert("❌ Withdrawal window abhi open nahi hai! Withdrawal ka samay subah 8:00 AM se shuru hota hai.");
@@ -426,7 +502,6 @@ async function requestPayout() {
         return;
     }
 
-    // 1. Daily 1 Withdrawal Limit Check
     const todayStart = new Date();
     todayStart.setHours(0, 0, 0, 0);
 
@@ -441,7 +516,6 @@ async function requestPayout() {
         return;
     }
 
-    // 2. Duplicate Bank Account Check (Check if account is already registered on another mobile ID)
     if (!existingBankAcc || existingBankAcc !== acc) {
         const { data: duplicateBank } = await client
             .from('users')
@@ -476,7 +550,6 @@ async function requestPayout() {
     btn.innerText = "Processing...";
 
     try {
-        // Step A: Insert Withdrawal Request
         const { error: reqError } = await client.from('withdrawals').insert([{
             mobile: savedUser.mobile,
             amount: netAmt,
@@ -491,7 +564,6 @@ async function requestPayout() {
 
         if (reqError) throw reqError;
 
-        // Step B: Deduct Balance & Save Bank Details (Locked)
         const newBalance = availableBalance - grossAmt;
         await client.from('users').update({ 
             balance: newBalance,
@@ -502,7 +574,7 @@ async function requestPayout() {
         }).eq('mobile', savedUser.mobile);
 
         alert(`₹${grossAmt} ka withdrawal request (Net: ₹${netAmt.toFixed(2)} after 10% fee) submit ho gaya!`);
-        window.location.href = "profile.html";
+        window.location.reload();
 
     } catch(err) {
         alert("Withdrawal Failed: " + err.message);
@@ -512,5 +584,4 @@ async function requestPayout() {
 }
 </script>
 </body>
-    </html>
-    
+</html>
