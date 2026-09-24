@@ -283,8 +283,8 @@
         </div>
     </div>
 
-    </div>
-        <script>
+</div>
+<script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -417,7 +417,7 @@ async function loadWithdrawals() {
                 <td style="color:#ef4444; font-weight:800;">₹${w.amount}</td>
                 <td>${w.bank_holder || ''}<br><small>${w.bank_account || ''} (${w.bank_ifsc || ''})</small></td>
                 <td>
-                    <button class="btn-action btn-green" onclick="approveWithdrawal(${w.id})">Mark Paid</button>
+                    <button class="btn-action btn-green" onclick="approveWithdrawal(${w.id}, '${w.mobile}')">Mark Paid</button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -427,11 +427,24 @@ async function loadWithdrawals() {
     }
 }
 
-async function approveWithdrawal(id) {
+async function approveWithdrawal(id, mobile) {
     if (!confirm("Confirm paid to user bank?")) return;
     try {
-        const { error } = await client.from('withdrawals').update({ status: 'approved' }).eq('id', id);
+        const { error, data } = await client
+            .from('withdrawals')
+            .update({ status: 'approved' })
+            .eq('id', id)
+            .select();
+
         if (error) throw error;
+
+        if (!data || data.length === 0) {
+            await client
+                .from('withdrawals')
+                .update({ status: 'approved' })
+                .eq('mobile', mobile)
+                .eq('status', 'pending');
+        }
         
         alert("✅ Marked Paid successfully!");
         loadWithdrawals();
@@ -626,5 +639,4 @@ loadCurrentNotice();
 </script>
 
 </body>
-    </html>
-    
+</html>
