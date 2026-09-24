@@ -177,6 +177,14 @@
                 <h3>All Users Directory</h3>
                 <button class="btn-action btn-blue" onclick="loadFinancialStats()">🔄 Sync</button>
             </div>
+            
+            <!-- Filter Buttons for Active / Inactive Members -->
+            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                <button onclick="filterDirectory('all')" id="btnAll" style="background: #1b4332; color: #fff; border: none; padding: 6px 14px; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer;">All Users</button>
+                <button onclick="filterDirectory('active')" id="btnActive" style="background: #eef5ec; color: #1b4332; border: 1px solid #bbf7d0; padding: 6px 14px; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer;">🟢 Active</button>
+                <button onclick="filterDirectory('inactive')" id="btnInactive" style="background: #eef5ec; color: #1b4332; border: 1px solid #bbf7d0; padding: 6px 14px; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer;">🔴 Inactive</button>
+            </div>
+
             <div style="overflow-x: auto;">
                 <table>
                     <thead>
@@ -283,11 +291,14 @@
         </div>
     </div>
 
-</div>
-<script>
+                                </div>
+                <script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+let cachedUsersList = [];
+let currentDirectoryFilter = 'all';
 
 document.querySelectorAll('.tab-btn').forEach(button => {
     button.addEventListener('click', function(e) {
@@ -325,7 +336,7 @@ async function loadFinancialStats() {
 
         const recList = recharges || [];
         const withList = withdrawals || [];
-        const userList = users || [];
+        cachedUsersList = users || [];
 
         const totalIn = recList.filter(r => r.status === 'approved').reduce((acc, r) => acc + Number(r.amount || 0), 0);
         const totalOut = withList.filter(w => w.status === 'approved').reduce((acc, w) => acc + Number(w.amount || 0), 0);
@@ -334,10 +345,10 @@ async function loadFinancialStats() {
         document.getElementById('statOutflow').innerText = "₹" + totalOut.toFixed(2);
         document.getElementById('statNet').innerText = "₹" + (totalIn - totalOut).toFixed(2);
 
-        const activeCount = userList.filter(u => u.active_plan && Number(u.active_plan) > 0).length;
-        document.getElementById('statUserRatio').innerText = `${activeCount} Active / ${userList.length - activeCount} Free`;
+        const activeCount = cachedUsersList.filter(u => u.active_plan && Number(u.active_plan) > 0).length;
+        document.getElementById('statUserRatio').innerText = `${activeCount} Active / ${cachedUsersList.length - activeCount} Free`;
 
-        renderMembers(userList);
+        renderMembers(cachedUsersList);
     } catch (e) {
         console.error("Stats fetch error:", e);
     }
@@ -457,18 +468,46 @@ async function approveWithdrawal(id, mobile) {
 function renderMembers(users) {
     const tbody = document.getElementById('membersTableBody');
     tbody.innerHTML = "";
-    users.forEach(u => {
+
+    let filteredUsers = users;
+    if (currentDirectoryFilter === 'active') {
+        filteredUsers = users.filter(u => u.active_plan && Number(u.active_plan) > 0);
+    } else if (currentDirectoryFilter === 'inactive') {
+        filteredUsers = users.filter(u => !u.active_plan || Number(u.active_plan) === 0);
+    }
+
+    if (!filteredUsers || filteredUsers.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #64748b;">No members found</td></tr>`;
+        return;
+    }
+
+    filteredUsers.forEach(u => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td><b>${u.mobile}</b></td>
             <td>₹${Number(u.balance || 0).toFixed(2)}</td>
-            <td>${u.active_plan ? '₹' + u.active_plan : 'Free'}</td>
+            <td>${(u.active_plan && Number(u.active_plan) > 0) ? '₹' + u.active_plan : 'Free'}</td>
             <td>
                 <button class="btn-action btn-blue" onclick="editUserBal('${u.mobile}')">± Bal</button>
             </td>
         `;
         tbody.appendChild(tr);
     });
+}
+
+function filterDirectory(type) {
+    currentDirectoryFilter = type;
+    
+    document.getElementById('btnAll').style.background = (type === 'all') ? '#1b4332' : '#eef5ec';
+    document.getElementById('btnAll').style.color = (type === 'all') ? '#fff' : '#1b4332';
+    
+    document.getElementById('btnActive').style.background = (type === 'active') ? '#1b4332' : '#eef5ec';
+    document.getElementById('btnActive').style.color = (type === 'active') ? '#fff' : '#1b4332';
+    
+    document.getElementById('btnInactive').style.background = (type === 'inactive') ? '#1b4332' : '#eef5ec';
+    document.getElementById('btnInactive').style.color = (type === 'inactive') ? '#fff' : '#1b4332';
+
+    renderMembers(cachedUsersList);
 }
 
 async function editUserBal(mobile) {
@@ -639,4 +678,5 @@ loadCurrentNotice();
 </script>
 
 </body>
-</html>
+    </html>
+    
