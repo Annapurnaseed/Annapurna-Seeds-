@@ -283,13 +283,12 @@
         </div>
     </div>
 
-                        </div>
-                <script>
+</div>
+<script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-// Touch Tab Event Binding
 document.querySelectorAll('.tab-btn').forEach(button => {
     button.addEventListener('click', function(e) {
         e.preventDefault();
@@ -318,7 +317,6 @@ function switchDirectTab(tabId) {
     if (btn) btn.click();
 }
 
-// 1. Load Realtime Balances
 async function loadFinancialStats() {
     try {
         const { data: recharges } = await client.from('recharges').select('amount, status');
@@ -345,7 +343,6 @@ async function loadFinancialStats() {
     }
 }
 
-// 2. Recharges Queue
 async function loadRecharges() {
     const tbody = document.getElementById('rechargeTableBody');
     tbody.innerHTML = `<tr><td colspan="4" style="text-align: center;">Refreshing...</td></tr>`;
@@ -378,15 +375,12 @@ async function approveRecharge(id, mobile, amount) {
     if (!confirm(`Confirm ₹${amount} for ${mobile}?`)) return;
 
     try {
-        // 1. Mark recharge as approved
         await client.from('recharges').update({ status: 'approved' }).eq('id', id);
 
-        // 2. Fetch current user balance
         const { data: userData } = await client.from('users').select('balance').eq('mobile', mobile).single();
         const currentBal = Number(userData?.balance || 0);
         const newBalance = currentBal + Number(amount);
 
-        // 3. Update ONLY Wallet Balance in users table (Plan user khud kharidega)
         await client.from('users').update({ 
             balance: newBalance
         }).eq('mobile', mobile);
@@ -406,7 +400,6 @@ async function rejectRecharge(id) {
     loadRecharges();
 }
 
-// 3. Withdrawals Queue
 async function loadWithdrawals() {
     const tbody = document.getElementById('withdrawTableBody');
     tbody.innerHTML = `<tr><td colspan="4" style="text-align: center;">Refreshing...</td></tr>`;
@@ -442,7 +435,6 @@ async function approveWithdrawal(id) {
     loadFinancialStats();
 }
 
-// 4. Directory Engine
 function renderMembers(users) {
     const tbody = document.getElementById('membersTableBody');
     tbody.innerHTML = "";
@@ -471,7 +463,6 @@ async function editUserBal(mobile) {
     }
 }
 
-// 5. Multi-Channel UPI Engine
 async function loadAllUpiChannels() {
     try {
         const { data } = await client.from('app_settings').select('upi_a, upi_b, upi_c, upi_d').eq('id', 1).single();
@@ -507,7 +498,6 @@ async function saveAllUpiChannels() {
     }
 }
 
-// 6. Live Meeting Manager Engine
 async function loadAdminMeeting() {
     try {
         const { data } = await client.from('meeting_posts').select('*').eq('id', 1).single();
@@ -545,7 +535,6 @@ async function saveAdminMeeting() {
     }
 }
 
-// 7. Community Feed Controls Engine
 let botActiveStatus = true;
 
 async function loadCommunityBotStatus() {
@@ -599,7 +588,6 @@ async function pushCustomCommunityPost() {
     }
 }
 
-// 8. Broadcast Home Alert Handlers
 async function loadCurrentNotice() {
     try {
         const { data } = await client.from('app_settings').select('broadcast_notice').eq('id', 1).single();
@@ -624,7 +612,6 @@ async function publishBroadcastAlert() {
     }
 }
 
-// Initial Run
 loadFinancialStats();
 loadAllUpiChannels();
 loadCommunityBotStatus();
