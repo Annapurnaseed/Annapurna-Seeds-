@@ -195,8 +195,8 @@
         <a href="profile.html" class="nav-link"><span class="nav-icon">👤</span><span>My</span></a>
     </div>
 
-    </div>
-    <script>
+</div>
+<script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -208,16 +208,16 @@ let userBalance = 0;
 
 async function initTasks() {
     try {
-        const { data } = await client.from('users').select('balance, telegram_claimed, whatsapp_claimed').eq('mobile', savedUser.mobile).single();
+        const { data } = await client.from('users').select('balance').eq('mobile', savedUser.mobile).single();
         if (data) {
             userBalance = Number(data.balance || 0);
             document.getElementById('userWalletTop').innerText = "₹" + userBalance.toFixed(2);
-            if (data.telegram_claimed) renderTgClaimedUI();
-            if (data.whatsapp_claimed) renderWaClaimedUI();
         }
-        if (localStorage.getItem('yt_claimed_' + savedUser.mobile)) {
-            renderYtClaimedUI();
-        }
+        
+        if (localStorage.getItem('tg_claimed_' + savedUser.mobile)) renderTgClaimedUI();
+        if (localStorage.getItem('wa_claimed_' + savedUser.mobile)) renderWaClaimedUI();
+        if (localStorage.getItem('yt_claimed_' + savedUser.mobile)) renderYtClaimedUI();
+
         loadUserActivePortfoliosTasks();
     } catch (e) {
         console.error("Init Error:", e);
@@ -306,45 +306,20 @@ async function runPlanTask(planId, rewardPerReview, totalReviews, completed) {
 }
 
 async function claimTaskReward(type, amount) {
-    if (type === 'yt') {
-        if (localStorage.getItem('yt_claimed_' + savedUser.mobile)) {
-            alert("⚠️ Aap yeh bonus pehle hi claim kar chuke hain!");
-            return;
-        }
-        try {
-            const { data: userData } = await client.from('users').select('balance').eq('mobile', savedUser.mobile).single();
-            const newBal = Number(userData?.balance || 0) + amount;
-            await client.from('users').update({ balance: newBal }).eq('mobile', savedUser.mobile);
+    let storageKey = type + '_claimed_' + savedUser.mobile;
 
-            localStorage.setItem('yt_claimed_' + savedUser.mobile, 'true');
-            document.getElementById('userWalletTop').innerText = "₹" + newBal.toFixed(2);
-            alert(`🎉 Badhai ho! ₹${amount} successfully aapke wallet mein add ho gaye hain.`);
-            location.reload();
-            return;
-        } catch (err) {
-            alert("Error: " + err.message);
-            return;
-        }
+    if (localStorage.getItem(storageKey)) {
+        alert("⚠️ Aap yeh bonus pehle hi claim kar chuke hain!");
+        return;
     }
 
-    const dbField = type === 'tg' ? 'telegram_claimed' : 'whatsapp_claimed';
-
     try {
-        const { data: checkData } = await client.from('users').select(dbField).eq('mobile', savedUser.mobile).single();
-        if (checkData && checkData[dbField]) {
-            alert("⚠️ Aap yeh bonus pehle hi claim kar chuke hain!");
-            return;
-        }
-
         const { data: userData } = await client.from('users').select('balance').eq('mobile', savedUser.mobile).single();
-        const newBal = Number(userData.balance || 0) + amount;
+        const newBal = Number(userData?.balance || 0) + amount;
+        
+        await client.from('users').update({ balance: newBal }).eq('mobile', savedUser.mobile);
 
-        let updateObj = { balance: newBal };
-        updateObj[dbField] = true;
-
-        const { error } = await client.from('users').update(updateObj).eq('mobile', savedUser.mobile);
-        if (error) throw error;
-
+        localStorage.setItem(storageKey, 'true');
         document.getElementById('userWalletTop').innerText = "₹" + newBal.toFixed(2);
         alert(`🎉 Badhai ho! ₹${amount} successfully aapke wallet mein add ho gaye hain.`);
         location.reload();
