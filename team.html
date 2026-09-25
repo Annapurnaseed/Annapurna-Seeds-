@@ -365,8 +365,7 @@
     </style>
 </head>
 <body>
-
-<div class="mobile-wrapper">
+    <div class="mobile-wrapper">
 
     <!-- Top Navigation -->
     <div class="top-header">
@@ -460,18 +459,26 @@
         </div>
     </div>
 
-    <!-- Team Members List Container -->
+    <!-- Team Members List Container with Level Tabs -->
     <div class="stats-clay-card">
         <div class="stats-head">
-            <h4>👥 Your Direct Team Members</h4>
+            <h4>👥 Your Network Team</h4>
             <span style="font-size: 11px; color: #1e824c; font-weight: 800;" id="teamCountBadge">0 Members</span>
         </div>
-        <div style="overflow-x: auto; margin-top: 10px;">
+
+        <!-- Level Switching Tabs -->
+        <div style="display: flex; gap: 6px; margin-bottom: 12px; background: #f0f7f2; padding: 4px; border-radius: 14px;">
+            <button onclick="switchTeamLevel(1)" id="tabL1" style="flex: 1; padding: 8px; border: none; border-radius: 10px; background: #1b4332; color: #fff; font-size: 11px; font-weight: 900; cursor: pointer;">Level 1 (15%)</button>
+            <button onclick="switchTeamLevel(2)" id="tabL2" style="flex: 1; padding: 8px; border: none; border-radius: 10px; background: transparent; color: #2d6a4f; font-size: 11px; font-weight: 900; cursor: pointer;">Level 2 (5%)</button>
+            <button onclick="switchTeamLevel(3)" id="tabL3" style="flex: 1; padding: 8px; border: none; border-radius: 10px; background: transparent; color: #2d6a4f; font-size: 11px; font-weight: 900; cursor: pointer;">Level 3 (2%)</button>
+        </div>
+
+        <div style="overflow-x: auto;">
             <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
                 <thead>
                     <tr style="background: #f0f7f2; color: #334155;">
                         <th style="padding: 8px; text-align: left; border-radius: 8px 0 0 8px;">Mobile / User</th>
-                        <th style="padding: 8px; text-align: center;">Status / Plan</th>
+                        <th style="padding: 8px; text-align: center; border-radius: 0 8px 8px 0;">Status / Plan</th>
                     </tr>
                 </thead>
                 <tbody id="teamMembersTableBody">
@@ -536,7 +543,7 @@
     </div>
 
                 </div>
-                <script>
+                    <script>
 const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -546,6 +553,10 @@ if (!savedUser.mobile) { window.location.href = 'login.html'; }
 
 let inviteCode = savedUser.invite_code || "ANP1812";
 let registerUrl = "";
+let currentLevel = 1;
+let level1List = [];
+let level2List = [];
+let level3List = [];
 
 async function initShare() {
     try {
@@ -561,43 +572,89 @@ async function initShare() {
         document.getElementById('refLinkInput').value = registerUrl;
         document.getElementById('refCodeInput').value = inviteCode;
 
-        // Fetch team members list invited by this user
-        const { data: team } = await client.from('users').select('mobile, active_plan').eq('invited_by', inviteCode);
-        const count = team ? team.length : 0;
-        document.getElementById('totalInvites').innerText = count;
-        document.getElementById('teamCountBadge').innerText = count + " Members";
+        // Fetch Level 1 (Direct Team)
+        const { data: l1 } = await client.from('users').select('mobile, active_plan, invite_code').eq('invited_by', inviteCode);
+        level1List = l1 || [];
 
-        const activeCount = team ? team.filter(u => u.active_plan && Number(u.active_plan) > 0).length : 0;
-        document.getElementById('activeUsers').innerText = activeCount;
-
-        // Render team members in table list
-        const tbody = document.getElementById('teamMembersTableBody');
-        tbody.innerHTML = "";
-
-        if (!team || team.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="2" style="text-align: center; color: #64748b; padding: 14px;">No team members joined yet. Share your link!</td></tr>`;
-            return;
+        // Fetch Level 2 (Downline of Level 1)
+        level2List = [];
+        if (level1List.length > 0) {
+            let l1Codes = level1List.map(u => u.invite_code).filter(Boolean);
+            if (l1Codes.length > 0) {
+                const { data: l2 } = await client.from('users').select('mobile, active_plan, invite_code').in('invited_by', l1Codes);
+                level2List = l2 || [];
+            }
         }
 
-        team.forEach(member => {
-            let maskedMobile = member.mobile.substring(0, 4) + "XXXX" + member.mobile.substring(8);
-            let planText = (member.active_plan && Number(member.active_plan) > 0) ? `₹${member.active_plan} Active` : 'Free / Inactive';
-            let planBg = (member.active_plan && Number(member.active_plan) > 0) ? '#dcfce7' : '#fee2e2';
-            let planColor = (member.active_plan && Number(member.active_plan) > 0) ? '#166534' : '#991b1b';
+        // Fetch Level 3 (Downline of Level 2)
+        level3List = [];
+        if (level2List.length > 0) {
+            let l2Codes = level2List.map(u => u.invite_code).filter(Boolean);
+            if (l2Codes.length > 0) {
+                const { data: l3 } = await client.from('users').select('mobile, active_plan').in('invited_by', l2Codes);
+                level3List = l3 || [];
+            }
+        }
 
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td style="padding: 10px 8px; border-bottom: 1px solid #f1f5f9; font-weight: 800; color: #123e24;">📱 ${maskedMobile}</td>
-                <td style="padding: 10px 8px; border-bottom: 1px solid #f1f5f9; text-align: center;">
-                    <span style="background: ${planBg}; color: ${planColor}; padding: 4px 10px; border-radius: 8px; font-weight: 800; font-size: 11px;">${planText}</span>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
+        // Total Invites & Active Users count across all levels
+        const totalCount = level1List.length + level2List.length + level3List.length;
+        document.getElementById('totalInvites').innerText = totalCount;
+
+        const allMembers = [...level1List, ...level2List, ...level3List];
+        const activeCount = allMembers.filter(u => u.active_plan && Number(u.active_plan) > 0).length;
+        document.getElementById('activeUsers').innerText = activeCount;
+
+        renderTeamTable();
 
     } catch (e) {
         console.error("Team load error:", e);
     }
+}
+
+function switchTeamLevel(level) {
+    currentLevel = level;
+    
+    document.getElementById('tabL1').style.background = (level === 1) ? '#1b4332' : 'transparent';
+    document.getElementById('tabL1').style.color = (level === 1) ? '#fff' : '#2d6a4f';
+
+    document.getElementById('tabL2').style.background = (level === 2) ? '#1b4332' : 'transparent';
+    document.getElementById('tabL2').style.color = (level === 2) ? '#fff' : '#2d6a4f';
+
+    document.getElementById('tabL3').style.background = (level === 3) ? '#1b4332' : 'transparent';
+    document.getElementById('tabL3').style.color = (level === 3) ? '#fff' : '#2d6a4f';
+
+    renderTeamTable();
+}
+
+function renderTeamTable() {
+    let targetList = level1List;
+    if (currentLevel === 2) targetList = level2List;
+    if (currentLevel === 3) targetList = level3List;
+
+    document.getElementById('teamCountBadge').innerText = targetList.length + " Members";
+    const tbody = document.getElementById('teamMembersTableBody');
+    tbody.innerHTML = "";
+
+    if (!targetList || targetList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="2" style="text-align: center; color: #64748b; padding: 14px;">No members in Level ${currentLevel} yet.</td></tr>`;
+        return;
+    }
+
+    targetList.forEach(member => {
+        let maskedMobile = member.mobile.substring(0, 4) + "XXXX" + member.mobile.substring(8);
+        let planText = (member.active_plan && Number(member.active_plan) > 0) ? `₹${member.active_plan} Active` : 'Free / Inactive';
+        let planBg = (member.active_plan && Number(member.active_plan) > 0) ? '#dcfce7' : '#fee2e2';
+        let planColor = (member.active_plan && Number(member.active_plan) > 0) ? '#166534' : '#991b1b';
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td style="padding: 10px 8px; border-bottom: 1px solid #f1f5f9; font-weight: 800; color: #123e24;">📱 ${maskedMobile}</td>
+            <td style="padding: 10px 8px; border-bottom: 1px solid #f1f5f9; text-align: center;">
+                <span style="background: ${planBg}; color: ${planColor}; padding: 4px 10px; border-radius: 8px; font-weight: 800; font-size: 11px;">${planText}</span>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
 }
 
 function copyLink() {
