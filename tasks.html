@@ -280,6 +280,91 @@ async function loadUserActivePortfoliosTasks() {
         container.appendChild(card);
     }
 }
+<script>
+const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
+const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+const savedUser = JSON.parse(localStorage.getItem('annapurna_user') || '{}');
+if (!savedUser.mobile) { window.location.href = 'login.html'; }
+
+let userBalance = 0;
+let hasVisitedTg = false;
+let hasVisitedWa = false;
+let hasVisitedYt = false;
+
+async function initTasks() {
+    try {
+        const { data } = await client.from('users').select('balance, telegram_claimed, whatsapp_claimed').eq('mobile', savedUser.mobile).single();
+        if (data) {
+            userBalance = Number(data.balance || 0);
+            document.getElementById('userWalletTop').innerText = "₹" + userBalance.toFixed(2);
+            if (data.telegram_claimed) renderTgClaimedUI();
+            if (data.whatsapp_claimed) renderWaClaimedUI();
+        }
+        // YouTube claimed check via localStorage to prevent schema errors
+        if (localStorage.getItem('yt_claimed_' + savedUser.mobile)) {
+            renderYtClaimedUI();
+        }
+        loadUserActivePortfoliosTasks();
+    } catch (e) {
+        console.error("Init Error:", e);
+    }
+}
+initTasks();
+
+async function loadUserActivePortfoliosTasks() {
+    const todayStr = new Date().toISOString().split('T')[0];
+    const { data: plans } = await client.from('user_plans').select('*').eq('mobile', savedUser.mobile);
+    const container = document.getElementById('allTasksContainer');
+    container.innerHTML = "";
+
+    if (!plans || plans.length === 0) {
+        container.innerHTML = `
+            <div class="daily-task-box" style="text-align: center;">
+                <h3 style="color: #123e24; font-size: 15px;">❌ No Active Agro Plan</h3>
+                <p style="font-size: 11px; color: #64748b; margin-top: 6px;">Task complete karne ke liye pehle Home page se koi bhi Agro Plan activate karein!</p>
+            </div>
+        `;
+        return;
+    }
+
+    for (let plan of plans) {
+        let completedToday = plan.completed_today || 0;
+        if (plan.last_task_date !== todayStr) {
+            completedToday = 0;
+            await client.from('user_plans').update({ completed_today: 0, last_task_date: todayStr }).eq('id', plan.id);
+        }
+
+        const isCompleted = completedToday >= plan.total_reviews;
+        const perReviewIncome = Number(plan.daily_income / plan.total_reviews).toFixed(2);
+
+        const card = document.createElement('div');
+        card.className = "daily-task-box";
+        card.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <span style="font-size: 13px; color: #14532d; font-weight: 900;">🌾 ${plan.plan_name} (₹${plan.plan_price})</span>
+                <span style="font-size: 9px; background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 6px; font-weight: 800;">Daily Income: ₹${plan.daily_income}</span>
+            </div>
+            <p style="font-size: 11px; color: #648a72; margin-bottom: 6px;">✨ Daily ${plan.total_reviews} Quality Reviews Mandatory</p>
+            
+            <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 800; color: #123e24;">
+                <span>Completed Today</span>
+                <span><b>${completedToday}</b> / ${plan.total_reviews}</span>
+            </div>
+            <div class="daily-progress-wrap">
+                <div class="daily-progress-bar" style="width: ${(completedToday / plan.total_reviews) * 100}%;"></div>
+            </div>
+
+            <button class="btn-daily-submit" id="taskBtn_${plan.id}" 
+                onclick="runPlanTask(${plan.id}, ${perReviewIncome}, ${plan.total_reviews}, ${completedToday})"
+                ${isCompleted ? 'disabled style="background: #94a3b8; cursor: not-allowed;"' : ''}>
+                ${isCompleted ? 'Plan Tasks Completed ✅' : `Verify Seed Batch (Earn ₹${perReviewIncome})`}
+            </button>
+        `;
+        container.appendChild(card);
+    }
+}
 
 async function runPlanTask(planId, rewardPerReview, totalReviews, completed) {
     const btn = document.getElementById(`taskBtn_${planId}`);
@@ -319,7 +404,30 @@ async function claimTaskReward(type, amount) {
     if (type === 'wa' && !hasVisitedWa) { alert("Pehle WhatsApp group join karein!"); return; }
     if (type === 'yt' && !hasVisitedYt) { alert("Pehle YouTube channel subscribe karein!"); return; }
 
-    const dbField = type === 'tg' ? 'telegram_claimed' : (type === 'wa' ? 'whatsapp_claimed' : 'youtube_claimed');
+    // YouTube Claim Logic via LocalStorage
+    if (type === 'yt') {
+        if (localStorage.getItem('yt_claimed_' + savedUser.mobile)) {
+            alert("⚠️ Aap yeh bonus pehle hi claim kar chuke hain!");
+            return;
+        }
+        try {
+            const { data: userData } = await client.from('users').select('balance').eq('mobile', savedUser.mobile).single();
+            const newBal = Number(userData?.balance || 0) + amount;
+            await client.from('users').update({ balance: newBal }).eq('mobile', savedUser.mobile);
+
+            localStorage.setItem('yt_claimed_' + savedUser.mobile, 'true');
+            document.getElementById('userWalletTop').innerText = "₹" + newBal.toFixed(2);
+            alert(`🎉 Badhai ho! ₹${amount} successfully aapke wallet mein add ho gaye hain.`);
+            location.reload();
+            return;
+        } catch (err) {
+            alert("Error: " + err.message);
+            return;
+        }
+    }
+
+    // Telegram & WhatsApp Claim Logic via Database
+    const dbField = type === 'tg' ? 'telegram_claimed' : 'whatsapp_claimed';
 
     try {
         const { data: checkData } = await client.from('users').select(dbField).eq('mobile', savedUser.mobile).single();
@@ -388,6 +496,6 @@ function switchTaskTab(tab) {
     }
 }
 </script>
-
+    
 </body>
 </html>
