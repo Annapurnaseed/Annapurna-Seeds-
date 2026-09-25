@@ -290,6 +290,16 @@
             <button class="btn-action btn-green" style="width: 100%; padding: 12px; font-size: 13px;" onclick="publishBroadcastAlert()">🚀 Publish Alert to Home</button>
         </div>
     </div>
+    <div class="stats-clay-card" style="margin: 14px; background: #fff; padding: 16px; border-radius: 20px;">
+    <h4 style="font-size: 14px; font-weight: 900; color: #123e24; margin-bottom: 10px;">🔍 Complete User History & Network Inspector</h4>
+    <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+        <input type="text" id="searchUserMobile" placeholder="Enter User Mobile No..." style="flex: 1; padding: 10px; border-radius: 12px; border: 1px solid #dcece0; outline: none; font-weight: 800;">
+        <button onclick="checkCompleteUserHistory()" style="background: #1e824c; color: #fff; border: none; padding: 10px 16px; border-radius: 12px; font-weight: 900; cursor: pointer;">Search</button>
+    </div>
+    <div id="userCompleteHistoryResult" style="font-size: 12px; color: #334155; line-height: 1.6;">
+        <i>Pehle kisi user ka mobile number enter karke search karein...</i>
+    </div>
+    </div>
 
                                 </div>
                 <script>
@@ -675,6 +685,125 @@ loadAllUpiChannels();
 loadCommunityBotStatus();
 loadAdminMeeting();
 loadCurrentNotice();
+        async function checkCompleteUserHistory() {
+    const mobile = document.getElementById('searchUserMobile').value.trim();
+    const resultBox = document.getElementById('userCompleteHistoryResult');
+    
+    if (!mobile) {
+        alert("Kripya mobile number enter karein!");
+        return;
+    }
+
+    resultBox.innerHTML = "Fetching complete user analytics...";
+
+    try {
+        // 1. Fetch User Main Details (Balance, Commission, Invite Code)
+        const { data: user, error: userErr } = await client.from('users').select('*').eq('mobile', mobile).single();
+        if (userErr || !user) {
+            resultBox.innerHTML = "<span style='color: red;'>❌ User nahi mila! Sahi mobile number dalein.</span>";
+            return;
+        }
+
+        // 2. Fetch Total Withdrawals made by this user
+        const { data: withdrawals } = await client.from('withdrawals').select('amount, status').eq('mobile', mobile);
+        let totalWithdrawn = 0;
+        if (withdrawals) {
+            withdrawals.forEach(w => {
+                if (w.status === 'Approved' || w.status === 'Success') {
+                    totalWithdrawn += Number(w.amount || 0);
+                }
+            });
+        }
+
+        // 3. Fetch Level 1 Members (Direct Team)
+        const { data: l1Members } = await client.from('users').select('mobile, active_plan, invite_code').eq('invited_by', user.invite_code);
+        let l1Count = l1Members ? l1Members.length : 0;
+        let l1Active = l1Members ? l1Members.filter(u => u.active_plan && Number(u.active_plan) > 0).length : 0;
+
+        // 4. Fetch Level 2 Members (Downline of Level 1)
+        let l2Count = 0;
+        let l2Active = 0;
+        let l2Codes = [];
+        if (l1Members && l1Members.length > 0) {
+            l1Codes = l1Members.map(u => u.invite_code).filter(Boolean);
+            if (l1Codes.length > 0) {
+                const { data: l2Data } = await client.from('users').select('mobile, active_plan, invite_code').in('invited_by', l1Codes);
+                if (l2Data) {
+                    l2Count = l2Data.length;
+                    l2Active = l2Data.filter(u => u.active_plan && Number(u.active_plan) > 0).length;
+                    // Extract Level 2 codes for Level 3
+                    var l2CodesList = l2Data.map(u => u.invite_code).filter(Boolean);
+                }
+            }
+        }
+
+        // 5. Fetch Level 3 Members (Downline of Level 2)
+        let l3Count = 0;
+        let l3Active = 0;
+        if (typeof l2CodesList !== 'undefined' && l2CodesList.length > 0) {
+            const { data: l3Data } = await client.from('users').select('mobile, active_plan').in('invited_by', l2CodesList);
+            if (l3Data) {
+                l3Count = l3Data.length;
+                l3Active = l3Data.filter(u => u.active_plan && Number(u.active_plan) > 0).length;
+            }
+        }
+
+        // 6. Fetch User's Purchased Plans
+        const { data: plans } = await client.from('user_plans').select('*').eq('mobile', mobile);
+        let totalPlanInvested = 0;
+        let plansHtml = "";
+
+        if (plans && plans.length > 0) {
+            plans.forEach(p => {
+                totalPlanInvested += Number(p.plan_price || 0);
+                plansHtml += `<li>🌾 ${p.plan_name} - ₹${p.plan_price}</li>`;
+            });
+        } else {
+            plansHtml = "<li>Koi active plan nahi hai.</li>";
+        }
+
+        // Display Complete Analytics Dashboard for the User
+        resultBox.innerHTML = `
+            <div style="background: #f0f7f2; padding: 14px; border-radius: 16px; border: 1px solid #dcece0;">
+                <b style="color: #123e24; font-size: 14px;">📱 User Mobile: ${user.mobile}</b><br>
+                🆔 Invite Code: <b>${user.invite_code || 'N/A'}</b><br><br>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+                    <div style="background: #fff; padding: 8px; border-radius: 10px; border: 1px solid #e1eee4;">
+                        💰 Current Balance:<br><b style="color: #27ae60; font-size: 13px;">₹${user.balance || 0}</b>
+                    </div>
+                    <div style="background: #fff; padding: 8px; border-radius: 10px; border: 1px solid #e1eee4;">
+                        💸 Total Withdrawal:<br><b style="color: #c0392b; font-size: 13px;">₹${totalWithdrawn}</b>
+                    </div>
+                    <div style="background: #fff; padding: 8px; border-radius: 10px; border: 1px solid #e1eee4;">
+                        🎁 Total Commission:<br><b style="color: #2980b9; font-size: 13px;">₹${user.commission || 0}</b>
+                    </div>
+                    <div style="background: #fff; padding: 8px; border-radius: 10px; border: 1px solid #e1eee4;">
+                        🌱 Total Invested:<br><b style="color: #1e824c; font-size: 13px;">₹${totalPlanInvested}</b>
+                    </div>
+                </div>
+
+                <div style="background: #ffffff; padding: 10px; border-radius: 12px; border: 1px solid #e1eee4; margin-bottom: 10px;">
+                    <b style="color: #123e24;">👥 Team Network Breakdown:</b>
+                    <ul style="padding-left: 18px; margin-top: 4px;">
+                        <li><b>Level 1 (Direct):</b> ${l1Count} Members (${l1Active} Active)</li>
+                        <li><b>Level 2 (Secondary):</b> ${l2Count} Members (${l2Active} Active)</li>
+                        <li><b>Level 3 (Extended):</b> ${l3Count} Members (${l3Active} Active)</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <b style="color: #123e24;">Active Plans List:</b>
+                    <ul style="padding-left: 18px; margin-top: 4px;">${plansHtml}</ul>
+                </div>
+            </div>
+        `;
+
+    } catch (err) {
+        resultBox.innerHTML = "<span style='color: red;'>Error: " + err.message + "</span>";
+    }
+              }
+                    
 </script>
 
 </body>
