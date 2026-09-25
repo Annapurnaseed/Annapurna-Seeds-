@@ -365,17 +365,17 @@
         </div>
     </div>
 
-    <!-- Live Community Feed Ticker (Linked from Admin Panel) -->
-    <div class="community-feed-box" id="homeFeedTicker">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
-            <span style="font-size: 11px; font-weight: 900; color: #15803d; display: flex; align-items: center; gap: 4px;">🌱 LIVE EARNING PROOF</span>
-            <span id="feedTime" style="font-size: 9px; color: #64748b; font-weight: 700;">Just now</span>
+        <!-- Live Community Feed Ticker Widget (Expanded & Ramesh Removed) -->
+    <div class="community-feed-box" id="homeFeedTicker" style="margin: 14px 18px 18px; background: linear-gradient(135deg, #ffffff, #f0fdf4); border-radius: 22px; padding: 16px 18px; border: 2px solid #86efac; box-shadow: 0 10px 25px rgba(20, 83, 45, 0.1);">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <span style="font-size: 13px; font-weight: 900; color: #15803d; display: flex; align-items: center; gap: 6px;">🌱 LIVE EARNING PROOF</span>
+            <span id="feedTime" style="font-size: 10px; color: #166534; font-weight: 800; background: #dcfce7; padding: 3px 8px; border-radius: 8px;">Verified Payout</span>
         </div>
-        <div style="font-size: 12px; font-weight: 800; color: #113820;" id="feedTextContent">
-            Ramesh (Meerut) successfully received withdrawal of <b style="color: #16a34a;">+₹950</b>!
+        <div style="font-size: 14px; font-weight: 800; color: #113820; line-height: 1.5;" id="feedTextContent">
+            Member (Najibabad) successfully received withdrawal of <b style="color: #16a34a;">+₹675</b>!
         </div>
     </div>
-
+    
     <!-- Action Grid -->
     <div class="action-grid">
         <a href="recharge.html" class="action-btn">
@@ -641,12 +641,12 @@ async function loadHomeLiveWidgets() {
         }
 
         const { data: feed } = await client.from('community_controls').select('*').eq('id', 1).single();
-        if (feed && feed.is_active && feed.custom_msg) {
-            document.getElementById('feedTextContent').innerHTML = `${feed.custom_name} (${feed.custom_city}) successfully received <b style="color: #16a34a;">${feed.custom_amount}</b>! — "${feed.custom_msg}"`;
-            document.getElementById('homeFeedTicker').style.display = 'block';
-        } else if (feed && !feed.is_active) {
-            document.getElementById('homeFeedTicker').style.display = 'none';
-        }
+                    if (feed && feed.is_active && feed.custom_msg) {
+                document.getElementById('feedTextContent').innerHTML = `Member (${feed.custom_city || 'Najibabad'}) successfully received withdrawal of <b style="color: #16a34a;">${feed.custom_amount || '+₹675'}</b>!`;
+                document.getElementById('homeFeedTicker').style.display = 'block';
+            } else if (feed && !feed.is_active) {
+                document.getElementById('homeFeedTicker').style.display = 'none';
+                        }
     } catch(e) {
         console.error("Widget load error:", e);
     }
