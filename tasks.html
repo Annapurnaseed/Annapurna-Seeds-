@@ -77,7 +77,8 @@
     </style>
 </head>
 <body>
-    <div class="mobile-wrapper">
+
+<div class="mobile-wrapper">
 
     <!-- Top Header -->
     <div class="top-header">
@@ -94,7 +95,7 @@
         <span>Tasks & Rewards Hub (750 Days Valid)</span>
     </div>
 
-    <!-- Telegram Channel Task (F10) -->
+    <!-- Telegram Channel Task -->
     <div id="tgTaskCard" class="tg-bonus-card" style="background: linear-gradient(135deg, #0284c7, #0369a1);">
         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
             <div style="width: 42px; height: 42px; border-radius: 14px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 20px;">✈️</div>
@@ -104,12 +105,12 @@
             </div>
         </div>
         <div style="display: flex; gap: 8px;">
-            <a href="https://t.me/annapurnaseeds" target="_blank" onclick="markVisited('tg')" style="flex: 1; background: #ffffff; color: #0369a1; text-decoration: none; padding: 10px; border-radius: 14px; font-size: 12px; font-weight: 900; text-align: center; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">Step 1: Join Channel</a>
+            <a href="https://t.me/annapurnaseeds" target="_blank" style="flex: 1; background: #ffffff; color: #0369a1; text-decoration: none; padding: 10px; border-radius: 14px; font-size: 12px; font-weight: 900; text-align: center; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">Step 1: Join Channel</a>
             <button id="btnClaimTg" onclick="claimTaskReward('tg', 10)" style="flex: 1; background: #22c55e; color: #fff; border: none; padding: 10px; border-radius: 14px; font-size: 12px; font-weight: 900; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">Step 2: Claim ₹10</button>
         </div>
     </div>
 
-    <!-- WhatsApp Group Task (F10) -->
+    <!-- WhatsApp Group Task -->
     <div id="waTaskCard" class="tg-bonus-card" style="background: linear-gradient(135deg, #16a34a, #15803d);">
         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
             <div style="width: 42px; height: 42px; border-radius: 14px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 20px;">💬</div>
@@ -119,12 +120,12 @@
             </div>
         </div>
         <div style="display: flex; gap: 8px;">
-            <a href="https://chat.whatsapp.com/LXQEDuNpdyziQCyXyBYVR0?text=Join+Annapurna+Seeds" target="_blank" onclick="markVisited('wa')" style="flex: 1; background: #ffffff; color: #15803d; text-decoration: none; padding: 10px; border-radius: 14px; font-size: 12px; font-weight: 900; text-align: center; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">Step 1: Join Group</a>
+            <a href="https://chat.whatsapp.com/LXQEDuNpdyziQCyXyBYVR0?text=Join+Annapurna+Seeds" target="_blank" style="flex: 1; background: #ffffff; color: #15803d; text-decoration: none; padding: 10px; border-radius: 14px; font-size: 12px; font-weight: 900; text-align: center; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">Step 1: Join Group</a>
             <button id="btnClaimWa" onclick="claimTaskReward('wa', 10)" style="flex: 1; background: #f59e0b; color: #fff; border: none; padding: 10px; border-radius: 14px; font-size: 12px; font-weight: 900; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">Step 2: Claim ₹10</button>
         </div>
     </div>
 
-    <!-- YouTube Channel Task (F10) -->
+    <!-- YouTube Channel Task -->
     <div id="ytTaskCard" class="tg-bonus-card" style="background: linear-gradient(135deg, #cc0000, #990000);">
         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
             <div style="width: 42px; height: 42px; border-radius: 14px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 20px;">▶</div>
@@ -134,7 +135,7 @@
             </div>
         </div>
         <div style="display: flex; gap: 8px;">
-            <a href="https://youtube.com/@annapurnaseed?si=Nl8l7Bc3IB0rdlmA" target="_blank" onclick="markVisited('yt')" style="flex: 1; background: #ffffff; color: #cc0000; text-decoration: none; padding: 10px; border-radius: 14px; font-size: 12px; font-weight: 900; text-align: center; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">Step 1: Subscribe</a>
+            <a href="https://youtube.com/@annapurnaseed?si=Nl8l7Bc3IB0rdlmA" target="_blank" style="flex: 1; background: #ffffff; color: #cc0000; text-decoration: none; padding: 10px; border-radius: 14px; font-size: 12px; font-weight: 900; text-align: center; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">Step 1: Subscribe</a>
             <button id="btnClaimYt" onclick="claimTaskReward('yt', 10)" style="flex: 1; background: #fbbf24; color: #78350f; border: none; padding: 10px; border-radius: 14px; font-size: 12px; font-weight: 900; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">Step 2: Claim ₹10</button>
         </div>
     </div>
@@ -171,7 +172,6 @@
                 <div>Reward</div>
                 <div style="text-align: right;">Status</div>
             </div>
-            <!-- Milestone Rows -->
             <div class="table-row"><div>₹10,000+</div><div class="col-reward">₹250</div><div style="text-align: right;"><button class="btn-status-pill">Pending</button></div></div>
             <div class="table-row"><div>₹30,000+</div><div class="col-reward">₹500</div><div style="text-align: right;"><button class="btn-status-pill">Pending</button></div></div>
             <div class="table-row"><div>₹50,000+</div><div class="col-reward">₹1,000</div><div style="text-align: right;"><button class="btn-status-pill">Pending</button></div></div>
@@ -181,11 +181,9 @@
         </div>
     </div>
 
-    <!-- Daily Tab Content (Dynamic Active Plans Tasks) -->
+    <!-- Daily Tab Content -->
     <div id="dailySection" style="display: none;">
-        <div id="allTasksContainer">
-            <!-- Loaded dynamically via JS -->
-        </div>
+        <div id="allTasksContainer"></div>
     </div>
 
     <!-- Bottom Navigation -->
@@ -207,91 +205,6 @@ const savedUser = JSON.parse(localStorage.getItem('annapurna_user') || '{}');
 if (!savedUser.mobile) { window.location.href = 'login.html'; }
 
 let userBalance = 0;
-let hasVisitedTg = false;
-let hasVisitedWa = false;
-let hasVisitedYt = false;
-
-async function initTasks() {
-    try {
-        const { data } = await client.from('users').select('balance, telegram_claimed, whatsapp_claimed, youtube_claimed').eq('mobile', savedUser.mobile).single();
-        if (data) {
-            userBalance = Number(data.balance || 0);
-            document.getElementById('userWalletTop').innerText = "₹" + userBalance.toFixed(2);
-            if (data.telegram_claimed) renderTgClaimedUI();
-            if (data.whatsapp_claimed) renderWaClaimedUI();
-            if (data.youtube_claimed) renderYtClaimedUI();
-        }
-        loadUserActivePortfoliosTasks();
-    } catch (e) {
-        console.error("Init Error:", e);
-    }
-}
-initTasks();
-
-async function loadUserActivePortfoliosTasks() {
-    const todayStr = new Date().toISOString().split('T')[0];
-    const { data: plans } = await client.from('user_plans').select('*').eq('mobile', savedUser.mobile);
-    const container = document.getElementById('allTasksContainer');
-    container.innerHTML = "";
-
-    if (!plans || plans.length === 0) {
-        container.innerHTML = `
-            <div class="daily-task-box" style="text-align: center;">
-                <h3 style="color: #123e24; font-size: 15px;">❌ No Active Agro Plan</h3>
-                <p style="font-size: 11px; color: #64748b; margin-top: 6px;">Task complete karne ke liye pehle Home page se koi bhi Agro Plan activate karein!</p>
-            </div>
-        `;
-        return;
-    }
-
-    for (let plan of plans) {
-        let completedToday = plan.completed_today || 0;
-        if (plan.last_task_date !== todayStr) {
-            completedToday = 0;
-            await client.from('user_plans').update({ completed_today: 0, last_task_date: todayStr }).eq('id', plan.id);
-        }
-
-        const isCompleted = completedToday >= plan.total_reviews;
-        const perReviewIncome = Number(plan.daily_income / plan.total_reviews).toFixed(2);
-
-        const card = document.createElement('div');
-        card.className = "daily-task-box";
-        card.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                <span style="font-size: 13px; color: #14532d; font-weight: 900;">🌾 ${plan.plan_name} (₹${plan.plan_price})</span>
-                <span style="font-size: 9px; background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 6px; font-weight: 800;">Daily Income: ₹${plan.daily_income}</span>
-            </div>
-            <p style="font-size: 11px; color: #648a72; margin-bottom: 6px;">✨ Daily ${plan.total_reviews} Quality Reviews Mandatory</p>
-            
-            <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 800; color: #123e24;">
-                <span>Completed Today</span>
-                <span><b>${completedToday}</b> / ${plan.total_reviews}</span>
-            </div>
-            <div class="daily-progress-wrap">
-                <div class="daily-progress-bar" style="width: ${(completedToday / plan.total_reviews) * 100}%;"></div>
-            </div>
-
-            <button class="btn-daily-submit" id="taskBtn_${plan.id}" 
-                onclick="runPlanTask(${plan.id}, ${perReviewIncome}, ${plan.total_reviews}, ${completedToday})"
-                ${isCompleted ? 'disabled style="background: #94a3b8; cursor: not-allowed;"' : ''}>
-                ${isCompleted ? 'Plan Tasks Completed ✅' : `Verify Seed Batch (Earn ₹${perReviewIncome})`}
-            </button>
-        `;
-        container.appendChild(card);
-    }
-}
-<script>
-const supabaseUrl = 'https://aoisaiyugxuycuketisr.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvaXNhaXl1Z3h1eWN1a2V0aXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2MDc0NTYsImV4cCI6MjEwNTE4MzQ1Nn0.PnTNtBrsjzLhKt-yIGpwIHYulTlEKFXx4uYVxnbbkkk';
-const client = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-const savedUser = JSON.parse(localStorage.getItem('annapurna_user') || '{}');
-if (!savedUser.mobile) { window.location.href = 'login.html'; }
-
-let userBalance = 0;
-let hasVisitedTg = false;
-let hasVisitedWa = false;
-let hasVisitedYt = false;
 
 async function initTasks() {
     try {
@@ -302,7 +215,6 @@ async function initTasks() {
             if (data.telegram_claimed) renderTgClaimedUI();
             if (data.whatsapp_claimed) renderWaClaimedUI();
         }
-        // YouTube claimed check via localStorage to prevent schema errors
         if (localStorage.getItem('yt_claimed_' + savedUser.mobile)) {
             renderYtClaimedUI();
         }
@@ -393,18 +305,7 @@ async function runPlanTask(planId, rewardPerReview, totalReviews, completed) {
     }, 1500);
 }
 
-function markVisited(type) {
-    if (type === 'tg') hasVisitedTg = true;
-    if (type === 'wa') hasVisitedWa = true;
-    if (type === 'yt') hasVisitedYt = true;
-}
-
 async function claimTaskReward(type, amount) {
-    if (type === 'tg' && !hasVisitedTg) { alert("Pehle Telegram channel join karein!"); return; }
-    if (type === 'wa' && !hasVisitedWa) { alert("Pehle WhatsApp group join karein!"); return; }
-    if (type === 'yt' && !hasVisitedYt) { alert("Pehle YouTube channel subscribe karein!"); return; }
-
-    // YouTube Claim Logic via LocalStorage
     if (type === 'yt') {
         if (localStorage.getItem('yt_claimed_' + savedUser.mobile)) {
             alert("⚠️ Aap yeh bonus pehle hi claim kar chuke hain!");
@@ -426,7 +327,6 @@ async function claimTaskReward(type, amount) {
         }
     }
 
-    // Telegram & WhatsApp Claim Logic via Database
     const dbField = type === 'tg' ? 'telegram_claimed' : 'whatsapp_claimed';
 
     try {
@@ -496,6 +396,6 @@ function switchTaskTab(tab) {
     }
 }
 </script>
-    
+
 </body>
 </html>
